@@ -1,18 +1,39 @@
-#
-# Cookbook Name:: zabbix-client
-# Recipe:: default
-#
-# Copyright 2013, Express 42 LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+package "zabbix-agent" do 
+	action :install
+end
+
+service "zabbix-agent" do 
+	supports :restart => true, :reload => true
+ 	action [ :enable, :start ]
+end
+
+
+if Chef::Config[:solo]
+  Chef::Log.warn("This recipe uses search. Chef Solo does not support search. I will return current node")
+else
+  if search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}").nil?
+  	zabbix_nodes = search(:node, "role:zabbix-server AND chef_environment:#{node.chef_environment}")
+  else
+  	zabbix_nodes = search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}")
+  end
+end
+
+if zabbix_nodes.nil?
+	zabbix_server_ip = node["zabbix"]["client"]["serverip"]
+else 
+	zabbix_nodes.each do |item|
+		zabbix_server_ip << item["zabbix"]["server"]["ip"]
+	end
+end
+
+raise "Zabbix server ip hasn't been found! Please check configuration" if not zabbix_server_ip
+
+template "/etc/zabbix/zabbix_agentd.conf" do
+	source "zabbix_agentd.conf.erb"
+	variables(
+		:server => zabbix_server_ip,
+		:loglevel => node["zabbix"]["client"]["loglevel"],
+		:include => node["zabbix"]["client"]["include"]
+		)
+	notifies :reload, resources(:service => "zabbix-agent")
+end
