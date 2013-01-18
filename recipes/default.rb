@@ -37,3 +37,13 @@ template "/etc/zabbix/zabbix_agentd.conf" do
     )
   notifies :reload, resources(:service => "zabbix-agent")
 end
+
+chef_gem 'rubix' do
+  source "/tmp/rubix-0.5.14.gem"
+  action :install
+end
+
+require 'rubix'
+
+zabbix_client_host node.fqdn do
+end
