@@ -7,22 +7,24 @@ service "zabbix-agent" do
   action [ :enable, :start ]
 end
 
+zabbix_server_ip = []
 
-if Chef::Config[:solo]
-  Chef::Log.warn("This recipe uses search. Chef Solo does not support search. I will return current node")
-else
-  if search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}").empty?
-    zabbix_nodes = search(:node, "role:zabbix-server AND chef_environment:#{node.chef_environment}")
+# check first node attributes, if node attributes empty - try search zabbix server
+if node["zabbix"]["client"]["serverip"] && !node["zabbix"]["client"]["serverip"].empty? 
+  zabbix_server_ip << node["zabbix"]["client"]["serverip"]
+else 
+  if Chef::Config[:solo]
+    Chef::Log.warn("This recipe uses search. Chef Solo does not support search. I will return current node")
+    zabbix_nodes = node
   else
-    zabbix_nodes = search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}")
+    if search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}").empty?
+      zabbix_nodes = search(:node, "role:zabbix-server AND chef_environment:#{node.chef_environment}")
+    else
+      zabbix_nodes = search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}")
+    end
   end
-end
-
-if zabbix_nodes.empty?
-  zabbix_server_ip = node["zabbix"]["client"]["serverip"]
-else
   zabbix_nodes.each do |item|
-    zabbix_server_ip << item["zabbix"]["server"]["ip"]
+    zabbix_server_ip = item["zabbix"]["server"]["ip"]
   end
 end
 
