@@ -64,3 +64,12 @@ zabbix_client_host node.fqdn do
   use_ip true
   ip_address "127.0.0.1"
 end
+
+cookbook_file "/tmp/zbx_templates_base_e42.xml" do
+  source "zbx_templates_base_e42.xml"
+  mode 0755
+  owner "root"
+  group "root"
+end
+
+zabbix_client_template "/tmp/zbx_templates_base_e42.xml"
