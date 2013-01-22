@@ -33,3 +33,4 @@ end
 actions :create
 
 attribute :host_name, :kind_of => String, :name_attribute => true
+attribute :host_group, :kind_of => String, :required => true

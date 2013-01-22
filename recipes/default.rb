@@ -41,11 +41,7 @@ template "/etc/zabbix/zabbix_agentd.conf" do
 end
 
 chef_gem 'rubix' do
-  source "/tmp/rubix-0.5.14.gem"
+  source "http://gems.express42.net/rubix-0.5.14.gem"
   action :install
 end
 
-require 'rubix'
-
-zabbix_client_host node.fqdn do
-end

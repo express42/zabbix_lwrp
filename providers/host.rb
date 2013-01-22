@@ -27,5 +27,8 @@
 
 
 action :create do
+  group = Rubix::HostGroup.find_or_create new_resource.host_group
+  host = Rubix::Host.find_or_create :name => new_resource.host_name,
+    :host_groups => [group]
 end
 
