@@ -40,8 +40,27 @@ template "/etc/zabbix/zabbix_agentd.conf" do
   notifies :reload, resources(:service => "zabbix-agent")
 end
 
-chef_gem 'rubix' do
-  source "http://gems.express42.net/rubix-0.5.14.gem"
+cookbook_file "/tmp/rubix-0.5.14.gem" do
+  source "rubix-0.5.14.gem"
+end
+
+gem_package "rubix" do
+  source "/tmp/rubix-0.5.14.gem"
   action :install
 end
 
+ruby_block "use rubix" do
+  block do
+    Gem.clear_paths
+
+    require 'rubix'
+
+    Rubix.connect("http://#{zabbix_server_ip}/api_jsonrpc.php", 'Admin', 'zabbix')
+  end
+end
+
+zabbix_client_host node.fqdn do
+  host_group "default"
+  use_ip true
+  ip_address "127.0.0.1"
+end

@@ -34,3 +34,7 @@ actions :create
 
 attribute :host_name, :kind_of => String, :name_attribute => true
 attribute :host_group, :kind_of => String, :required => true
+attribute :port, :kind_of => Integer, :default => 10050
+attribute :ip_address, :kind_of => String
+attribute :dns, :kind_of => String
+attribute :use_ip, :kind_of => [TrueClass, FalseClass], :required => true, :default =>true
