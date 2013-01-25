@@ -59,12 +59,6 @@ ruby_block "use rubix" do
   end
 end
 
-zabbix_client_host node.fqdn do
-  host_group "default"
-  use_ip true
-  ip_address "127.0.0.1"
-end
-
 cookbook_file "/tmp/zbx_templates_base_e42.xml" do
   source "zbx_templates_base_e42.xml"
   mode 0755
@@ -73,3 +67,10 @@ cookbook_file "/tmp/zbx_templates_base_e42.xml" do
 end
 
 zabbix_client_template "/tmp/zbx_templates_base_e42.xml"
+
+zabbix_client_host node.fqdn do
+  host_group "default"
+  use_ip true
+  ip_address "127.0.0.1"
+  templates ["Chef_E42_Template"]
+end

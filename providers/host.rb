@@ -29,8 +29,13 @@
 action :create do
   group = Rubix::HostGroup.find_or_create new_resource.host_group
 
+  templates = new_resource.templates.map do |name|
+    Rubix::Template.find(:name => name)
+  end
+
   host = Rubix::Host.find_or_create :name => new_resource.host_name,
-    :host_groups => [group], :interfaces => ['ip' => new_resource.ip_address,
-    'main' => 1, 'use_ip' => new_resource.use_ip, 'dns' => new_resource.dns]
+    :host_groups => [group],
+    :interfaces => ['ip' => new_resource.ip_address, 'main' => 1, 'use_ip' => new_resource.use_ip, 'dns' => new_resource.dns],
+    :templates => templates
 end
 
