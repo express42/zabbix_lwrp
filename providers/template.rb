@@ -35,3 +35,20 @@ action :import do
     ::File.open check_path, 'w'
   end
 end
+
+action :add do
+  host = Rubix::Host.find(:name => new_resource.host_name)
+
+  if host
+    template = Rubix::Template.find(:name => new_resource.path)
+
+    if template
+      host.template_ids << template.id
+      host.save
+    else
+      Chef::Log.info "Zabbix Template #{new_resource.path} not found"
+    end
+  else
+    Chef::Log.info "Zabbix Host #{new_resource.host_name} not found"
+  end
+end

@@ -74,3 +74,8 @@ zabbix_client_host node.fqdn do
   ip_address "127.0.0.1"
   templates ["Chef_E42_Template"]
 end
+
+zabbix_client_template "CPU_E42_Template" do
+  action :add
+  host_name node.fqdn
+end

@@ -30,6 +30,7 @@ def initialize(*args)
     @action = :import
 end
 
-actions :import
+actions :import, :add
 
+attribute :host_name, :kind_of => String
 attribute :path, :kind_of => String, :name_attribute => true
