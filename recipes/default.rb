@@ -72,7 +72,6 @@ zabbix_client_host node.fqdn do
   host_group "default"
   use_ip true
   ip_address "127.0.0.1"
-  templates ["Chef_E42_Template"]
 end
 
 zabbix_client_template "CPU_E42_Template" do
