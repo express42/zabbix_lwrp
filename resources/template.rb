@@ -27,7 +27,7 @@
 
 def initialize(*args)
     super
-    @action = :import
+    @action = :add
 end
 
 actions :import, :add

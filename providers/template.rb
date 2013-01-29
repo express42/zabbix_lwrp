@@ -37,7 +37,11 @@ action :import do
 end
 
 action :add do
-  host = Rubix::Host.find(:name => new_resource.host_name)
+  if new_resource.host_name && !new_resource.host_name.blank?
+    host = Rubix::Host.find(:name => new_resource.host_name)
+  else
+    host = Rubix::Host.find(:name => node.fqdn)
+  end
 
   if host
     template = Rubix::Template.find(:name => new_resource.path)
