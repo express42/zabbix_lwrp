@@ -1,10 +1,10 @@
-# CHANGELOG for zabbix-client
+# CHANGELOG for zabbix
 
-This file is used to list changes made in each version of zabbix-client.
+This file is used to list changes made in each version of zabbix.
 
 ## 0.1.0:
 
-* Initial release of zabbix-client
+* Initial release of zabbix cookbook
 
 - - -
 Check the [Markdown Syntax Guide](http://daringfireball.net/projects/markdown/syntax) for help with Markdown.

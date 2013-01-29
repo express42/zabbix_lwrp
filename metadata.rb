@@ -1,4 +1,4 @@
-name             'zabbix-client'
+name             'zabbix'
 maintainer       'Express 42 LLC'
 maintainer_email 'cookbooks@express42.com'
 license          'Apache 2.0'

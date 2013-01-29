@@ -1,4 +1,4 @@
-zabbix-client Cookbook
+zabbix Cookbook
 ======================
 TODO: Enter the cookbook description here.
 
@@ -11,14 +11,14 @@ TODO: List your cookbook requirements. Be sure to include any requirements this 
 
 e.g.
 #### packages
-- `toaster` - zabbix-client needs toaster to brown your bagel.
+- `toaster` - zabbix needs toaster to brown your bagel.
 
 Attributes
 ----------
 TODO: List you cookbook attributes here.
 
 e.g.
-#### zabbix-client::default
+#### zabbix::default
 <table>
   <tr>
     <th>Key</th>

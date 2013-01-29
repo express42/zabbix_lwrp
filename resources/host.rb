@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: zabbix-client
+# Cookbook Name:: zabbix
 # Resource:: default
 #
 # Author:: LLC Express 42 (info@express42.com)
