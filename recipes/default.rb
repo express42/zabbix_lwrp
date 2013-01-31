@@ -10,9 +10,9 @@ end
 zabbix_server_ip = []
 
 # check first node attributes, if node attributes empty - try search zabbix server
-if node["zabbix"]["client"]["serverip"] && !node["zabbix"]["client"]["serverip"].empty? 
+if node["zabbix"]["client"]["serverip"] && !node["zabbix"]["client"]["serverip"].empty?
   zabbix_server_ip << node["zabbix"]["client"]["serverip"]
-else 
+else
   if Chef::Config[:solo]
     Chef::Log.warn("This recipe uses search. Chef Solo does not support search. I will return current node")
     zabbix_nodes = node
@@ -81,14 +81,12 @@ zabbix_template "CPU_E42_Template"
 
 zabbix_application "Test application" do
   action :sync
-=begin
-  item "vfs.fs.size[#{zabbix_partition},free]" do
-    type Integer
-    source :agent
-    description "Free disk space on #{zabbix_partition}"
-    units "bytes"
+  item "vfs.fs.size[/var/log,free]" do
+    type :active
+    name "Free disk space on /var/log"
   end
 
+=begin
  item "vfs.fs.size[#{zabbix_partition},pfree]" do
     type Float
     source :agent

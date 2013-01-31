@@ -38,6 +38,25 @@ action :sync do
       @app.save
     end
   end
+
+  Chef::Log.info @current_items.size
+
+  new_resource.items.each do |item|
+    if current_item = @current_items.find { |i| i.key == item.get_key }
+      @current_items.delete current_item
+
+      # FIXME: update existing item
+    else
+      Rubix::Item.new(item.to_hash.merge(:host_id => @host.id, :interface_id => @host.interfaces.first.id, :applications => [@app])).save
+    end
+  end
+
+  # now delete unused items
+  @current_items.each do |item|
+    item.destroy
+  end
+
+  Chef::Log.info @current_items.size
 end
 
 def load_current_resource
@@ -45,5 +64,10 @@ def load_current_resource
 
   @host = Rubix::Host.find(:name => node.fqdn)
   @app = Rubix::Application.all(:hostids => @host.id, :filter => {:name => new_resource.name}).first
-  @current_resource.exists = !@app.nil?
+  if @app.nil?
+    @current_items = []
+  else
+    @current_resource.exists = true
+    @current_items = Rubix::Item.all(:hostids => @host.id, :applicationids => @app.id)
+  end
 end

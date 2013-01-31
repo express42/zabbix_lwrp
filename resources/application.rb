@@ -29,3 +29,76 @@ default_action :sync
 attribute :name, :kind_of => String, :name_attribute => true
 
 attr_accessor :exists
+attr_reader :items
+
+def initialize(name, run_context=nil)
+  super
+  @items = []
+end
+
+class ZabbixItem
+  def initialize(key, context, &block)
+    @key = key
+    @type = Integer
+    @name = nil
+    @units = ''
+    @multiplier = '0'
+    @delta = '0'
+    @formula = ''
+    @source = :trapper
+    @context = context
+
+    instance_eval(&block)
+  end
+
+  def get_key
+    @key
+  end
+
+  def type(value)
+    @type = value
+  end
+
+  def name(value)
+    @name = value
+  end
+
+  def units(value)
+    @units = value
+  end
+
+  def multiplier(value)
+    @multiplier = value
+  end
+
+  def delta(value)
+    @delta = value
+  end
+
+  def source(value)
+    @source = value
+  end
+
+  def formula(value)
+    @formula = value
+  end
+
+  def trigger(&block)
+    trigger = ZabbixTrigger.new(&block)
+    trigger.item @name
+
+    @context.triggers << trigger
+  end
+
+  def to_hash
+    {
+      :key => @key,
+      :type => @type,
+      :name => @name
+    }
+  end
+end
+
+def item(name, &block)
+  @items << ZabbixItem.new(name, self, &block)
+end
