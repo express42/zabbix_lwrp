@@ -56,6 +56,7 @@ ruby_block "use rubix" do
     require 'rubix'
 
     Rubix.connect("http://#{zabbix_server_ip}/api_jsonrpc.php", 'Admin', 'zabbix')
+#    Rubix.logger.level = Logger::DEBUG
   end
 end
 
@@ -77,3 +78,81 @@ zabbix_host node.fqdn do
 end
 
 zabbix_template "CPU_E42_Template"
+
+zabbix_application "Test application" do
+  action :sync
+=begin
+  item "vfs.fs.size[#{zabbix_partition},free]" do
+    type Integer
+    source :agent
+    description "Free disk space on #{zabbix_partition}"
+    units "bytes"
+  end
+
+ item "vfs.fs.size[#{zabbix_partition},pfree]" do
+    type Float
+    source :agent
+    description "Free disk space on #{zabbix_partition} in %"
+    units "%"
+  end
+
+  item "vfs.fs.inode[#{zabbix_partition},free]" do
+    type Integer
+    source :agent
+    description "Free inodes on #{zabbix_partition}"
+    units "bytes"
+  end
+
+  item "vfs.fs.inode[#{zabbix_partition},pfree]" do
+    type Float
+    source :agent
+    description "Free inodes on #{zabbix_partition} in %"
+    units "%"
+
+    trigger do
+      description "Number of free inodes on #{zabbix_partition} < 10%"
+      value "10"
+      func "max"
+      relation "<"
+      duration 120
+      priority "High"
+    end
+  end
+
+  item "vfs.fs.size[#{zabbix_partition},total]" do
+    type Integer
+    source :agent
+    description "Total disk space on #{zabbix_partition}"
+    units "bytes"
+  end
+
+  item "vfs.fs.inode[#{zabbix_partition},total]" do
+    type Integer
+    source :agent
+    description "Total inodes on #{zabbix_partition}"
+    units "bytes"
+  end
+
+  item "vfs.fs.size[#{zabbix_partition},used]" do
+    type Integer
+    source :agent
+    description "Used disk space on #{zabbix_partition}"
+    units "bytes"
+  end
+
+  item "vfs.fs.size[#{zabbix_partition},pused]" do
+    type Float
+    source :agent
+    description "Used disk space on #{zabbix_partition} in %"
+    units "%"
+    trigger do
+      description "Free disk space on #{zabbix_partition} < 10%"
+      value "90"
+      func "min"
+      relation ">"
+      duration 120
+      priority "High"
+    end
+  end
+=end
+end
