@@ -39,10 +39,8 @@ action :sync do
     end
   end
 
-  Chef::Log.info @current_items.size
-
   new_resource.items.each do |item|
-    if current_item = @current_items.find { |i| i.key == item.get_key }
+    if current_item = @current_items.find { |i| i.key == item.key }
       @current_items.delete current_item
 
       # FIXME: update existing item
@@ -55,8 +53,6 @@ action :sync do
   @current_items.each do |item|
     item.destroy
   end
-
-  Chef::Log.info @current_items.size
 end
 
 def load_current_resource
@@ -69,5 +65,6 @@ def load_current_resource
   else
     @current_resource.exists = true
     @current_items = Rubix::Item.all(:hostids => @host.id, :applicationids => @app.id)
+    @current_triggers = Rubix::Trigger.all(:hostids => @host.id, :applicationids => @app.id)
   end
 end

@@ -29,15 +29,16 @@ default_action :sync
 attribute :name, :kind_of => String, :name_attribute => true
 
 attr_accessor :exists
-attr_reader :items
+attr_reader :items, :triggers
 
 def initialize(name, run_context=nil)
   super
   @items = []
+  @triggers = []
 end
 
 class ZabbixItem
-  def initialize(key, context, &block)
+  def initialize(key, &block)
     @key = key
     @type = Integer
     @name = nil
@@ -46,12 +47,11 @@ class ZabbixItem
     @delta = '0'
     @formula = ''
     @source = :trapper
-    @context = context
 
     instance_eval(&block)
   end
 
-  def get_key
+  def key
     @key
   end
 
@@ -83,13 +83,6 @@ class ZabbixItem
     @formula = value
   end
 
-  def trigger(&block)
-    trigger = ZabbixTrigger.new(&block)
-    trigger.item @name
-
-    @context.triggers << trigger
-  end
-
   def to_hash
     {
       :key => @key,
@@ -99,6 +92,43 @@ class ZabbixItem
   end
 end
 
+class ZabbixTrigger
+  def initialize(description, context, &block)
+    @description = description
+    @context = context
+    instance_eval(&block)
+  end
+
+  # it is common to use node in trigger expression, so we pass it here
+  def node
+    @context.node
+  end
+
+  def description
+    @description
+  end
+
+  def expression(value)
+    @expression = value
+  end
+
+  def priority(value)
+    @priority = value
+  end
+
+  def to_hash
+    {
+      :description => @description,
+      :expression => @expression,
+      :priority => @priority
+    }
+  end
+end
+
 def item(name, &block)
-  @items << ZabbixItem.new(name, self, &block)
+  @items << ZabbixItem.new(name, &block)
+end
+
+def trigger(name, &block)
+  @triggers << ZabbixTrigger.new(name, self, &block)
 end

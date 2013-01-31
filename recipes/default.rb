@@ -81,76 +81,14 @@ zabbix_template "CPU_E42_Template"
 
 zabbix_application "Test application" do
   action :sync
+
   item "vfs.fs.size[/var/log,free]" do
     type :active
     name "Free disk space on /var/log"
   end
 
-=begin
- item "vfs.fs.size[#{zabbix_partition},pfree]" do
-    type Float
-    source :agent
-    description "Free disk space on #{zabbix_partition} in %"
-    units "%"
+  trigger "Number #{node.fqdn} of free inodes on log < 10%" do
+    expression "{#{node.fqdn}:vfs.fs.size[/var/log,free].last(0)}>0"
+    priority :high
   end
-
-  item "vfs.fs.inode[#{zabbix_partition},free]" do
-    type Integer
-    source :agent
-    description "Free inodes on #{zabbix_partition}"
-    units "bytes"
-  end
-
-  item "vfs.fs.inode[#{zabbix_partition},pfree]" do
-    type Float
-    source :agent
-    description "Free inodes on #{zabbix_partition} in %"
-    units "%"
-
-    trigger do
-      description "Number of free inodes on #{zabbix_partition} < 10%"
-      value "10"
-      func "max"
-      relation "<"
-      duration 120
-      priority "High"
-    end
-  end
-
-  item "vfs.fs.size[#{zabbix_partition},total]" do
-    type Integer
-    source :agent
-    description "Total disk space on #{zabbix_partition}"
-    units "bytes"
-  end
-
-  item "vfs.fs.inode[#{zabbix_partition},total]" do
-    type Integer
-    source :agent
-    description "Total inodes on #{zabbix_partition}"
-    units "bytes"
-  end
-
-  item "vfs.fs.size[#{zabbix_partition},used]" do
-    type Integer
-    source :agent
-    description "Used disk space on #{zabbix_partition}"
-    units "bytes"
-  end
-
-  item "vfs.fs.size[#{zabbix_partition},pused]" do
-    type Float
-    source :agent
-    description "Used disk space on #{zabbix_partition} in %"
-    units "%"
-    trigger do
-      description "Free disk space on #{zabbix_partition} < 10%"
-      value "90"
-      func "min"
-      relation ">"
-      duration 120
-      priority "High"
-    end
-  end
-=end
 end
