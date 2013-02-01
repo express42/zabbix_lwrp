@@ -40,13 +40,14 @@ template "/etc/zabbix/zabbix_agentd.conf" do
   notifies :reload, resources(:service => "zabbix-agent")
 end
 
-cookbook_file "/tmp/rubix-0.5.14.gem" do
-  source "rubix-0.5.14.gem"
+cookbook_file "/tmp/rubix-0.5.16.gem" do
+  source "rubix-0.5.16.gem"
 end
 
 gem_package "rubix" do
-  source "/tmp/rubix-0.5.14.gem"
+  source "/tmp/rubix-0.5.16.gem"
   action :install
+  version '0.5.16'
 end
 
 ruby_block "use rubix" do
@@ -56,7 +57,7 @@ ruby_block "use rubix" do
     require 'rubix'
 
     Rubix.connect("http://#{zabbix_server_ip}/api_jsonrpc.php", 'Admin', 'zabbix')
-#    Rubix.logger.level = Logger::DEBUG
+    Rubix.logger.level = Logger::DEBUG
   end
 end
 
@@ -91,4 +92,10 @@ zabbix_application "Test application" do
     expression "{#{node.fqdn}:vfs.fs.size[/var/log,free].last(0)}>0"
     priority :high
   end
+end
+
+zabbix_graph "Graph 1" do
+  width 640
+  height 480
+  graph_items [:key => 'vfs.fs.size[/var/log,free]', :color => '111111']
 end

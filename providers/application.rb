@@ -53,6 +53,30 @@ action :sync do
   @current_items.each do |item|
     item.destroy
   end
+
+  # triggers' part
+  new_resource.triggers.each do |trigger|
+    if current_trigger = @current_triggers.find { |i| i.description == trigger.description }
+      @current_triggers.delete current_trigger
+
+      # FIXME: update existing trigger
+    else
+      converge_by("Cieate #{trigger}") do
+        Rubix::Trigger.new(trigger.to_hash).save
+      end
+    end
+  end
+
+  # now delete unused triggers
+  @current_triggers.each do |trigger|
+    # delete only triggers not from template
+    Chef::Log.info trigger
+    if trigger.template_id == 0
+      converge_by("Distroy #{trigger}") do
+        trigger.destroy
+      end
+    end
+  end
 end
 
 def load_current_resource
@@ -62,6 +86,7 @@ def load_current_resource
   @app = Rubix::Application.all(:hostids => @host.id, :filter => {:name => new_resource.name}).first
   if @app.nil?
     @current_items = []
+    @current_triggers = []
   else
     @current_resource.exists = true
     @current_items = Rubix::Item.all(:hostids => @host.id, :applicationids => @app.id)
