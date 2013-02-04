@@ -99,3 +99,9 @@ zabbix_graph "Graph 1" do
   height 480
   graph_items [:key => 'vfs.fs.size[/var/log,free]', :color => '111111']
 end
+
+zabbix_screen "Screen 1" do
+  screen_item "Graph 1" do
+    resource_type :graph
+  end
+end
