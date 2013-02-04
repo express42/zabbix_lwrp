@@ -90,7 +90,7 @@ zabbix_application "Test application" do
 
   trigger "Number #{node.fqdn} of free inodes on log < 10%" do
     expression "{#{node.fqdn}:vfs.fs.size[/var/log,free].last(0)}>0"
-    priority :high
+    severity :high
   end
 end
 

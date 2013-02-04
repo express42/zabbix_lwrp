@@ -112,7 +112,7 @@ class ZabbixTrigger
     @expression = value
   end
 
-  def priority(value)
+  def severity(value)
     @priority = value
   end
 
