@@ -34,27 +34,17 @@ action :create do
     Chef::Log.info "#{new_resource} already exists."
   else
     converge_by("Create #{new_resource}.") do
-      Rubix::MediaType.new(
-        :name     => new_resource.name,
-        :type     => new_resource.type,
-        :server   => new_resource.server,
-        :helo     => new_resource.helo,
-        :email    => new_resource.email,
-        :path     => new_resource.path,
-        :modem    => new_resource.modem,
-        :username => new_resource.username,
-        :password => new_resource.password
-        ).save
+      Rubix::UserGroup.new(:name => new_resource.name).save
     end
   end
 end
 
 def load_current_resource
-  @current_resource = Chef::Resource::ZabbixMediaType.new(new_resource.name)
+  @current_resource = Chef::Resource::ZabbixUserGroup.new(new_resource.name)
 
-  @media_type = Rubix::MediaType.find :name => new_resource.name
+  @user_group = Rubix::UserGroup.find :name => new_resource.name
 
-  unless @media_type.nil?
+  unless @user_group.nil?
     @current_resource.exists = true
   end
 end

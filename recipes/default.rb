@@ -110,3 +110,5 @@ zabbix_media_type "sms" do
   type :sms
   modem "/dev/modem"
 end
+
+zabbix_user_group 'My Beloved group'

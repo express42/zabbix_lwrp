@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: zabbix
-# Provider:: default
+# Resource:: default
 #
 # Author:: LLC Express 42 (info@express42.com)
 #
@@ -25,36 +25,9 @@
 # SOFTWARE.
 #
 
-def whyrun_supported?
-  true
-end
+attr_accessor :exists
 
-action :create do
-  if @current_resource.exists
-    Chef::Log.info "#{new_resource} already exists."
-  else
-    converge_by("Create #{new_resource}.") do
-      Rubix::MediaType.new(
-        :name     => new_resource.name,
-        :type     => new_resource.type,
-        :server   => new_resource.server,
-        :helo     => new_resource.helo,
-        :email    => new_resource.email,
-        :path     => new_resource.path,
-        :modem    => new_resource.modem,
-        :username => new_resource.username,
-        :password => new_resource.password
-        ).save
-    end
-  end
-end
+actions :create
+default_action :create
 
-def load_current_resource
-  @current_resource = Chef::Resource::ZabbixMediaType.new(new_resource.name)
-
-  @media_type = Rubix::MediaType.find :name => new_resource.name
-
-  unless @media_type.nil?
-    @current_resource.exists = true
-  end
-end
+attribute :name, :kind_of => String, :name_attribute => true
