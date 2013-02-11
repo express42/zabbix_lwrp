@@ -105,3 +105,8 @@ zabbix_screen "Screen 1" do
     resource_type :graph
   end
 end
+
+zabbix_media_type "sms" do
+  type :sms
+  modem "/dev/modem"
+end
