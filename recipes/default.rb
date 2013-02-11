@@ -73,7 +73,7 @@ zabbix_template "/tmp/zbx_templates_base_e42.xml" do
 end
 
 zabbix_host node.fqdn do
-  host_group "default"
+  host_group "My Favorite Host Group"
   use_ip true
   ip_address "127.0.0.1"
 end
@@ -112,3 +112,16 @@ zabbix_media_type "sms" do
 end
 
 zabbix_user_group 'My Beloved group'
+
+zabbix_action 'My favorite action' do
+  event_source :triggers
+  operation do
+    user_groups 'My Beloved group'
+  end
+
+  condition :trigger, :equal, "Number #{node.fqdn} of free inodes on log < 10%"
+  condition :trigger_value, :equal, :problem
+  condition :trigger_severity, :gte, :high
+  condition :host_group, :equal, 'My Favorite Host Group'
+  condition :maintenance, :not_in, :maintenance
+end
