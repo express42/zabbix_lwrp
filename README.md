@@ -12,7 +12,6 @@ Tested only on Ubuntu 12.04, but should works on Debian too. Works only with zab
 Attributes
 ----------
 
-e.g.
 #### zabbix::default
 <table>
   <tr>
@@ -64,14 +63,121 @@ LWRP
 ----
 
 This cookbooks provides next resources:
-* zabbix_action
-* zabbix_application
-* zabbix_graph
-* zabbix_host
-* zabbix_media_type
-* zabbix_screen
-* zabbix_template
-* zabbix_user_group
+* [zabbix_action](#zabbix_action)
+* [zabbix_application](#zabbix_application)
+* [zabbix_graph](#zabbix_graph)
+* [zabbix_host](#zabbix_host)
+* [zabbix_media_type](#zabbix_media_type)
+* [zabbix_screen](#zabbix_screen)
+* [zabbix_template](#zabbix_template)
+* [zabbix_user_group](#zabbix_user_group)
+
+## zabbix_action
+```ruby
+zabbix_action 'My favorite action' do
+  event_source :triggers
+  operation do
+    user_groups 'My Beloved group'
+  end
+
+  condition :trigger, :equal, "Number #{node.fqdn} of free inodes on log < 10%"
+  condition :trigger_value, :equal, :problem
+  condition :trigger_severity, :gte, :high
+  condition :host_group, :equal, 'My Favorite Host Group'
+  condition :maintenance, :not_in, :maintenance
+end
+
+```
+
+
+## zabbix_application
+
+## zabbix_graph
+
+## zabbix_host
+
+## zabbix_media_type
+
+## zabbix_screen
+
+## zabbix_template
+
+### Actions
+<table>
+  <tr>
+    <th>Action</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><tt>add</tt></td>
+    <td>Default action. Add a template to node</td>
+  </tr>
+  <tr>
+    <td><tt>import</tt></td>
+    <td>Import templates from xml file to zabbix server</td>
+  </tr>
+</table>
+
+### Attributes
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>path</tt></td>
+    <td><strong>Name attribute</strong>. Path to file for :import or name of template for :add action (required)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>host_name</tt></td>
+    <td>Name of host new template to add</td>
+    <td>FQDN of current node</td>
+  </tr>
+</table>
+
+### Examples
+```ruby
+zabbix_template "/tmp/zbx_templates_base_e42.xml" do
+  action :import
+end
+
+zabbix_template "CPU_E42_Template"
+```
+
+## zabbix_user_group
+
+### Actions
+<table>
+  <tr>
+    <th>Action</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><tt>create</tt></td>
+    <td>Default action. Create a new zabbix user group</td>
+  </tr>
+</table>
+
+### Attributes
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>name</tt></td>
+    <td><strong>Name attribute</strong>. Name of new zabbix user group (required)</td>
+    <td></td>
+  </tr>
+</table>
+
+### Examples
+```ruby
+zabbix_user_group 'Ultimate Question Group'
+```
 
 
 Contributing
