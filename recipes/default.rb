@@ -1,3 +1,7 @@
+#
+# Zabbix client installation part
+#
+
 package "zabbix-agent" do
   action :install
 end
@@ -59,69 +63,4 @@ ruby_block "use rubix" do
     Rubix.connect("http://#{zabbix_server_ip}/api_jsonrpc.php", 'Admin', 'zabbix')
     Rubix.logger.level = Logger::DEBUG
   end
-end
-
-cookbook_file "/tmp/zbx_templates_base_e42.xml" do
-  source "zbx_templates_base_e42.xml"
-  mode 0755
-  owner "root"
-  group "root"
-end
-
-zabbix_template "/tmp/zbx_templates_base_e42.xml" do
-  action :import
-end
-
-zabbix_host node.fqdn do
-  host_group "My Favorite Host Group"
-  use_ip true
-  ip_address "127.0.0.1"
-end
-
-zabbix_template "CPU_E42_Template"
-
-zabbix_application "Test application" do
-  action :sync
-
-  item "vfs.fs.size[/var/log,free]" do
-    type :active
-    name "Free disk space on /var/log"
-  end
-
-  trigger "Number #{node.fqdn} of free inodes on log < 10%" do
-    expression "{#{node.fqdn}:vfs.fs.size[/var/log,free].last(0)}>0"
-    severity :high
-  end
-end
-
-zabbix_graph "Graph 1" do
-  width 640
-  height 480
-  graph_items [:key => 'vfs.fs.size[/var/log,free]', :color => '111111']
-end
-
-zabbix_screen "Screen 1" do
-  screen_item "Graph 1" do
-    resource_type :graph
-  end
-end
-
-zabbix_media_type "sms" do
-  type :sms
-  modem "/dev/modem"
-end
-
-zabbix_user_group 'My Beloved group'
-
-zabbix_action 'My favorite action' do
-  event_source :triggers
-  operation do
-    user_groups 'My Beloved group'
-  end
-
-  condition :trigger, :equal, "Number #{node.fqdn} of free inodes on log < 10%"
-  condition :trigger_value, :equal, :problem
-  condition :trigger_severity, :gte, :high
-  condition :host_group, :equal, 'My Favorite Host Group'
-  condition :maintenance, :not_in, :maintenance
 end
