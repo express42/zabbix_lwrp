@@ -55,6 +55,8 @@ Just include `zabbix` in your node's `run_list`:
 }
 ```
 
+This recipe should be before all usage of LWRP, because connection to zabbix server is established here.
+
 #### zabbix::example
 
 Here an examples of usage of LWRP
@@ -73,14 +75,191 @@ This cookbooks provides next resources:
 * [zabbix_user_group](#zabbix_user_group)
 
 ## zabbix_action
+
+zabbix_action LWRP creates zabbix action with operations, conditions and messages.
+
+### Actions
+<table>
+  <tr>
+    <th>Action</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><tt>sync</tt></td>
+    <td>Default action. Sync action description with one's in zabbix server</td>
+  </tr>
+</table>
+
+### Attributes
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>name</tt></td>
+    <td><strong>Name attribute</strong>. Name of the action (required)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>event_source</tt></td>
+    <td>Source of event for action, now only :trigger allowed</td>
+    <td>:triggers</td>
+  </tr>
+  <tr>
+    <td><tt>escalation_time</tt></td>
+    <td>Delay between escalation steps</td>
+    <td>60</td>
+  </tr>
+  <tr>
+    <td><tt>enabled</tt></td>
+    <td>Is action enabled?</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td><tt>message_subject</tt></td>
+    <td>Subject of action message</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>message_body</tt></td>
+    <td>Body of action message</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td><tt>send_recovery_message</tt></td>
+    <td>Send recovery message when conditions of action become false</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td><tt>recovery_message_subject</tt></td>
+    <td>Subject of recovery message</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>recovery_message_body</tt></td>
+    <td>Body of recovery message</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>operation</tt></td>
+    <td>Add an operation to action, see below. It's possible to add more then one operation</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>condition</tt></td>
+    <td>Add an condition to action, see below. It's possible to add more the one condition</td>
+    <td></td>
+  </tr>
+</table>
+
+Attributes for operation.
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>type</tt></td>
+    <td>Type of operation, can be :message or :command</td>
+    <td>:message</td>
+  </tr>
+  <tr>
+    <td><tt>escalation_time</tt></td>
+    <td>Time to escalate to next step</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>start</tt></td>
+    <td>Start step, when this operation take place</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>stop</tt></td>
+    <td>Last step, when this operation take place</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>user_groups</tt></td>
+    <td>Zabbix user group names that'll receive message</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>message</tt></td>
+    <td>Message description, see below</td>
+    <td>Use default actin message if empty</td>
+  </tr>
+</table>
+
+Attributes for conditions.
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>type</tt></td>
+    <td>Type of condition, can be one of :trigger, :trigger_value, :trigger_serverity, :host_group, :maintenance</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>operator</tt></td>
+    <td>Operator for condition, can be one of :equal, :not_equal, :like, :not_like, :in, :gte, :lte, :not_in</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>value</tt></td>
+    <td>Value for condition.</td>
+    <td></td>
+  </tr>
+</table>
+
+It also possible to use short form of condition, like:
 ```ruby
-zabbix_action 'My favorite action' do
+  condition :trigger, :equal, '42th trigger name'
+```
+
+Attributes for message.
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>use_default_message</tt></td>
+    <td>Use default message from action</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>subject</tt></td>
+    <td>Message subject</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>message</tt></td>
+    <td>Message body</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><tt>media_type</tt></td>
+    <td>Name of media type to use</td>
+    <td>By default all media types are used</td>
+  </tr>
+</table>
+
+### Examples
+```ruby
+zabbix_action 'Some disturbation in force' do
   event_source :triggers
   operation do
-    user_groups 'My Beloved group'
+    user_groups 'Ultimate Question Group'
   end
 
-  condition :trigger, :equal, "Number #{node.fqdn} of free inodes on log < 10%"
+  condition :trigger, :equal, "#{node.fqdn}: Number of free inodes on log < 10%"
   condition :trigger_value, :equal, :problem
   condition :trigger_severity, :gte, :high
   condition :host_group, :equal, 'My Favorite Host Group'

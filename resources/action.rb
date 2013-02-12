@@ -81,8 +81,8 @@ class ZabbixCondition
     @type = value
   end
 
-  def operation value
-    @operation = value
+  def operator value
+    @operator = value
   end
 
   def value v
@@ -109,7 +109,7 @@ class ZabbixCondition
 
     {
       :type => @type,
-      :operation => @operation,
+      :operator => @operator,
       :value => value
     }
   end
