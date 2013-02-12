@@ -45,13 +45,17 @@ action :sync do
 
       # FIXME: update existing item
     else
-      Rubix::Item.new(item.to_hash.merge(:host_id => @host.id, :interface_id => @host.interfaces.first.id, :applications => [@app])).save
+      converge_by("Create new item #{item}") do
+        Rubix::Item.new(item.to_hash.merge(:host_id => @host.id, :interface_id => @host.interfaces.first.id, :applications => [@app])).save
+      end
     end
   end
 
   # now delete unused items
   @current_items.each do |item|
-    item.destroy
+    converge_by("Destroy item #{item}") do
+      item.destroy
+    end
   end
 
   # triggers' part
@@ -61,7 +65,7 @@ action :sync do
 
       # FIXME: update existing trigger
     else
-      converge_by("Cieate #{trigger}") do
+      converge_by("Create #{trigger}") do
         Rubix::Trigger.new(trigger.to_hash).save
       end
     end
@@ -70,7 +74,6 @@ action :sync do
   # now delete unused triggers
   @current_triggers.each do |trigger|
     # delete only triggers not from template
-    Chef::Log.info trigger
     if trigger.template_id == 0
       converge_by("Distroy #{trigger}") do
         trigger.destroy

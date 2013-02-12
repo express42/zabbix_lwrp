@@ -61,6 +61,5 @@ ruby_block "use rubix" do
     require 'rubix'
 
     Rubix.connect("http://#{zabbix_server_ip}/api_jsonrpc.php", 'Admin', 'zabbix')
-    Rubix.logger.level = Logger::DEBUG
   end
 end
