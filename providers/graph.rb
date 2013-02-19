@@ -58,6 +58,6 @@ def load_current_resource
   @graph = Rubix::Graph.find(:name => new_resource.name)
 
   unless @graph.nil?
-    @exists = true
+    @current_resource.exists = true
   end
 end

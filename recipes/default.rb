@@ -11,28 +11,22 @@ service "zabbix-agent" do
   action [ :enable, :start ]
 end
 
-zabbix_server_ip = []
-
 # check first node attributes, if node attributes empty - try search zabbix server
 if node["zabbix"]["client"]["serverip"] && !node["zabbix"]["client"]["serverip"].empty?
-  zabbix_server_ip << node["zabbix"]["client"]["serverip"]
+  zabbix_server_ip = node["zabbix"]["client"]["serverip"]
 else
   if Chef::Config[:solo]
     Chef::Log.warn("This recipe uses search. Chef Solo does not support search. I will return current node")
-    zabbix_nodes = node
+    zabbix_node = node
   else
-    if search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}").empty?
-      zabbix_nodes = search(:node, "role:zabbix-server AND chef_environment:#{node.chef_environment}")
-    else
-      zabbix_nodes = search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}")
-    end
+    zabbix_node = search(:node, "role:zabbix-server AND chef_environment:#{node.chef_environment}").first
+    zabbix_node = search(:node, "role:zabbix-proxy AND chef_environment:#{node.chef_environment}").first unless zabbix_node
   end
-  zabbix_nodes.each do |item|
-    zabbix_server_ip = item["zabbix"]["server"]["ip"]
-  end
+
+  zabbix_server_ip = zabbix_node.ipaddress if zabbix_node
 end
 
-raise "Zabbix server ip hasn't been found! Please check configuration" if not zabbix_server_ip
+raise "Zabbix server ip hasn't been found! Please check configuration" if zabbix_server_ip.nil?
 
 template "/etc/zabbix/zabbix_agentd.conf" do
   source "zabbix_agentd.conf.erb"
