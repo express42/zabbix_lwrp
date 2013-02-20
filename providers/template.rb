@@ -48,7 +48,7 @@ action :add do
 
     if template
       host.template_ids << template.id
-      host.save
+      host.save!
     else
       Chef::Log.info "Zabbix Template #{new_resource.path} not found"
     end
