@@ -7,7 +7,7 @@ hosts, screens and so on.
 Requirements
 ------------
 
-Tested only on Ubuntu 12.04, but should works on Debian too. Works only with zabbix version 2.0.4
+Tested only on Ubuntu 12.04, but should works on Debian too. Works only with zabbix version 2.0.4 and 2.0.5.
 
 Attributes
 ----------
@@ -21,22 +21,22 @@ Attributes
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['zabbix']['client']['include']</tt></td>
+    <td>['zabbix']['client']['include']</td>
     <td>String</td>
     <td>Path for additional scripts and user parameters </td>
-    <td><tt>/opt/zabbix/etc</tt></td>
+    <td>/opt/zabbix/etc</td>
   </tr>
   <tr>
-    <td><tt>['zabbix']['client']['loglevel']</tt></td>
+    <td>['zabbix']['client']['loglevel']</td>
     <td>Integer</td>
     <td>Log level for zabbix client</td>
-    <td><tt>3</tt></td>
+    <td>3</td>
   </tr>
   <tr>
-    <td><tt>['zabbix']['client']['serverip']</tt></td>
+    <td>['zabbix']['client']['serverip']</td>
     <td>String</td>
     <td>IP address of zabbix server. If none, cookbook try to search for nodes with roles 'zabbix-proxy' or 'zabbix-server'.</td>
-    <td><tt>not defined</tt></td>
+    <td>not defined</td>
   </tr>
 </table>
 
@@ -55,7 +55,7 @@ Just include `zabbix` in your node's `run_list`:
 }
 ```
 
-This recipe should be before all usage of LWRP, because connection to zabbix server is established here.
+This recipe should be included before all usage of LWRP, because connection to zabbix server is established here.
 
 #### zabbix::example
 
@@ -85,7 +85,7 @@ zabbix_action LWRP creates zabbix action with operations, conditions and message
     <th>Description</th>
   </tr>
   <tr>
-    <td><tt>sync</tt></td>
+    <td>sync</td>
     <td>Default action. Sync action description with one's in zabbix server</td>
   </tr>
 </table>
@@ -98,57 +98,57 @@ zabbix_action LWRP creates zabbix action with operations, conditions and message
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>name</tt></td>
+    <td>name</td>
     <td><strong>Name attribute</strong>. Name of the action (required)</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>event_source</tt></td>
+    <td>event_source</td>
     <td>Source of event for action, now only :trigger allowed</td>
     <td>:triggers</td>
   </tr>
   <tr>
-    <td><tt>escalation_time</tt></td>
+    <td>escalation_time</td>
     <td>Delay between escalation steps</td>
     <td>60</td>
   </tr>
   <tr>
-    <td><tt>enabled</tt></td>
+    <td>enabled</td>
     <td>Is action enabled?</td>
     <td>true</td>
   </tr>
   <tr>
-    <td><tt>message_subject</tt></td>
+    <td>message_subject</td>
     <td>Subject of action message</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>message_body</tt></td>
+    <td>message_body</td>
     <td>Body of action message</td>
     <td>true</td>
   </tr>
   <tr>
-    <td><tt>send_recovery_message</tt></td>
+    <td>send_recovery_message</td>
     <td>Send recovery message when conditions of action become false</td>
     <td>false</td>
   </tr>
   <tr>
-    <td><tt>recovery_message_subject</tt></td>
+    <td>recovery_message_subject</td>
     <td>Subject of recovery message</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>recovery_message_body</tt></td>
+    <td>recovery_message_body</td>
     <td>Body of recovery message</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>operation</tt></td>
+    <td>operation</td>
     <td>Add an operation to action, see below. It's possible to add more then one operation</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>condition</tt></td>
+    <td>condition</td>
     <td>Add an condition to action, see below. It's possible to add more the one condition</td>
     <td></td>
   </tr>
@@ -162,32 +162,32 @@ Attributes for operation.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>type</tt></td>
+    <td>type</td>
     <td>Type of operation, can be :message or :command</td>
     <td>:message</td>
   </tr>
   <tr>
-    <td><tt>escalation_time</tt></td>
+    <td>escalation_time</td>
     <td>Time to escalate to next step</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>start</tt></td>
+    <td>start</td>
     <td>Start step, when this operation take place</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>stop</tt></td>
+    <td>stop</td>
     <td>Last step, when this operation take place</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>user_groups</tt></td>
+    <td>user_groups</td>
     <td>Zabbix user group names that'll receive message</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>message</tt></td>
+    <td>message</td>
     <td>Message description, see below</td>
     <td>Use default actin message if empty</td>
   </tr>
@@ -201,17 +201,17 @@ Attributes for conditions.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>type</tt></td>
+    <td>type</td>
     <td>Type of condition, can be one of :trigger, :trigger_value, :trigger_serverity, :host_group, :maintenance</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>operator</tt></td>
+    <td>operator</td>
     <td>Operator for condition, can be one of :equal, :not_equal, :like, :not_like, :in, :gte, :lte, :not_in</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>value</tt></td>
+    <td>value</td>
     <td>Value for condition.</td>
     <td></td>
   </tr>
@@ -230,22 +230,22 @@ Attributes for message.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>use_default_message</tt></td>
+    <td>use_default_message</td>
     <td>Use default message from action</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>subject</tt></td>
+    <td>subject</td>
     <td>Message subject</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>message</tt></td>
+    <td>message</td>
     <td>Message body</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>media_type</tt></td>
+    <td>media_type</td>
     <td>Name of media type to use</td>
     <td>By default all media types are used</td>
   </tr>
@@ -271,6 +271,104 @@ end
 
 ## zabbix_application
 
+zabbix_application lwrp creates application, items and triggers. You should think about items and triggers like nested
+resources inside zabbix_application lwrp.
+
+### Actions
+<table>
+  <tr>
+    <th>Action</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>sync</td>
+    <td>Default action. Sync application description with one's in zabbix server</td>
+  </tr>
+</table>
+
+### Attributes
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><strong>Name attribute</strong>. Name of the application (required)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>item</td>
+    <td>Add an item to application, see below. It's possible to add more then one item</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>trigger</td>
+    <td>Add an trigger to application, see below. It's possible to add more the one trigger</td>
+    <td></td>
+  </tr>
+</table>
+
+### Item attributes
+Create/update zabbix item
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td>key</td>
+    <td><strong>Name attribute</strong>. Zabbix key for an item, should be unique.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>Type of zabbix check, possible values 
+      :zabbix, :trapper, :active, :calculated
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Descriptive name of zabbix check, shown in web-interface
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>frequency</td>
+    <td>How often zabbix checks this item in seconds</td>
+    <td>60</td>
+  </tr>
+  <tr>
+    <td>history</td>
+    <td>How many days store item's history</td>
+    <td>7 days</td>
+  </tr>
+  <tr>
+    <td>trends</td>
+    <td>How many days store item's trends (archived history)</td>
+    <td>365</td>
+  </tr>
+  <tr>
+    <td>value_type</td>
+    <td>Type of gathered value, possible values
+      :float, :character, :log_line, :unsigned_int, :text
+    </td>
+    <td>:unsigned_int</td>
+  </tr>
+</table>
+
+### Trigger attributes
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+</table>
+
 ### Examples
 ```ruby
 zabbix_application "Test application" do
@@ -279,6 +377,8 @@ zabbix_application "Test application" do
   item "vfs.fs.size[/var/log,free]" do
     type :active
     name "Free disk space on /var/log"
+    frequency 600
+    value_type :unsigned_int
   end
 
   trigger "Number #{node.fqdn} of free inodes on log < 10%" do
@@ -342,11 +442,11 @@ end
     <th>Description</th>
   </tr>
   <tr>
-    <td><tt>add</tt></td>
+    <td>add</td>
     <td>Default action. Add a template to node</td>
   </tr>
   <tr>
-    <td><tt>import</tt></td>
+    <td>import</td>
     <td>Import templates from xml file to zabbix server</td>
   </tr>
 </table>
@@ -359,12 +459,12 @@ end
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>path</tt></td>
+    <td>path</td>
     <td><strong>Name attribute</strong>. Path to file for :import or name of template for :add action (required)</td>
     <td></td>
   </tr>
   <tr>
-    <td><tt>host_name</tt></td>
+    <td>host_name</td>
     <td>Name of host new template to add</td>
     <td>FQDN of current node</td>
   </tr>
@@ -388,7 +488,7 @@ zabbix_template "CPU_E42_Template"
     <th>Description</th>
   </tr>
   <tr>
-    <td><tt>create</tt></td>
+    <td>create</td>
     <td>Default action. Create a new zabbix user group</td>
   </tr>
 </table>
@@ -401,7 +501,7 @@ zabbix_template "CPU_E42_Template"
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>name</tt></td>
+    <td>name</td>
     <td><strong>Name attribute</strong>. Name of new zabbix user group (required)</td>
     <td></td>
   </tr>

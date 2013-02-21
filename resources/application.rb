@@ -38,6 +38,8 @@ def initialize(name, run_context=nil)
 end
 
 class ZabbixItem
+  VALUE_TYPES = [:float, :character, :log_line, :unsigned_int, :text].freeze
+
   def initialize(key, &block)
     @key = key
     @type = Integer
@@ -63,6 +65,23 @@ class ZabbixItem
     @name = value
   end
 
+  def frequency(value)
+    @frequency = value
+  end
+
+  def history(value)
+    @history = value
+  end
+
+  def trends(value)
+    @trends = value
+  end
+
+  def value_type(value)
+    raise "Value type should be one of #{VALUE_TYPES.join(", ")}" unless VALUE_TYPES.include? value
+    @value_type = value
+  end
+
   def units(value)
     @units = value
   end
@@ -85,9 +104,13 @@ class ZabbixItem
 
   def to_hash
     {
-      :key => @key,
-      :type => @type,
-      :name => @name
+      :key        => @key,
+      :type       => @type,
+      :name       => @name,
+      :frequency  => @frequency,
+      :history    => @history || 7,
+      :trends     => @trends || 365,
+      :value_type => @value_type || :unsigned_int
     }
   end
 end
