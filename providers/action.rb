@@ -50,7 +50,7 @@ action :sync do
         :recovery_message_body => new_resource.recovery_message_body,
         :operations => operations,
         :conditions => new_resource.conditions.map(&:to_hash)
-        ).save
+        ).save!
     end
   end
 end

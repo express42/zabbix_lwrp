@@ -34,7 +34,7 @@ action :create do
     Chef::Log.info "#{new_resource} already exists."
   else
     converge_by("Create #{new_resource}.") do
-      Rubix::UserGroup.new(:name => new_resource.name).save
+      Rubix::UserGroup.new(:name => new_resource.name).save!
     end
   end
 end

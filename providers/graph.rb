@@ -44,7 +44,7 @@ action :create do
       end
       @graph = Rubix::Graph.new(:name => new_resource.name, :height => new_resource.height,
                                 :width => new_resource.width, :graph_items => graph_items)
-      @graph.save
+      @graph.save!
     end
   end
 end

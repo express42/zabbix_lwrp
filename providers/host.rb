@@ -28,7 +28,7 @@
 
 action :create do
   group = Rubix::HostGroup.find :name => new_resource.host_group
-  group = Rubix::HostGroup.new(:name => new_resource.host_group).save unless group
+  group = Rubix::HostGroup.new(:name => new_resource.host_group).save! unless group
 
   host = Rubix::Host.find_or_create :name => new_resource.host_name,
     :host_groups => [group],

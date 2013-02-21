@@ -44,7 +44,7 @@ action :create do
         :modem    => new_resource.modem,
         :username => new_resource.username,
         :password => new_resource.password
-        ).save
+        ).save!
     end
   end
 end

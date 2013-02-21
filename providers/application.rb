@@ -35,7 +35,7 @@ action :sync do
   else
     converge_by("Create #{new_resource}.") do
       @app = Rubix::Application.new(:host_id => @host.id, :name => new_resource.name)
-      @app.save
+      @app.save!
     end
   end
 
@@ -46,7 +46,7 @@ action :sync do
       # FIXME: update existing item
     else
       converge_by("Create new item #{item}") do
-        Rubix::Item.new(item.to_hash.merge(:host_id => @host.id, :interface_id => @host.interfaces.first.id, :applications => [@app])).save
+        Rubix::Item.new(item.to_hash.merge(:host_id => @host.id, :interface_id => @host.interfaces.first.id, :applications => [@app])).save!
       end
     end
   end
@@ -66,7 +66,7 @@ action :sync do
       # FIXME: update existing trigger
     else
       converge_by("Create #{trigger}") do
-        Rubix::Trigger.new(trigger.to_hash).save
+        Rubix::Trigger.new(trigger.to_hash).save!
       end
     end
   end

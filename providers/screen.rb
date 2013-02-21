@@ -57,7 +57,7 @@ action :sync do
     res
   end
 
-  @screen.save
+  @screen.save!
 end
 
 def load_current_resource
