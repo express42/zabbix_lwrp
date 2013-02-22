@@ -24,6 +24,12 @@
 # Zabbix client installation part
 #
 
+apt_repository "obs-zabbix" do
+  action :add
+  uri "http://download.opensuse.org/repositories/home:/express42:/zabbix2/precise/ ./"
+  key 'http://download.opensuse.org/repositories/home:/express42:/zabbix2/precise/Release.key'
+end
+
 package "zabbix-agent" do
   action :install
 end
