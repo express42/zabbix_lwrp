@@ -31,7 +31,7 @@ apt_repository "obs-zabbix" do
 end
 
 package "zabbix-agent" do
-  action :install
+  action :upgrade
 end
 
 service "zabbix-agent" do
