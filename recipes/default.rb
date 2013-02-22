@@ -35,7 +35,7 @@ package "zabbix-agent" do
 end
 
 service "zabbix-agent" do
-  supports :restart => true, :reload => true
+  supports :restart => true
   action [ :enable, :start ]
 end
 
@@ -63,7 +63,7 @@ template "/etc/zabbix/zabbix_agentd.conf" do
     :loglevel => node["zabbix"]["client"]["loglevel"],
     :include => node["zabbix"]["client"]["include"]
     )
-  notifies :reload, resources(:service => "zabbix-agent")
+  notifies :restart, resources(:service => "zabbix-agent")
 end
 
 cookbook_file "/tmp/rubix-0.5.16.gem" do
