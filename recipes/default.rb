@@ -24,6 +24,10 @@
 # Zabbix client installation part
 #
 
+class Chef::Recipe
+  include Express42::Base::Network
+end
+
 apt_repository "obs-zabbix" do
   action :add
   uri "http://download.opensuse.org/repositories/home:/express42:/zabbix2/precise/ ./"
@@ -69,14 +73,14 @@ template "/etc/zabbix/zabbix_agentd.conf" do
   notifies :restart, resources(:service => "zabbix-agent")
 end
 
-cookbook_file "/tmp/rubix-0.5.16.gem" do
-  source "rubix-0.5.16.gem"
+cookbook_file "/tmp/rubix-0.5.17.gem" do
+  source "rubix-0.5.17.gem"
 end
 
 gem_package "rubix" do
-  source "/tmp/rubix-0.5.16.gem"
+  source "/tmp/rubix-0.5.17.gem"
   action :install
-  version '0.5.16'
+  version '0.5.17'
 end
 
 ruby_block "use rubix" do

@@ -68,3 +68,6 @@ zabbix_action 'My favorite action' do
   condition :maintenance, :not_in, :maintenance
 end
 
+zabbix_user_macro 'my_macro' do
+  value 'foobar'
+end
