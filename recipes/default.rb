@@ -56,12 +56,15 @@ end
 
 raise "Zabbix server ip hasn't been found! Please check configuration" if zabbix_server_ip.nil?
 
+ip_mon = net_get_private(node)[0][1]
+
 template "/etc/zabbix/zabbix_agentd.conf" do
   source "zabbix_agentd.conf.erb"
   variables(
     :server => zabbix_server_ip,
     :loglevel => node["zabbix"]["client"]["loglevel"],
-    :include => node["zabbix"]["client"]["include"]
+    :include => node["zabbix"]["client"]["include"],
+    :listen_ip => ip_mon
     )
   notifies :restart, resources(:service => "zabbix-agent")
 end

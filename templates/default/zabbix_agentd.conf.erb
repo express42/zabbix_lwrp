@@ -9,6 +9,9 @@ LogFile=/var/log/zabbix/zabbix_agentd.log
 LogFileSize=0
 DebugLevel=<%= @loglevel %>
 
+<% if @listen_ip %>
+ListenIP=<%= @listen_ip %>
+<% end %>
 # zabbix server connect configuration
 Server=<%= @server %>
 ServerActive=<%= @server %>
