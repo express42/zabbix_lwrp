@@ -42,13 +42,12 @@ class ZabbixItem
 
   def initialize(key, &block)
     @key = key
-    @type = Integer
+    @type = :active
     @name = nil
     @units = ''
     @multiplier = '0'
-    @delta = '0'
+    @delta = :as_is
     @formula = ''
-    @source = :trapper
 
     instance_eval(&block)
   end
@@ -110,7 +109,9 @@ class ZabbixItem
       :frequency  => @frequency,
       :history    => @history || 7,
       :trends     => @trends || 365,
-      :value_type => @value_type || :unsigned_int
+      :value_type => @value_type || :unsigned_int,
+      :delta      => @delta,
+      :formula    => @formula
     }
   end
 end

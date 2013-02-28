@@ -8,6 +8,7 @@ PidFile=/var/run/zabbix/zabbix_agentd.pid
 LogFile=/var/log/zabbix/zabbix_agentd.log
 LogFileSize=0
 DebugLevel=<%= @loglevel %>
+EnableRemoteCommands=1
 
 <% if @listen_ip %>
 ListenIP=<%= @listen_ip %>
