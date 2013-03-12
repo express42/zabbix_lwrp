@@ -43,12 +43,12 @@ action :sync do
 
     si = {:resource_type => item.type}
 
+    @host = Rubix::Host.find(:name => node.fqdn)
     case item.type
     when :graph
-      g = Rubix::Graph.find :name => item.name
+      g = Rubix::Graph.all :filter => { :name => item.name, :hostid => @host.id }
       si[:resource_id] = g.id
     when :simple_graph
-      @host = Rubix::Host.find(:name => node.fqdn)
       i = Rubix::Item.find :key => item.name, :host_id => @host.id
       si[:resource_id] = g.id
     end
