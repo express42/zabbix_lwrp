@@ -35,25 +35,25 @@ action :sync do
   else
     converge_by("Create #{new_resource}.") do
       @screen = Rubix::Screen.new(:name => new_resource.name, :hsize => new_resource.hsize,
-                                  :wsize => new_resource.wsize)
+                                  :vsize => new_resource.vsize)
     end
   end
 
   @screen.screen_items = new_resource.screen_items.inject([]) do |res, item|
 
-    si = {:resource_type => item.type}
-
     @host = Rubix::Host.find(:name => node.fqdn)
-    case item.type
+    case item.to_hash[:resource_type]
     when :graph
       g = Rubix::Graph.all(:filter => { :name => item.name, :hostid => @host.id }).first
-      si[:resource_id] = g.id
+      @resource_id = g.id
     when :simple_graph
       i = Rubix::Item.find :key => item.name, :host_id => @host.id
-      si[:resource_id] = g.id
+      @resource_id = i.id
+    else
+      raise 'Incorrect resource type for screen item'
     end
 
-    res << Rubix::ScreenItem.new(si)
+    res << Rubix::ScreenItem.new(item.to_hash.merge(:resource_id => @resource_id))
     res
   end
 

@@ -25,26 +25,37 @@ zabbix_template "CPU_E42_Template"
 zabbix_application "Test application" do
   action :sync
 
-  item "vfs.fs.size[/var/log,free]" do
-    type :active
-    name "Free disk space on /var/log"
+  (0..5).each do |i|
+    item "vfs.fs.size[/var/log#{i},free]" do
+      type :active
+      name "Free disk space on /var/log#{i}"
+    end
   end
 
   trigger "Number #{node.fqdn} of free inodes on log < 10%" do
-    expression "{#{node.fqdn}:vfs.fs.size[/var/log,free].last(0)}>0"
+    expression "{#{node.fqdn}:vfs.fs.size[/var/log0,free].last(0)}>0"
     severity :high
   end
 end
 
-zabbix_graph "Graph 1" do
-  width 640
-  height 480
-  graph_items [:key => 'vfs.fs.size[/var/log,free]', :color => '111111']
+(0..5).each do |i|
+  zabbix_graph "Graph #{i}" do
+    width 640
+    height 480
+    graph_items [:key => "vfs.fs.size[/var/log#{i},free]", :color => "#{i}" * 6]
+  end
 end
 
 zabbix_screen "Screen 1" do
-  screen_item "Graph 1" do
-    resource_type :graph
+  hsize 1
+  vsize 6
+  (0..5).each do |i|
+    screen_item "Graph #{i}" do
+      resource_type :graph
+      height 200
+      width 900
+      y i
+    end
   end
 end
 

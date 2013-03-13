@@ -28,7 +28,7 @@ default_action :sync
 
 attribute :name,  :kind_of => String, :name_attribute => true
 attribute :hsize, :kind_of => Integer
-attribute :wsize, :kind_of => Integer
+attribute :vsize, :kind_of => Integer
 
 attr_accessor :exists
 attr_reader :screen_items
@@ -49,12 +49,64 @@ class ZabbixScreenItem
     @name
   end
 
-  def type
-    @resource_type
-  end
-
   def resource_type(value)
     @resource_type = value
+  end
+
+  def elements(value)
+    @elements = value
+  end
+
+  def halign(value)
+    @halign = value
+  end
+
+  def valign(value)
+    @valign = value
+  end
+
+  def height(value)
+    @height = value
+  end
+
+  def width(value)
+    @width = value
+  end
+
+  def x(value)
+    @x = value
+  end
+
+  def y(value)
+    @y = value
+  end
+
+  def sort_triggers(value)
+    @sort_triggers = value
+  end
+
+  def style(value)
+    @style = value
+  end
+
+  def url(value)
+    @url = value
+  end
+
+  def to_hash
+    {
+      :resource_type => @resource_type,
+      :elements      => @elements,
+      :halign        => @halign,
+      :valign        => @valign,
+      :height        => @height,
+      :width         => @width,
+      :x             => @x,
+      :y             => @y,
+      :sort_triggers => @sort_triggers,
+      :style         => @style,
+      :url           => @url
+    }
   end
 end
 
