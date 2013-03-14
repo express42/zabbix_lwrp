@@ -39,7 +39,8 @@ action :create do
       graph_items = new_resource.graph_items.map do |gi|
         {
           :item_id => Rubix::Item.find(:key => gi[:key], :host_id => @host.id).id,
-          :color   => gi[:color]
+          :color   => gi[:color],
+          :y_axis_sie => gi[:y_axis_side]
         }
       end
       @graph = Rubix::Graph.new(:name => new_resource.name, :height => new_resource.height,

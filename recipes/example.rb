@@ -42,7 +42,7 @@ end
   zabbix_graph "Graph #{i}" do
     width 640
     height 480
-    graph_items [:key => "vfs.fs.size[/var/log#{i},free]", :color => "#{i}" * 6]
+    graph_items [:key => "vfs.fs.size[/var/log#{i},free]", :color => "#{i}" * 6, :y_axis_side => :left]
   end
 end
 
