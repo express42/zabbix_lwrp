@@ -60,7 +60,7 @@ end
 
 raise "Zabbix server ip hasn't been found! Please check configuration" if zabbix_server_ip.nil?
 
-ip_mon = net_get_public(node).empty? ? net_get_private(node)[0][1] : net_get_public(node)[0][1]
+ip_mon = net_get_private(node)[0][1]
 
 template "/etc/zabbix/zabbix_agentd.conf" do
   source "zabbix_agentd.conf.erb"
