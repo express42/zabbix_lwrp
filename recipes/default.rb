@@ -73,14 +73,14 @@ template "/etc/zabbix/zabbix_agentd.conf" do
   notifies :restart, resources(:service => "zabbix-agent")
 end
 
-cookbook_file "/tmp/rubix-0.5.20.gem" do
-  source "rubix-0.5.20.gem"
+cookbook_file "/tmp/rubix-0.5.21.gem" do
+  source "rubix-0.5.21.gem"
 end
 
 gem_package "rubix" do
-  source "/tmp/rubix-0.5.20.gem"
+  source "/tmp/rubix-0.5.21.gem"
   action :install
-  version '0.5.20'
+  version '0.5.21'
 end
 
 ruby_block "use rubix" do
