@@ -40,7 +40,7 @@ action :create do
         {
           :item_id => Rubix::Item.find(:key => gi[:key], :host_id => @host.id).id,
           :color   => gi[:color],
-          :y_axis_sie => gi[:y_axis_side]
+          :y_axis_side => gi[:y_axis_side]
         }
       end
       @graph = Rubix::Graph.new(:name => new_resource.name, :height => new_resource.height,
