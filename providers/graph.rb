@@ -56,7 +56,8 @@ def load_current_resource
   @current_resource.width       new_resource.width
   @current_resource.graph_items new_resource.graph_items
 
-  @graph = Rubix::Graph.find(:name => new_resource.name)
+  @host = Rubix::Host.find(:name => node.fqdn)
+  @graph = Rubix::Graph.all(:filter => { :name => new_resource.name, :hostid => @host.id }).first
 
   unless @graph.nil?
     @current_resource.exists = true
