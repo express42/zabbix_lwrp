@@ -83,15 +83,8 @@ gem_package "rubix" do
   version '0.5.21'
 end
 
-ruby_block "use rubix" do
-  block do
-    Gem.clear_paths
-
-    require 'rubix'
-
-    Rubix.connect("http://#{zabbix_server_ip}/api_jsonrpc.php", 'Admin', 'zabbix')
-
-    Rubix.logger = Logger.new STDOUT
-    Rubix.logger.level = Logger::DEBUG
-  end
+zabbix_connect "zabbix server" do
+  apiurl "http://#{zabbix_server_ip}/api_jsonrpc.php"
+  databag "zabbix"
 end
+
