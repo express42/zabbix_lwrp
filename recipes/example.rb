@@ -2,6 +2,11 @@
 # Zabbix objects creation demo
 #
 
+zabbix_connect do
+  apiurl "http://localhost"
+  databag "zabbix"
+end
+
 
 cookbook_file "/tmp/zbx_templates_base_e42.xml" do
   source "zbx_templates_base_e42.xml"
