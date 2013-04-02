@@ -38,6 +38,17 @@ action :make do
   
   raise "there aren't user and password for connection to zabbix" if !user || !pass
 
+  cookbook_file "/tmp/rubix-0.5.21.gem" do
+    source "rubix-0.5.21.gem"
+    cookbook "zabbix"
+  end
+
+  gem_package "rubix" do
+    source "/tmp/rubix-0.5.21.gem"
+    action :install
+    version '0.5.21'
+  end
+
   ruby_block "use rubix and make connection to zabbix" do
     block do
       Gem.clear_paths
