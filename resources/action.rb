@@ -68,7 +68,7 @@ class ZabbixCondition
   def initialize(context, *cond, &block)
     if cond
       if cond.is_a?(Array) && cond.size == 3
-        @type, @operation, @value = cond
+        @type, @operator, @value = cond
       else
         raise 'condition should have 3 elements - type, operator and value'
       end
@@ -142,19 +142,20 @@ class ZabbixOperation
   end
 
   def message(&block)
-    @message = ZabbixMessasge.new(&block)
+    @message = ZabbixMessage.new(&block)
   end
 
   def to_hash
     user_groups = Rubix::UserGroup.all(:filter => {:name => @user_groups}) if @user_groups
     {
       :type => @type || :message,
-      :user_groups => user_groups
+      :user_groups => user_groups,
+      :message => Rubix::Message.new(@message.to_hash)
     }
   end
 end
 
-class ZabbixMessasge
+class ZabbixMessage
 
   def initialize(&block)
     instance_eval(&block)
@@ -174,5 +175,18 @@ class ZabbixMessasge
 
   def media_type value
     @media_type = value
+  end
+
+  def to_hash
+    media_type = Rubix::MediaType.find(:description => @media_type)
+
+    raise "Media type with name #{@media_type} not found" unless media_type
+
+    {
+      :subject => @subject,
+      :use_default_message => @use_default_message,
+      :message => @message,
+      :media_type_id => media_type.id
+    }
   end
 end
