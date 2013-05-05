@@ -61,6 +61,7 @@ action :sync do
   # triggers' part
   new_resource.triggers.each do |trigger|
     if current_trigger = @current_triggers.find { |i| i.description == trigger.description }
+      Chef::Log.info "#{trigger} already exists"
       @current_triggers.delete current_trigger
 
       # FIXME: update existing trigger
