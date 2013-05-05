@@ -66,21 +66,21 @@ action :sync do
       # FIXME: update existing trigger
     else
       converge_by("Create #{trigger.description}") do
-        Chef::Log.info "#{trigger.to_hash.inspect} should be created"
         Rubix::Trigger.new(trigger.to_hash).save!
       end
     end
   end
 
   # now delete unused triggers
-  @current_triggers.each do |trigger|
-    # delete only triggers not from template
-    if trigger.template_id == 0
-      converge_by("Distroy #{trigger}") do
-        trigger.destroy
-      end
-    end
-  end
+  # FIXME - Zabbix incorrectly select triggers that belongs to application
+  # @current_triggers.each do |trigger|
+  #   # delete only triggers not from template
+  #   if trigger.template_id == 0
+  #     converge_by("Distroy #{trigger}") do
+  #       trigger.destroy
+  #     end
+  #   end
+  # end
 end
 
 def load_current_resource
