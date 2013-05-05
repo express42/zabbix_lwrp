@@ -59,7 +59,10 @@ action :sync do
   end
 
   # triggers' part
+  Chef::Log.info "Chef triggers #{new_resource.triggers.count}"
+  Chef::Log.info "Zabbix triggers #{@current_triggers.triggers.count}"
   new_resource.triggers.each do |trigger|
+    Chef::Log.info "Trigger description: #{trigger.description}"
     if current_trigger = @current_triggers.find { |i| i.description == trigger.description }
       Chef::Log.info "#{trigger} already exists"
       @current_triggers.delete current_trigger
