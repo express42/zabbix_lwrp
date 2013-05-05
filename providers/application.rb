@@ -65,8 +65,8 @@ action :sync do
 
       # FIXME: update existing trigger
     else
-      Chef::Log.info "#{trigger} should be created"
-      converge_by("Create #{trigger.to_hash}") do
+      Chef::Log.info "#{trigger.to_hash} should be created"
+      converge_by("Create #{trigger}") do
         Rubix::Trigger.new(trigger.to_hash).save!
       end
     end
