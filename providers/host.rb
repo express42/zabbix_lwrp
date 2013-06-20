@@ -27,12 +27,21 @@
 
 
 action :create do
-  group = Rubix::HostGroup.find :name => new_resource.host_group
-  group = Rubix::HostGroup.new(:name => new_resource.host_group).save! unless group
+  group_id = ZabbixConnect.zbx.hostgroups.get_or_create(:name => new_resource.host_group)
 
-  host = Rubix::Host.find_or_create :name => new_resource.host_name,
-    :host_groups => [group],
-    :interfaces => ['ip' => new_resource.ip_address, 'main' => 1, 'use_ip' => new_resource.use_ip, 'dns' => new_resource.dns]
-
+  ZabbixConnect.zbx.hosts.create_or_update(
+    :host => new_resource.host_name,
+    :interfaces => [
+      {
+        :type => 1,
+        :main => 1,
+        :ip => new_resource.ip_address,
+        :dns => new_resource.dns,
+        :port => 10050,
+        :useip => new_resource.use_ip
+      }
+    ],
+    :groups => [ :groupid => group_id ]
+  )
 end
 

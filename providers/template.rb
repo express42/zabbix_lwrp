@@ -38,17 +38,19 @@ end
 
 action :add do
   if new_resource.host_name && !new_resource.host_name.blank?
-    host = Rubix::Host.find(:name => new_resource.host_name)
+    host = ZabbixConnect.zbx.hosts.get_id(:host => new_resource.host_name)
   else
-    host = Rubix::Host.find(:name => node.fqdn)
+    host = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
   end
 
   if host
-    template = Rubix::Template.find(:name => new_resource.path)
+    template = ZabbixConnect.zbx.templates.get_id(:host => new_resource.path)
 
     if template
-      host.template_ids << template.id
-      host.save!
+      ZabbixConnect.zbx.templates.mass_add(
+        :hosts_id => [host],
+        :templates_id => [template]
+      )
     else
       Chef::Log.info "Zabbix Template #{new_resource.path} not found"
     end

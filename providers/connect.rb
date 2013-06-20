@@ -25,6 +25,10 @@
 # SOFTWARE.
 #
 
+def self.zbx
+  @@zbx
+end
+
 action :make do
   credentials_databag = new_resource.databag
   user = new_resource.user
@@ -35,27 +39,18 @@ action :make do
     user = "Admin"
     pass = data_bag_item(credentials_databag, 'admin')['pass'].first
   end
-  
+
   raise "there aren't user and password for connection to zabbix" if !user || !pass
 
-  cookbook_file "/tmp/rubix-0.5.21.gem" do
-    source "rubix-0.5.21.gem"
-    cookbook "zabbix"
+  chef_gem "zabbixapi" do
+    version '0.5.9'
   end
 
-  gem_package "rubix" do
-    source "/tmp/rubix-0.5.21.gem"
-    action :install
-    version '0.5.21'
-  end
+  require "zabbixapi"
 
-  ruby_block "use rubix and make connection to zabbix" do
-    block do
-      Gem.clear_paths
-      require 'rubix'
-      Rubix.connect(apiurl, user, pass)
-      Rubix.logger = Logger.new STDOUT
-      Rubix.logger.level = Logger::DEBUG
-    end
-  end
+  @@zbx = ZabbixApi.connect(
+    :url => apiurl,
+    :user => user,
+    :password => pass
+  )
 end
