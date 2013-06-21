@@ -38,15 +38,46 @@ def initialize(name, run_context=nil)
 end
 
 class ZabbixItem
-  VALUE_TYPES = [:float, :character, :log_line, :unsigned_int, :text].freeze
+  TYPES = {
+    :zabbix     => 0,
+    :snmpv1     => 1,
+    :trapper    => 2,
+    :simple     => 3,
+    :snmpv2c    => 4,
+    :internal   => 5,
+    :snmpv3     => 6,
+    :active     => 7,
+    :aggregate  => 8,
+    :httptest   => 9,
+    :external   => 10,
+    :db_monitor => 11,
+    :ipmi       => 12,
+    :ssh        => 13,
+    :telnet     => 14,
+    :calculated => 15
+  }.freeze
+
+  VALUE_TYPES = {
+    :float        => 0,         # Numeric (float)
+    :character    => 1,         # Character
+    :log_line     => 2,         # Log
+    :unsigned_int => 3,         # Numeric (unsigned)
+    :text         => 4          # Text
+  }.freeze
+
+  DELTA_TYPES = {
+    :as_is     => 0,
+    :speed_per_second       => 1,
+    :delta => 2
+  }.freeze
 
   def initialize(key, &block)
     @key = key
-    @type = :active
+    @type = TYPES[:active]
     @name = nil
     @units = ''
     @multiplier = '0'
-    @delta = :as_is
+    @delta = DELTA_TYPES[:as_is]
     @formula = ''
 
     instance_eval(&block)
@@ -57,7 +88,7 @@ class ZabbixItem
   end
 
   def type(value)
-    @type = value
+    @type = TYPES[value]
   end
 
   def name(value)
@@ -77,8 +108,8 @@ class ZabbixItem
   end
 
   def value_type(value)
-    raise "Value type should be one of #{VALUE_TYPES.join(", ")}" unless VALUE_TYPES.include? value
-    @value_type = value
+    raise "Value type should be one of #{VALUE_TYPES.keys.join(", ")}" unless VALUE_TYPES.keys.include? value
+    @value_type = VALUE_TYPES[value]
   end
 
   def units(value)
@@ -90,7 +121,7 @@ class ZabbixItem
   end
 
   def delta(value)
-    @delta = value
+    @delta = DELTA_TYPES[value]
   end
 
   def source(value)
@@ -103,13 +134,13 @@ class ZabbixItem
 
   def to_hash
     {
-      :key        => @key,
+      :key_        => @key,
       :type       => @type,
       :name       => @name,
-      :frequency  => @frequency,
+      :delay      => @frequency,
       :history    => @history || 7,
       :trends     => @trends || 365,
-      :value_type => @value_type || :unsigned_int,
+      :value_type => @value_type || VALUE_TYPES[:unsigned_int],
       :delta      => @delta,
       :formula    => @formula
     }
@@ -117,6 +148,15 @@ class ZabbixItem
 end
 
 class ZabbixTrigger
+  PRIORITY = {
+      :not_classified => 0,
+      :information    => 1,
+      :warning        => 2,
+      :average        => 3,
+      :high           => 4,
+      :disaster       => 5
+  }.freeze
+
   def initialize(description, context, &block)
     @description = description
     @context = context
@@ -137,7 +177,7 @@ class ZabbixTrigger
   end
 
   def severity(value)
-    @priority = value
+    @priority = PRIORITY[value]
   end
 
   def to_hash

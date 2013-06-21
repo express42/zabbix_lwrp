@@ -26,7 +26,11 @@
 #
 
 def self.zbx
-  @@zbx
+  if defined?(@@zbx) && @@zbx
+    @@zbx
+  else
+    raise 'You should put zabbix_connect resource before all zabbix resources call'
+  end
 end
 
 action :make do

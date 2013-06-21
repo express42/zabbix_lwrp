@@ -34,19 +34,34 @@ action :sync do
     Chef::Log.info "#{new_resource} already exists."
   else
     converge_by("Create #{new_resource}.") do
-      @app = Rubix::Application.new(:host_id => @host.id, :name => new_resource.name)
-      @app.save!
+      @app_id = ZabbixConnect.zbx.applications.create(:hostid => @host_id, :name => new_resource.name)
     end
   end
 
+  @host = ZabbixConnect.zbx.client.api_request(
+    :method => 'host.get',
+    :params => {
+      :hostids => @host_id,
+      :selectInterfaces => 'refer'
+    }).first
+
   new_resource.items.each do |item|
-    if current_item = @current_items.find { |i| i.key == item.key }
+    if current_item = @current_items.find { |i| i["key_"] == item.key }
       @current_items.delete current_item
 
-      # FIXME: update existing item
+      converge_by("Update item #{item}") do
+        ZabbixConnect.zbx.items.update(item.to_hash.merge(
+          :itemid => current_item["itemid"],
+          :hostid => @host_id,
+          :interfaceid => @host['interfaces'].keys.first,
+          :applications => [@app_id]))
+      end
     else
       converge_by("Create new item #{item}") do
-        Rubix::Item.new(item.to_hash.merge(:host_id => @host.id, :interface_id => @host.interfaces.first.id, :applications => [@app])).save!
+        ZabbixConnect.zbx.items.create(item.to_hash.merge(
+          :hostid => @host_id,
+          :interfaceid => @host['interfaces'].keys.first,
+          :applications => [@app_id]))
       end
     end
   end
@@ -60,40 +75,52 @@ action :sync do
 
   # triggers' part
   new_resource.triggers.each do |trigger|
-    if current_trigger = @current_triggers.find { |i| i.description == trigger.description }
+    if current_trigger = @current_triggers.find { |i| i["description"] == trigger.description }
       @current_triggers.delete current_trigger
 
-      # FIXME: update existing trigger
+      converge_by("Update #{trigger.description}") do
+        ZabbixConnect.zbx.triggers.update(trigger.to_hash.merge(
+          :triggerid => current_trigger["triggerid"]))
+      end
     else
       converge_by("Create #{trigger.description}") do
-        Rubix::Trigger.new(trigger.to_hash).save!
+        ZabbixConnect.zbx.triggers.create(trigger.to_hash)
       end
     end
   end
 
   # now delete unused triggers
-  # FIXME - Zabbix incorrectly select triggers that belongs to application
-  # @current_triggers.each do |trigger|
-  #   # delete only triggers not from template
-  #   if trigger.template_id == 0
-  #     converge_by("Distroy #{trigger}") do
-  #       trigger.destroy
-  #     end
-  #   end
-  # end
+  # Zabbix incorrectly select triggers that belongs to application, but all triggers depends on items
+  # and deleted, when appropriate items deleted, so this is OK
 end
 
 def load_current_resource
   @current_resource = Chef::Resource::ZabbixApplication.new(new_resource.name)
 
-  @host = Rubix::Host.find(:name => node.fqdn)
-  @app = Rubix::Application.all(:hostids => @host.id, :filter => {:name => new_resource.name}).first
-  if @app.nil?
+  @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
+  app = ZabbixConnect.zbx.client.api_request(
+    :method => 'application.get',
+    :params => {
+      :hostids => @host_id,
+      :filter => {
+        :name => new_resource.name
+      }
+    }).first
+
+  if app.nil?
     @current_items = []
     @current_triggers = []
   else
+    @app_id = app['applicationid']
     @current_resource.exists = true
-    @current_items = Rubix::Item.all(:hostids => @host.id, :applicationids => @app.id)
-    @current_triggers = Rubix::Trigger.all(:hostids => @host.id, :applicationids => @app.id)
+    @current_items = ZabbixConnect.zbx.client.api_request(
+      :method => 'item.get',
+      :params => {:hostids => @host_id, :applicationids => @app_id, :output => 'extend'}
+    )
+
+    @current_triggers = ZabbixConnect.zbx.client.api_request(
+      :method => 'trigger.get',
+      :params => {:hostids => @host_id, :output => 'extend'}
+    )
   end
 end

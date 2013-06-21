@@ -29,23 +29,36 @@ def whyrun_supported?
   true
 end
 
+def get_item_id(key, host_id)
+  item = ZabbixConnect.zbx.client.api_request(
+    :method => 'item.get',
+    :params => {
+      :hostids => host_id,
+      :filter => {
+        :key_ => key
+      }
+    }
+  ).first
+
+  return item['itemid'] if item
+end
+
 action :create do
   if @current_resource.exists
     Chef::Log.info("#{new_resource} already exists")
+
+    # FIXME update
   else
     converge_by("Create #{new_resource}") do
-      @host =  Rubix::Host.find(:name => node.fqdn)
-
       graph_items = new_resource.graph_items.map do |gi|
         {
-          :item_id => Rubix::Item.find(:key => gi[:key], :host_id => @host.id).id,
+          :itemid => get_item_id(gi[:key], @host_id),
           :color   => gi[:color],
-          :y_axis_side => gi[:y_axis_side]
+          :yaxisside => gi[:yaxisside]
         }
       end
-      @graph = Rubix::Graph.new(:name => new_resource.name, :height => new_resource.height,
-                                :width => new_resource.width, :graph_items => graph_items)
-      @graph.save!
+      @graph = ZabbixConnect.zbx.graphs.create(:name => new_resource.name, :height => new_resource.height,
+                                :width => new_resource.width, :gitems => graph_items)
     end
   end
 end
@@ -56,8 +69,17 @@ def load_current_resource
   @current_resource.width       new_resource.width
   @current_resource.graph_items new_resource.graph_items
 
-  @host = Rubix::Host.find(:name => node.fqdn)
-  @graph = Rubix::Graph.all(:filter => { :name => new_resource.name, :hostid => @host.id }).first
+  @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
+
+  @graph = ZabbixConnect.zbx.client.api_request(
+    :method => 'graph.get',
+    :params => {
+      :hostids => @host_id,
+      :filter => {
+        :name => new_resource.name
+      }
+    }
+  ).first
 
   unless @graph.nil?
     @current_resource.exists = true

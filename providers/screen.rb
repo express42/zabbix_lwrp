@@ -34,36 +34,51 @@ action :sync do
     Chef::Log.info "#{new_resource} already exists."
   else
     converge_by("Create #{new_resource}.") do
-      @screen = Rubix::Screen.new(:name => new_resource.name, :hsize => new_resource.hsize,
-                                  :vsize => new_resource.vsize)
+      @screen = {:screenid => ZabbixConnect.zbx.screens.create(:name => new_resource.name, :hsize => new_resource.hsize,
+                                  :vsize => new_resource.vsize)}
     end
   end
 
-  @screen.screen_items = new_resource.screen_items.inject([]) do |res, item|
+  @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
 
-    @host = Rubix::Host.find(:name => node.fqdn)
-    case item.to_hash[:resource_type]
-    when :graph
-      g = Rubix::Graph.all(:filter => { :name => item.name, :hostid => @host.id }).first
-      @resource_id = g.id
-    when :simple_graph
-      i = Rubix::Item.find :key => item.name, :host_id => @host.id
-      @resource_id = i.id
+  @screen['screenitems'] = new_resource.screen_items.inject([]) do |res, item|
+    case item.to_hash[:resourcetype]
+    when 0 # graph resource type
+      g = ZabbixConnect.zbx.client.api_request(
+        :method => 'graph.get',
+        :params => {
+          :hostids => @host_id,
+          :filter => {
+            :name => item.name
+          }
+        }
+      ).first
+      raise "Graph '#{item.name}' not found" unless g
+      @resource_id = g["graphid"]
     else
       raise 'Incorrect resource type for screen item'
     end
 
-    res << Rubix::ScreenItem.new(item.to_hash.merge(:resource_id => @resource_id))
+    res << item.to_hash.merge(:resourceid => @resource_id)
     res
   end
 
-  @screen.save!
+  @screen.delete('templateid')
+
+  ZabbixConnect.zbx.client.api_request(
+    :method => 'screen.update',
+    :params => @screen)
 end
 
 def load_current_resource
   @current_resource = Chef::Resource::ZabbixScreen.new(new_resource.name)
 
-  @screen = Rubix::Screen.find(:name => new_resource.name)
+  @screen = ZabbixConnect.zbx.client.api_request(
+    :method => 'screen.get',
+    :params => {
+      :filter => {:name => new_resource.name},
+      :output => 'extend',
+      :selectScreenItems => 'extend'}).first
 
   unless @screen.nil?
     @current_resource.exists = true
