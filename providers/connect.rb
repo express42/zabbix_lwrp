@@ -28,8 +28,6 @@
 def self.zbx
   if defined?(@@zbx) && @@zbx
     @@zbx
-  else
-    raise 'You should put zabbix_connect resource before all zabbix resources call'
   end
 end
 
@@ -52,9 +50,13 @@ action :make do
 
   require "zabbixapi"
 
-  @@zbx = ZabbixApi.connect(
-    :url => apiurl,
-    :user => user,
-    :password => pass
-  )
+  begin
+    @@zbx = ZabbixApi.connect(
+      :url => apiurl,
+      :user => user,
+      :password => pass
+    )
+  rescue
+    Chef::Log.warn "Couldn't connect to zabbix server, all zabbix provider are non-working"
+  end
 end

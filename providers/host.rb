@@ -27,21 +27,26 @@
 
 
 action :create do
-  group_id = ZabbixConnect.zbx.hostgroups.get_or_create(:name => new_resource.host_group)
 
-  ZabbixConnect.zbx.hosts.create_or_update(
-    :host => new_resource.host_name,
-    :interfaces => [
-      {
-        :type => 1,
-        :main => 1,
-        :ip => new_resource.ip_address,
-        :dns => new_resource.dns,
-        :port => 10050,
-        :useip => new_resource.use_ip
-      }
-    ],
-    :groups => [ :groupid => group_id ]
-  )
+  if ZabbixConnect.zbx
+    group_id = ZabbixConnect.zbx.hostgroups.get_or_create(:name => new_resource.host_group)
+
+    ZabbixConnect.zbx.hosts.create_or_update(
+      :host => new_resource.host_name,
+      :interfaces => [
+        {
+          :type => 1,
+          :main => 1,
+          :ip => new_resource.ip_address,
+          :dns => new_resource.dns || '',
+          :port => 10050,
+          :useip => new_resource.use_ip ? 1 : 0
+        }
+      ],
+      :groups => [ :groupid => group_id ]
+    )
+  else
+    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
+  end
 end
 

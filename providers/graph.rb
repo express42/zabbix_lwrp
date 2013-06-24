@@ -44,44 +44,52 @@ def get_item_id(key, host_id)
 end
 
 action :create do
-  if @current_resource.exists
-    Chef::Log.info("#{new_resource} already exists")
+  if ZabbixConnect.zbx
+    if @current_resource.exists
+      Chef::Log.info("#{new_resource} already exists")
 
-    # FIXME update
-  else
-    converge_by("Create #{new_resource}") do
-      graph_items = new_resource.graph_items.map do |gi|
-        {
-          :itemid => get_item_id(gi[:key], @host_id),
-          :color   => gi[:color],
-          :yaxisside => gi[:yaxisside]
-        }
+      # FIXME update
+    else
+      converge_by("Create #{new_resource}") do
+        graph_items = new_resource.graph_items.map do |gi|
+          {
+            :itemid => get_item_id(gi[:key], @host_id),
+            :color   => gi[:color],
+            :yaxisside => gi[:yaxisside]
+          }
+        end
+        @graph = ZabbixConnect.zbx.graphs.create(:name => new_resource.name, :height => new_resource.height,
+                                  :width => new_resource.width, :gitems => graph_items)
       end
-      @graph = ZabbixConnect.zbx.graphs.create(:name => new_resource.name, :height => new_resource.height,
-                                :width => new_resource.width, :gitems => graph_items)
     end
+  else
+    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
   end
 end
 
 def load_current_resource
-  @current_resource = Chef::Resource::ZabbixGraph.new(new_resource.name)
-  @current_resource.height      new_resource.height
-  @current_resource.width       new_resource.width
-  @current_resource.graph_items new_resource.graph_items
+  if ZabbixConnect.zbx
+    @current_resource = Chef::Resource::ZabbixGraph.new(new_resource.name)
+    @current_resource.height      new_resource.height
+    @current_resource.width       new_resource.width
+    @current_resource.graph_items new_resource.graph_items
 
-  @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
+    @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
 
-  @graph = ZabbixConnect.zbx.client.api_request(
-    :method => 'graph.get',
-    :params => {
-      :hostids => @host_id,
-      :filter => {
-        :name => new_resource.name
+    @graph = ZabbixConnect.zbx.client.api_request(
+      :method => 'graph.get',
+      :params => {
+        :hostids => @host_id,
+        :filter => {
+          :name => new_resource.name
+        }
       }
-    }
-  ).first
+    ).first
 
-  unless @graph.nil?
-    @current_resource.exists = true
+    unless @graph.nil?
+      @current_resource.exists = true
+    end
+  else
+    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
   end
 end

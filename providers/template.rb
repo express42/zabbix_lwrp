@@ -37,24 +37,28 @@ action :import do
 end
 
 action :add do
-  if new_resource.host_name && !new_resource.host_name.blank?
-    host = ZabbixConnect.zbx.hosts.get_id(:host => new_resource.host_name)
-  else
-    host = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
-  end
-
-  if host
-    template = ZabbixConnect.zbx.templates.get_id(:host => new_resource.path)
-
-    if template
-      ZabbixConnect.zbx.templates.mass_add(
-        :hosts_id => [host],
-        :templates_id => [template]
-      )
+  if ZabbixConnect.zbx
+    if new_resource.host_name && !new_resource.host_name.blank?
+      host = ZabbixConnect.zbx.hosts.get_id(:host => new_resource.host_name)
     else
-      Chef::Log.info "Zabbix Template #{new_resource.path} not found"
+      host = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
+    end
+
+    if host
+      template = ZabbixConnect.zbx.templates.get_id(:host => new_resource.path)
+
+      if template
+        ZabbixConnect.zbx.templates.mass_add(
+          :hosts_id => [host],
+          :templates_id => [template]
+        )
+      else
+        Chef::Log.info "Zabbix Template #{new_resource.path} not found"
+      end
+    else
+      Chef::Log.info "Zabbix Host #{new_resource.host_name} not found"
     end
   else
-    Chef::Log.info "Zabbix Host #{new_resource.host_name} not found"
+    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
   end
 end

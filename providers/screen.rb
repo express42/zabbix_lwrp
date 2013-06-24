@@ -30,57 +30,66 @@ def whyrun_supported?
 end
 
 action :sync do
-  if @current_resource.exists
-    Chef::Log.info "#{new_resource} already exists."
-  else
-    converge_by("Create #{new_resource}.") do
-      @screen = {:screenid => ZabbixConnect.zbx.screens.create(:name => new_resource.name, :hsize => new_resource.hsize,
-                                  :vsize => new_resource.vsize)}
-    end
-  end
+  if ZabbixConnect.zbx
 
-  @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
-
-  @screen['screenitems'] = new_resource.screen_items.inject([]) do |res, item|
-    case item.to_hash[:resourcetype]
-    when 0 # graph resource type
-      g = ZabbixConnect.zbx.client.api_request(
-        :method => 'graph.get',
-        :params => {
-          :hostids => @host_id,
-          :filter => {
-            :name => item.name
-          }
-        }
-      ).first
-      raise "Graph '#{item.name}' not found" unless g
-      @resource_id = g["graphid"]
+    if @current_resource.exists
+      Chef::Log.info "#{new_resource} already exists."
     else
-      raise 'Incorrect resource type for screen item'
+      converge_by("Create #{new_resource}.") do
+        @screen = {:screenid => ZabbixConnect.zbx.screens.create(:name => new_resource.name, :hsize => new_resource.hsize,
+                                    :vsize => new_resource.vsize)}
+      end
     end
 
-    res << item.to_hash.merge(:resourceid => @resource_id)
-    res
+    @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
+
+    @screen['screenitems'] = new_resource.screen_items.inject([]) do |res, item|
+      case item.to_hash[:resourcetype]
+      when 0 # graph resource type
+        g = ZabbixConnect.zbx.client.api_request(
+          :method => 'graph.get',
+          :params => {
+            :hostids => @host_id,
+            :filter => {
+              :name => item.name
+            }
+          }
+        ).first
+        raise "Graph '#{item.name}' not found" unless g
+        @resource_id = g["graphid"]
+      else
+        raise 'Incorrect resource type for screen item'
+      end
+
+      res << item.to_hash.merge(:resourceid => @resource_id)
+      res
+    end
+
+    @screen.delete('templateid')
+
+    ZabbixConnect.zbx.client.api_request(
+      :method => 'screen.update',
+      :params => @screen)
+  else
+    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
   end
-
-  @screen.delete('templateid')
-
-  ZabbixConnect.zbx.client.api_request(
-    :method => 'screen.update',
-    :params => @screen)
 end
 
 def load_current_resource
-  @current_resource = Chef::Resource::ZabbixScreen.new(new_resource.name)
+  if ZabbixConnect.zbx
+    @current_resource = Chef::Resource::ZabbixScreen.new(new_resource.name)
 
-  @screen = ZabbixConnect.zbx.client.api_request(
-    :method => 'screen.get',
-    :params => {
-      :filter => {:name => new_resource.name},
-      :output => 'extend',
-      :selectScreenItems => 'extend'}).first
+    @screen = ZabbixConnect.zbx.client.api_request(
+      :method => 'screen.get',
+      :params => {
+        :filter => {:name => new_resource.name},
+        :output => 'extend',
+        :selectScreenItems => 'extend'}).first
 
-  unless @screen.nil?
-    @current_resource.exists = true
+    unless @screen.nil?
+      @current_resource.exists = true
+    end
+  else
+    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
   end
 end
