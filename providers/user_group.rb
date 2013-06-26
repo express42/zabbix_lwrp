@@ -34,7 +34,7 @@ action :create do
     Chef::Log.info "#{new_resource} already exists."
   else
     converge_by("Create #{new_resource}.") do
-      Rubix::UserGroup.new(:name => new_resource.name).save!
+      ZabbixConnect.zbx.usergroups.create(:name => new_resource.name)
     end
   end
 end
@@ -42,7 +42,7 @@ end
 def load_current_resource
   @current_resource = Chef::Resource::ZabbixUserGroup.new(new_resource.name)
 
-  @user_group = Rubix::UserGroup.find :name => new_resource.name
+  @user_group = ZabbixConnect.zbx.usergroups.get(:name => new_resource.name).first
 
   unless @user_group.nil?
     @current_resource.exists = true

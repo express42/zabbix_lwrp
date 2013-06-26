@@ -57,6 +57,44 @@ def condition(*cond, &block)
 end
 
 class ZabbixCondition
+  TYPE = {
+    :host_group         => 0,
+    :host               => 1,
+    :trigger            => 2,
+    :trigger_name       => 3,
+    :trigger_severity   => 4,
+    :trigger_value      => 5,
+    :time_period        => 6,
+    :dhost_ip           => 7,
+    :dservice_type      => 8,
+    :dservice_port      => 9,
+    :dstatus            => 10,
+    :duptime            => 11,
+    :dvalue             => 12,
+    :host_template      => 13,
+    :event_acknowledged => 14,
+    :application        => 15,
+    :maintenance        => 16,
+    :node               => 17,
+    :drule              => 18,
+    :dcheck             => 19,
+    :proxy              => 20,
+    :dobject            => 21,
+    :host_name          => 22
+  }.freeze
+
+
+  OPERATOR = {
+    :equal      => 0,
+    :not_equal  => 1,
+    :like       => 2,
+    :not_like   => 3,
+    :in         => 4,
+    :gte        => 5,
+    :lte        => 6,
+    :not_in     => 7
+  }.freeze
+
   TRIGGER_VALUES = { :ok => 0, :problem => 1 }.freeze
   TRIGGER_SEVERITY = {
     :info     => 1,
@@ -92,7 +130,7 @@ class ZabbixCondition
   def to_hash
     case @type
     when :trigger
-      value = Rubix::Trigger.find(:description => @value).id if @value && !@value.empty?
+      value = ZabbixConnect.zbx.triggers.get_id(:description => @value) if @value && !@value.empty?
     when :trigger_value
       raise "Only #{TRIGGER_VALUES.keys.join(' ')} is allowed for trigger value" unless TRIGGER_VALUES.has_key? @value
       value = TRIGGER_VALUES[@value]
@@ -100,7 +138,7 @@ class ZabbixCondition
       raise "Only #{TRIGGER_SEVERITY.keys.join(' ')} is allowed for trigger severity" unless TRIGGER_SEVERITY.has_key? @value
       value = TRIGGER_SEVERITY[@value]
     when :host_group
-      value = Rubix::HostGroup.find(:name => @value).id if @value && !@value.empty?
+      value = Chef::Provider::ZabbixConnect.zbx.hostgroups.get_id(:name => @value) if @value && !@value.empty?
     when :maintenance
       value = '0'
     else
@@ -108,16 +146,28 @@ class ZabbixCondition
     end
 
     {
-      :type => @type,
-      :operator => @operator,
+      :conditiontype => TYPE[@type],
+      :operator => OPERATOR[@operator],
       :value => value
     }
   end
 end
 
 class ZabbixOperation
-  def initialize(context, &block)
+  TYPE = {
+    :message           => 0,
+    :command           => 1,
+    :host_add          => 2,
+    :host_remove       => 3,
+    :host_group_add    => 4,
+    :host_group_remove => 5,
+    :template_add      => 6,
+    :template_remove   => 7,
+    :host_enable       => 8,
+    :host_disable      => 9
+  }.freeze
 
+  def initialize(context, &block)
     instance_eval(&block)
   end
 
@@ -146,11 +196,11 @@ class ZabbixOperation
   end
 
   def to_hash
-    user_groups = Rubix::UserGroup.all(:filter => {:name => @user_groups}) if @user_groups
+    user_groups = Chef::Provider::ZabbixConnect.zbx.usergroups.get(:name => @user_groups) if @user_groups
     {
-      :type => @type || :message,
-      :user_groups => user_groups,
-      :message => Rubix::Message.new(@message.to_hash)
+      :operationtype => TYPE[@type || :message],
+      :opmessage_grp => user_groups,
+      :opmessage => @message.to_hash
     }
   end
 end
@@ -178,15 +228,15 @@ class ZabbixMessage
   end
 
   def to_hash
-    media_type = Rubix::MediaType.find(:description => @media_type)
+    media_type = Chef::Provider::ZabbixConnect.zbx.mediatypes.get_id(:description => @media_type)
 
     raise "Media type with name #{@media_type} not found" unless media_type
 
     {
-      :subject => @subject,
-      :use_default_message => @use_default_message,
-      :message => @message,
-      :media_type_id => media_type.id
+      :subject     => @subject,
+      :default_msg => @use_default_message ? 1 : 0,
+      :message     => @message,
+      :mediatypeid => media_type
     }
   end
 end

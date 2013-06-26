@@ -29,22 +29,31 @@ def whyrun_supported?
   true
 end
 
+TYPE = {
+  :email      => 0,
+  :script     => 1,
+  :sms        => 2,
+  :jabber     => 3,
+  :ez_texting => 100
+}.freeze
+
+
 action :create do
   if @current_resource.exists
     Chef::Log.info "#{new_resource} already exists."
   else
     converge_by("Create #{new_resource}.") do
-      Rubix::MediaType.new(
-        :name     => new_resource.name,
-        :type     => new_resource.type,
-        :server   => new_resource.server,
-        :helo     => new_resource.helo,
-        :email    => new_resource.email,
-        :path     => new_resource.path,
-        :modem    => new_resource.modem,
-        :username => new_resource.username,
-        :password => new_resource.password
-        ).save!
+      ZabbixConnect.zbx.mediatypes.create_or_update(
+        :description => new_resource.name,
+        :type        => TYPE[new_resource.type],
+        :server      => new_resource.server,
+        :helo        => new_resource.helo,
+        :email       => new_resource.email,
+        :path        => new_resource.path,
+        :modem       => new_resource.modem,
+        :username    => new_resource.username,
+        :password    => new_resource.password
+        )
     end
   end
 end
@@ -52,7 +61,7 @@ end
 def load_current_resource
   @current_resource = Chef::Resource::ZabbixMediaType.new(new_resource.name)
 
-  @media_type = Rubix::MediaType.find :name => new_resource.name
+  @media_type = ZabbixConnect.zbx.mediatypes.get(:description => new_resource.name).first
 
   unless @media_type.nil?
     @current_resource.exists = true

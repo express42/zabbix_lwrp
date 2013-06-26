@@ -25,6 +25,12 @@
 # SOFTWARE.
 #
 
+EVENT_SOURCE = {
+  :triggers          => 0,
+  :discovery         => 1,
+  :auto_registration => 2
+}.freeze
+
 def whyrun_supported?
   true
 end
@@ -38,19 +44,23 @@ action :sync do
     end
 
     converge_by("Create #{new_resource}.") do
-      Rubix::Action.new(
-        :name     => new_resource.name,
-        :event_source => new_resource.event_source,
-        :escalation_time => new_resource.escalation_time,
-        :enabled => new_resource.enabled,
-        :message_subject => new_resource.message_subject,
-        :message_body => new_resource.message_body,
-        :send_recovery_message => new_resource.send_recovery_message,
-        :recovery_message_subject => new_resource.recovery_message_subject,
-        :recovery_message_body => new_resource.recovery_message_body,
-        :operations => operations,
-        :conditions => new_resource.conditions.map(&:to_hash)
-        ).save!
+      ZabbixConnect.zbx.query(
+        :method => 'action.create',
+        :params => {
+          :evaltype        => 0,
+          :name            => new_resource.name,
+          :eventsource     => EVENT_SOURCE[new_resource.event_source],
+          :esc_period      => new_resource.escalation_time,
+          :status          => new_resource.enabled ? 1 : 0,
+          :def_shortdata   => new_resource.message_subject || "",
+          :def_longdata    => new_resource.message_body || "",
+          :recovery_msg    => new_resource.send_recovery_message ? 1 : 0,
+          :r_shortdata     => new_resource.recovery_message_subject || "",
+          :r_longdata      => new_resource.recovery_message_body || "",
+          :operations      => operations,
+          :conditions      => new_resource.conditions.map(&:to_hash)
+        }
+      )
     end
   end
 end
@@ -58,7 +68,7 @@ end
 def load_current_resource
   @current_resource = Chef::Resource::ZabbixAction.new(new_resource.name)
 
-  @zabbix_action = Rubix::Action.find :name => new_resource.name
+  @zabbix_action = ZabbixConnect.zbx.query(:method => 'action.get', :params => {:filter => {:name => new_resource.name}}).first
 
   unless @zabbix_action.nil?
     @current_resource.exists = true

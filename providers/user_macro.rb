@@ -34,7 +34,14 @@ action :create do
     Chef::Log.info "#{new_resource} already exists."
   else
     converge_by("Create #{new_resource}.") do
-      Rubix::UserMacro.new(:name => new_resource.name, :host => @host, :value => new_resource.value).save!
+      ZabbixConnect.zbx.query(
+        :method => 'usermacro.create',
+        :params => {
+          :macro => "{$#{new_resource.name.upcase}}",
+          :hostid => @host,
+          :value => new_resource.value
+        }
+      )
     end
   end
 end
@@ -43,9 +50,17 @@ def load_current_resource
   @current_resource = Chef::Resource::ZabbixUserMacro.new(new_resource.name)
   host_name = new_resource.host_name || node.fqdn
 
-  @host =  Rubix::Host.find :name => host_name
+  @host =  ZabbixConnect.zbx.hosts.get_id(:host => host_name)
 
-  @user_macro = Rubix::UserMacro.find :name => new_resource.name, :host_id => @host.id
+  @user_macro = ZabbixConnect.zbx.query(
+    :method => 'usermacro.get',
+    :params => {
+      :hostids => [@host],
+      :filter => {
+        :macro => new_resource.name
+      }
+    }
+  ).first
 
   unless @user_macro.nil?
     @current_resource.exists = true
