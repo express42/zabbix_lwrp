@@ -31,6 +31,48 @@ def self.zbx
   end
 end
 
+def self.import_template(file_handler)
+  require 'cgi'
+  require 'net/http/post/multipart'
+
+  data = {
+    'rules[groups][createMissing]'     => 1,
+    'rules[host][updateExisting]'      => 1,
+    'rules[host][createMissing]'       => 1,
+    'rules[templates][updateExisting]' => 1,
+    'rules[templates][createMissing]'  => 1,
+    'rules[items][updateExisting]'     => 1,
+    'rules[items][createMissing]'      => 1,
+    'rules[triggers][updateExisting]'  => 1,
+    'rules[triggers][createMissing]'   => 1,
+    'rules[graphs][updateExisting]'    => 1,
+    'rules[graphs][createMissing]'     => 1,
+    :import_file                       => file_handler
+  }
+
+  path = @@zbx.client.options[:url].gsub('api_jsonrpc.php', 'conf.import.php')
+
+  auth = @@zbx.client.instance_variable_get(:@auth_hash)
+
+  uri = URI.parse(path)
+  data = {}.tap do |wrapped|
+    data.each_pair do |key, value|
+      if value.respond_to?(:read)
+        # We are going to assume it's always XML we're uploading.
+        wrapped[key] = UploadIO.new(value, "application/xml", ::File.basename(value.path))
+      else
+        wrapped[key] = value
+      end
+    end
+  end
+
+  request = Net::HTTP::Post::Multipart.new(uri.path, data).tap do |req|
+    req['Cookie'] = "zbx_sessionid=#{CGI::escape(auth)}"
+  end
+
+  Net::HTTP.new(uri.host, uri.port).request(request)
+end
+
 action :make do
   credentials_databag = new_resource.databag
   user = new_resource.user
@@ -46,6 +88,10 @@ action :make do
 
   chef_gem "zabbixapi" do
     version '0.5.9'
+  end
+
+  chef_gem "multipart-post" do
+    version '1.1.5'
   end
 
   require "zabbixapi"

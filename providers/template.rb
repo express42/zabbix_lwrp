@@ -31,7 +31,7 @@ action :import do
 
   unless ::File.exists? check_path
     Chef::Log.info "Importing template #{new_resource.path}"
-    Rubix::Template.import(::File.new(new_resource.path))
+    ZabbixConnect.import_template(::File.new(new_resource.path))
     ::File.open check_path, 'w'
   end
 end
