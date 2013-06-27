@@ -40,7 +40,7 @@ action :sync do
       end
     end
 
-    @host = ZabbixConnect.zbx.client.api_request(
+    @host = ZabbixConnect.zbx.query(
       :method => 'host.get',
       :params => {
         :hostids => @host_id,
@@ -105,7 +105,7 @@ def load_current_resource
     @current_resource = Chef::Resource::ZabbixApplication.new(new_resource.name)
 
     @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
-    app = ZabbixConnect.zbx.client.api_request(
+    app = ZabbixConnect.zbx.query(
       :method => 'application.get',
       :params => {
         :hostids => @host_id,
@@ -120,12 +120,12 @@ def load_current_resource
     else
       @app_id = app['applicationid']
       @current_resource.exists = true
-      @current_items = ZabbixConnect.zbx.client.api_request(
+      @current_items = ZabbixConnect.zbx.query(
         :method => 'item.get',
         :params => {:hostids => @host_id, :applicationids => @app_id, :output => 'extend'}
       )
 
-      @current_triggers = ZabbixConnect.zbx.client.api_request(
+      @current_triggers = ZabbixConnect.zbx.query(
         :method => 'trigger.get',
         :params => {:hostids => @host_id, :output => 'extend'}
       )

@@ -30,7 +30,7 @@ def whyrun_supported?
 end
 
 def get_item_id(key, host_id)
-  item = ZabbixConnect.zbx.client.api_request(
+  item = ZabbixConnect.zbx.query(
     :method => 'item.get',
     :params => {
       :hostids => host_id,
@@ -76,7 +76,7 @@ def load_current_resource
 
     @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
 
-    @graph = ZabbixConnect.zbx.client.api_request(
+    @graph = ZabbixConnect.zbx.query(
       :method => 'graph.get',
       :params => {
         :hostids => @host_id,

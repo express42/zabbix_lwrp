@@ -46,7 +46,7 @@ action :sync do
     @screen['screenitems'] = new_resource.screen_items.inject([]) do |res, item|
       case item.to_hash[:resourcetype]
       when 0 # graph resource type
-        g = ZabbixConnect.zbx.client.api_request(
+        g = ZabbixConnect.zbx.query(
           :method => 'graph.get',
           :params => {
             :hostids => @host_id,
@@ -67,7 +67,7 @@ action :sync do
 
     @screen.delete('templateid')
 
-    ZabbixConnect.zbx.client.api_request(
+    ZabbixConnect.zbx.query(
       :method => 'screen.update',
       :params => @screen)
   else
@@ -79,7 +79,7 @@ def load_current_resource
   if ZabbixConnect.zbx
     @current_resource = Chef::Resource::ZabbixScreen.new(new_resource.name)
 
-    @screen = ZabbixConnect.zbx.client.api_request(
+    @screen = ZabbixConnect.zbx.query(
       :method => 'screen.get',
       :params => {
         :filter => {:name => new_resource.name},
