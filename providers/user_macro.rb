@@ -57,7 +57,7 @@ def load_current_resource
     :params => {
       :hostids => [@host],
       :filter => {
-        :macro => new_resource.name
+        :macro => "{$#{new_resource.name.upcase}}",
       }
     }
   ).first
