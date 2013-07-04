@@ -9,6 +9,7 @@ LogFile=/var/log/zabbix/zabbix_agentd.log
 LogFileSize=0
 DebugLevel=<%= @loglevel %>
 EnableRemoteCommands=1
+Timeout=<%= @timeout %>
 
 <% if @listen_ip %>
 ListenIP=<%= @listen_ip %>
