@@ -30,11 +30,13 @@ def whyrun_supported?
 end
 
 action :create do
-  if @current_resource.exists
-    Chef::Log.info "#{new_resource} already exists."
-  else
-    converge_by("Create #{new_resource}.") do
-      ZabbixConnect.zbx.usergroups.create(:name => new_resource.name)
+  if ZabbixConnect.zbx
+    if @current_resource.exists
+      Chef::Log.info "#{new_resource} already exists."
+    else
+      converge_by("Create #{new_resource}.") do
+        ZabbixConnect.zbx.usergroups.create(:name => new_resource.name)
+      end
     end
   end
 end
@@ -42,9 +44,11 @@ end
 def load_current_resource
   @current_resource = Chef::Resource::ZabbixUserGroup.new(new_resource.name)
 
-  @user_group = ZabbixConnect.zbx.usergroups.get(:name => new_resource.name).first
+  if ZabbixConnect.zbx
+    @user_group = ZabbixConnect.zbx.usergroups.get(:name => new_resource.name).first
 
-  unless @user_group.nil?
-    @current_resource.exists = true
+    unless @user_group.nil?
+      @current_resource.exists = true
+    end
   end
 end

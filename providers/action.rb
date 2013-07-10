@@ -36,31 +36,33 @@ def whyrun_supported?
 end
 
 action :sync do
-  if @current_resource.exists
-    Chef::Log.info "#{new_resource} already exists."
-  else
-    operations = new_resource.operations.map do |op|
-      op.to_hash
-    end
+  if ZabbixConnect.zbx
+    if @current_resource.exists
+      Chef::Log.info "#{new_resource} already exists."
+    else
+      operations = new_resource.operations.map do |op|
+        op.to_hash
+      end
 
-    converge_by("Create #{new_resource}.") do
-      ZabbixConnect.zbx.query(
-        :method => 'action.create',
-        :params => {
-          :evaltype        => 0,
-          :name            => new_resource.name,
-          :eventsource     => EVENT_SOURCE[new_resource.event_source],
-          :esc_period      => new_resource.escalation_time,
-          :status          => new_resource.enabled ? 1 : 0,
-          :def_shortdata   => new_resource.message_subject || "",
-          :def_longdata    => new_resource.message_body || "",
-          :recovery_msg    => new_resource.send_recovery_message ? 1 : 0,
-          :r_shortdata     => new_resource.recovery_message_subject || "",
-          :r_longdata      => new_resource.recovery_message_body || "",
-          :operations      => operations,
-          :conditions      => new_resource.conditions.map(&:to_hash)
-        }
-      )
+      converge_by("Create #{new_resource}.") do
+        ZabbixConnect.zbx.query(
+          :method => 'action.create',
+          :params => {
+            :evaltype        => 0,
+            :name            => new_resource.name,
+            :eventsource     => EVENT_SOURCE[new_resource.event_source],
+            :esc_period      => new_resource.escalation_time,
+            :status          => new_resource.enabled ? 1 : 0,
+            :def_shortdata   => new_resource.message_subject || "",
+            :def_longdata    => new_resource.message_body || "",
+            :recovery_msg    => new_resource.send_recovery_message ? 1 : 0,
+            :r_shortdata     => new_resource.recovery_message_subject || "",
+            :r_longdata      => new_resource.recovery_message_body || "",
+            :operations      => operations,
+            :conditions      => new_resource.conditions.map(&:to_hash)
+          }
+        )
+      end
     end
   end
 end
@@ -68,9 +70,11 @@ end
 def load_current_resource
   @current_resource = Chef::Resource::ZabbixAction.new(new_resource.name)
 
-  @zabbix_action = ZabbixConnect.zbx.query(:method => 'action.get', :params => {:filter => {:name => new_resource.name}}).first
+  if ZabbixConnect.zbx
+    @zabbix_action = ZabbixConnect.zbx.query(:method => 'action.get', :params => {:filter => {:name => new_resource.name}}).first
 
-  unless @zabbix_action.nil?
-    @current_resource.exists = true
+    unless @zabbix_action.nil?
+      @current_resource.exists = true
+    end
   end
 end
