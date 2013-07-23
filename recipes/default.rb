@@ -44,11 +44,12 @@ ip_mon = net_get_private(node).empty? ? net_get_public(node)[0][1] : net_get_pri
 template "/etc/zabbix/zabbix_agentd.conf" do
   source "zabbix_agentd.conf.erb"
   variables(
-    :server    => node["zabbix"]["client"]["serverhost"],
-    :loglevel  => node["zabbix"]["client"]["loglevel"],
-    :include   => node["zabbix"]["client"]["include"],
-    :timeout   => node["zabbix"]["client"]["timeout"],
-    :listen_ip => ip_mon
-    )
+    :server      => node["zabbix"]["client"]["serverhost"],
+    :loglevel    => node["zabbix"]["client"]["loglevel"],
+    :include     => node["zabbix"]["client"]["include"],
+    :timeout     => node["zabbix"]["client"]["timeout"],
+    :listen_ip   => ip_mon,
+    :user_params => node["zabbix"]["client"]["user_params"]
+  )
   notifies :restart, resources(:service => "zabbix-agent")
 end
