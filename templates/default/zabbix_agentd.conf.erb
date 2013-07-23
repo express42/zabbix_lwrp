@@ -20,8 +20,9 @@ ServerActive=<%= @server %>
 Hostname=<%= node[:fqdn] %>
 
 # additional scripts and user parameters
-Include=<%= @include %>
-
 <% @user_params.each do |k, v| %>
 UserParameter=<%= k %>,<%= v %>
 <% end %>
+
+Include=<%= @include %>
+
