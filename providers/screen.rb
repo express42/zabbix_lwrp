@@ -36,8 +36,14 @@ action :sync do
       Chef::Log.info "#{new_resource} already exists."
     else
       converge_by("Create #{new_resource}.") do
-        @screen = {:screenid => ZabbixConnect.zbx.screens.create(:name => new_resource.name, :hsize => new_resource.hsize,
-                                    :vsize => new_resource.vsize)}
+        ZabbixConnect.zbx.screens.create(:name => new_resource.name, :hsize => new_resource.hsize,
+                                    :vsize => new_resource.vsize)
+        @screen = ZabbixConnect.zbx.query(
+          :method => 'screen.get',
+          :params => {
+            :filter => {:name => new_resource.name},
+            :output => 'extend',
+            :selectScreenItems => 'extend'}).first
       end
     end
 
