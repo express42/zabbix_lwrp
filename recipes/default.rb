@@ -41,6 +41,12 @@ end
 
 ip_mon = net_get_private(node).empty? ? net_get_public(node)[0][1] : net_get_private(node)[0][1]
 
+directory node["zabbix"]["client"]["include"] do
+  owner "zabbix"
+  group "zabbix"
+  recursive true
+end
+
 template "/etc/zabbix/zabbix_agentd.conf" do
   source "zabbix_agentd.conf.erb"
   variables(
