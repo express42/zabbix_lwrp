@@ -50,7 +50,7 @@ end
 
 def load_current_resource
   @current_resource = Chef::Resource::ZabbixUserMacro.new(new_resource.name)
-  host_name = new_resource.host_name || node.fqdn
+  host_name = new_resource.host_name || node['fqdn']
 
   if ZabbixConnect.zbx
     @host =  ZabbixConnect.zbx.hosts.get_id(:host => host_name)

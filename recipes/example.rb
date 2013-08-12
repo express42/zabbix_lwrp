@@ -20,7 +20,7 @@ zabbix_template "/tmp/zbx_templates_base_e42.xml" do
   action :import
 end
 
-zabbix_host node.fqdn do
+zabbix_host node['fqdn'] do
   host_group "My Favorite Host Group"
   use_ip true
   ip_address "127.0.0.1"
@@ -38,8 +38,8 @@ zabbix_application "Test application" do
     end
   end
 
-  trigger "Number #{node.fqdn} of free inodes on log < 10%" do
-    expression "{#{node.fqdn}:vfs.fs.size[/var/log0,free].last(0)}>0"
+  trigger "Number #{node['fqdn']} of free inodes on log < 10%" do
+    expression "{#{node['fqdn']}:vfs.fs.size[/var/log0,free].last(0)}>0"
     severity :high
   end
 end
@@ -48,7 +48,7 @@ end
   zabbix_graph "Graph #{i}" do
     width 640
     height 480
-    graph_items [:key => "vfs.fs.size[/var/log#{i},free]", :color => "#{i}" * 6, :y_axis_side => :left]
+    graph_items [:key => "vfs.fs.size[/var/log#{i},free]", :color => i.to_s * 6, :y_axis_side => :left]
   end
 end
 

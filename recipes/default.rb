@@ -57,5 +57,5 @@ template "/etc/zabbix/zabbix_agentd.conf" do
     :listen_ip   => ip_mon,
     :user_params => node["zabbix"]["client"]["user_params"]
   )
-  notifies :restart, resources(:service => "zabbix-agent")
+  notifies :restart, 'service[zabbix-agent]'
 end
