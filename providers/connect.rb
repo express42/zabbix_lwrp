@@ -87,7 +87,7 @@ action :make do
   raise "there aren't user and password for connection to zabbix" if !user || !pass
 
   chef_gem "zabbixapi" do
-    version '0.5.9'
+    version '0.6.2'
   end
 
   chef_gem "multipart-post" do
