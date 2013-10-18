@@ -34,6 +34,7 @@ service "zabbix-agent" do
 end
 
 ip_mon = net_get_private(node).empty? ? net_get_public(node)[0][1] : net_get_private(node)[0][1]
+calculate_ip = node["zabbix"]["client"]["calculate_ip"]
 
 directory node["zabbix"]["client"]["include"] do
   owner "zabbix"
@@ -48,7 +49,7 @@ template "/etc/zabbix/zabbix_agentd.conf" do
     :loglevel    => node["zabbix"]["client"]["loglevel"],
     :include     => node["zabbix"]["client"]["include"],
     :timeout     => node["zabbix"]["client"]["timeout"],
-    :listen_ip   => ip_mon,
+     :listen_ip  => calculate_ip ? ip_mon : "0.0.0.0",
     :user_params => node["zabbix"]["client"]["user_params"]
   )
   notifies :restart, 'service[zabbix-agent]'
