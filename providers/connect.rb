@@ -36,18 +36,19 @@ def self.import_template(file_handler)
   require 'net/http/post/multipart'
 
   data = {
-    'rules[groups][createMissing]'     => 1,
-    'rules[host][updateExisting]'      => 1,
-    'rules[host][createMissing]'       => 1,
-    'rules[templates][updateExisting]' => 1,
-    'rules[templates][createMissing]'  => 1,
-    'rules[items][updateExisting]'     => 1,
-    'rules[items][createMissing]'      => 1,
-    'rules[triggers][updateExisting]'  => 1,
-    'rules[triggers][createMissing]'   => 1,
-    'rules[graphs][updateExisting]'    => 1,
-    'rules[graphs][createMissing]'     => 1,
-    :import_file                       => file_handler
+    'rules[groups][createMissing]'           => 1,
+    'rules[host][updateExisting]'            => 1,
+    'rules[host][createMissing]'             => 1,
+    'rules[templates][updateExisting]'       => 1,
+    'rules[templates][createMissing]'        => 1,
+    'rules[templateLinkage][createMissing]'  => 1,
+    'rules[items][updateExisting]'           => 1,
+    'rules[items][createMissing]'            => 1,
+    'rules[triggers][updateExisting]'        => 1,
+    'rules[triggers][createMissing]'         => 1,
+    'rules[graphs][updateExisting]'          => 1,
+    'rules[graphs][createMissing]'           => 1,
+    :import_file                             => file_handler
   }
 
   path = @@zbx.client.options[:url].gsub('api_jsonrpc.php', 'conf.import.php')
