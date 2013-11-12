@@ -134,7 +134,7 @@ class ZabbixItem
 
   def to_hash
     {
-      :key_        => @key,
+      :key_       => @key,
       :type       => @type,
       :name       => @name,
       :delay      => @frequency,
@@ -142,7 +142,7 @@ class ZabbixItem
       :trends     => @trends || 365,
       :value_type => @value_type || VALUE_TYPES[:unsigned_int],
       :delta      => @delta,
-      :formula    => @formula
+      :params     => @formula
     }
   end
 end
