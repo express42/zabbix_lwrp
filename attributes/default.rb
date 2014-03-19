@@ -6,3 +6,4 @@ default["zabbix"]["client"]["calculate_ip"] = true
 default["zabbix"]["client"]["serverhost"] = '127.0.0.1'
 default["zabbix"]["client"]["apihost"] = '127.0.0.1'
 default["zabbix"]["client"]["user_params"] = {}
+default["zabbix"]["client"]["gem-version"] = '2.2.0'

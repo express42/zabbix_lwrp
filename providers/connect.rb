@@ -88,7 +88,7 @@ action :make do
   raise "there aren't user and password for connection to zabbix" if !user || !pass
 
   chef_gem "zabbixapi" do
-    version '0.6.2'
+    version node['zabbix']['client']['gem-version']
   end
 
   chef_gem "multipart-post" do
@@ -103,7 +103,7 @@ action :make do
       :user => user,
       :password => pass
     )
-  rescue
-    Chef::Log.warn "Couldn't connect to zabbix server, all zabbix provider are non-working"
+  rescue Exception => e
+    Chef::Log.warn "Couldn't connect to zabbix server, all zabbix provider are non-working." + e.message
   end
 end
