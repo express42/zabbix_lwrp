@@ -10,6 +10,7 @@ end
 
 
 cookbook_file "/tmp/zbx_templates_base_e42.xml" do
+  cookbook "zabbix" # take our template by default
   source "zbx_templates_base_e42.xml"
   mode 0755
   owner "root"
