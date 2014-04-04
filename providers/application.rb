@@ -62,7 +62,7 @@ action :sync do
         converge_by("Create new item #{item}") do
           ZabbixConnect.zbx.items.create(item.to_hash.merge(
             :hostid => @host_id,
-            :interfaceid => @host['interfaces'].keys.first,
+            :interfaceid => @host['interfaces'].first["interfaceid"],
             :applications => [@app_id]))
         end
       end
