@@ -55,7 +55,7 @@ action :sync do
           ZabbixConnect.zbx.items.update(item.to_hash.merge(
             :itemid => current_item["itemid"],
             :hostid => @host_id,
-            :interfaceid => @host['interfaces'].keys.first,
+            :interfaceid => @host['interfaces'].first["interfaceid"],
             :applications => [@app_id]))
         end
       else
