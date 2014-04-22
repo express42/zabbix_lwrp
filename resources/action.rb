@@ -129,18 +129,16 @@ class ZabbixCondition
 
   def to_hash
     case @type
-    when :trigger
-      value = ZabbixConnect.zbx.triggers.get_id(:description => @value) if @value && !@value.empty?
+    when :trigger, :host_group
+      value = @value
     when :trigger_value
       raise "Only #{TRIGGER_VALUES.keys.join(' ')} is allowed for trigger value" unless TRIGGER_VALUES.has_key? @value
       value = TRIGGER_VALUES[@value]
     when :trigger_severity
       raise "Only #{TRIGGER_SEVERITY.keys.join(' ')} is allowed for trigger severity" unless TRIGGER_SEVERITY.has_key? @value
       value = TRIGGER_SEVERITY[@value]
-    when :host_group
-      value = Chef::Provider::ZabbixConnect.zbx.hostgroups.get_id(:name => @value) if @value && !@value.empty?
     when :maintenance
-      value = '0'
+      value = ''
     else
       raise "Unknown action's condition type '#{@type}'"
     end
@@ -196,10 +194,9 @@ class ZabbixOperation
   end
 
   def to_hash
-    user_groups = Chef::Provider::ZabbixConnect.zbx.usergroups.get(:name => @user_groups) if @user_groups
     {
       :operationtype => TYPE[@type || :message],
-      :opmessage_grp => user_groups,
+      :opmessage_grp => @user_groups,
       :opmessage => @message.to_hash
     }
   end
@@ -228,15 +225,11 @@ class ZabbixMessage
   end
 
   def to_hash
-    media_type = Chef::Provider::ZabbixConnect.zbx.mediatypes.get_id(:description => @media_type)
-
-    raise "Media type with name #{@media_type} not found" unless media_type
-
     {
       :subject     => @subject,
       :default_msg => @use_default_message ? 1 : 0,
       :message     => @message,
-      :mediatypeid => media_type
+      :mediatypeid => @media_type
     }
   end
 end

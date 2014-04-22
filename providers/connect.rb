@@ -45,27 +45,32 @@ def self.import_template(file_handler)
     :import_file                             => file_handler
   }
 
-  path = @@zbx.client.options[:url].gsub('api_jsonrpc.php', 'conf.import.php')
+  if defined?(@@zbx)
+    path = @@zbx.client.options[:url].gsub('api_jsonrpc.php', 'conf.import.php')
 
-  auth = @@zbx.client.instance_variable_get(:@auth_hash)
+    auth = @@zbx.client.instance_variable_get(:@auth_hash)
 
-  uri = URI.parse(path)
-  data = {}.tap do |wrapped|
-    data.each_pair do |key, value|
-      if value.respond_to?(:read)
-        # We are going to assume it's always XML we're uploading.
-        wrapped[key] = UploadIO.new(value, "application/xml", ::File.basename(value.path))
-      else
-        wrapped[key] = value
+    uri = URI.parse(path)
+    data = {}.tap do |wrapped|
+      data.each_pair do |key, value|
+        if value.respond_to?(:read)
+          # We are going to assume it's always XML we're uploading.
+          wrapped[key] = UploadIO.new(value, "application/xml", ::File.basename(value.path))
+        else
+          wrapped[key] = value
+        end
       end
     end
-  end
 
-  request = Net::HTTP::Post::Multipart.new(uri.path, data).tap do |req|
-    req['Cookie'] = "zbx_sessionid=#{CGI::escape(auth)}"
-  end
+    request = Net::HTTP::Post::Multipart.new(uri.path, data).tap do |req|
+      req['Cookie'] = "zbx_sessionid=#{CGI::escape(auth)}"
+    end
 
-  Net::HTTP.new(uri.host, uri.port).request(request)
+    Net::HTTP.new(uri.host, uri.port).request(request)
+  else
+    Chef::Log.warn('Use import_template after zabbix_connect')
+    false
+  end
 end
 
 action :make do
@@ -103,22 +108,19 @@ action :make do
   end
 
   create_hosts
+  create_templates
   create_applications
   create_graphs
   create_screens
   create_media_types
   create_user_groups
   create_user_macros
+  create_actions
 end
 
 
 def create_hosts
-  if Chef::Config[:solo]
-    hosts = [node]
-  else
-  end
-
-  hosts.each do |host|
+  get_hosts do |host|
     fqdn, values = host['zabbix']['hosts'].to_a.first
 
     group_id = @@zbx.hostgroups.get_or_create(:name => values['host_group'])
@@ -150,12 +152,7 @@ def create_hosts
 end
 
 def create_applications
-  if Chef::Config[:solo]
-    hosts = [node]
-  else
-  end
-
-  hosts.each do |host|
+  get_hosts do |host|
     fqdn, values = host['zabbix']['hosts'].to_a.first
     host_id = values['host_id']
     interface_id = values['interface_id']
@@ -242,12 +239,7 @@ end
 
 
 def create_graphs
-  if Chef::Config[:solo]
-    hosts = [node]
-  else
-  end
-
-  hosts.each do |host|
+  get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
     host_id = values['host_id']
 
@@ -296,12 +288,7 @@ def get_item_id(key, host_id)
 end
 
 def create_screens
-  if Chef::Config[:solo]
-    hosts = [node]
-  else
-  end
-
-  hosts.each do |host|
+  get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
     host_id = values['host_id']
 
@@ -358,12 +345,7 @@ def create_screens
 end
 
 def create_media_types
-  if Chef::Config[:solo]
-    hosts = [node]
-  else
-  end
-
-  hosts.each do |host|
+  get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
 
     values['media_types'].each do |media_type_name, media_type_data|
@@ -383,12 +365,7 @@ def create_media_types
 end
 
 def create_user_groups
-  if Chef::Config[:solo]
-    hosts = [node]
-  else
-  end
-
-  hosts.each do |host|
+  get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
 
     values['user_groups'].each do |user_group_name|
@@ -399,12 +376,7 @@ def create_user_groups
 end
 
 def create_user_macros
-  if Chef::Config[:solo]
-    hosts = [node]
-  else
-  end
-
-  hosts.each do |host|
+  get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
     host_id = values['host_id']
 
@@ -428,6 +400,80 @@ def create_user_macros
               :hostid => host_id,
               :value => value
             }
+          )
+        end
+      end
+    end
+  end
+end
+
+def get_hosts(&block)
+  if Chef::Config[:solo]
+    block.call node
+  else
+    search(:node, "hosts:*").each do |host|
+      block.call host
+    end
+  end
+end
+
+def create_templates
+  get_hosts do |host|
+    _, values = host['zabbix']['hosts'].to_a.first
+
+    values['templates'].each do |template, hostname|
+      host_id = @@zbx.hosts.get_id(:host => hostname)
+      template = @@zbx.templates.get_id(:host => template)
+
+      if template
+        @@zbx.templates.mass_add(
+          :hosts_id => [host_id],
+          :templates_id => [template]
+        )
+      end
+    end
+  end
+end
+
+def create_actions
+  get_hosts do |host|
+    _, values = host['zabbix']['hosts'].to_a.first
+
+    values['actions'].each do |name, data|
+      action = @@zbx.query(:method => 'action.get', :params => {:filter => {:name => name}}).first
+
+      unless action
+        conditions = data['conditions'].map do |condition|
+          if condition['conditiontype'] == Chef::Resource::ZabbixAction::ZabbixCondition::TYPE[:trigger]
+            value = @@zbx.triggers.get_id(:description => condition['value'])
+            condition.merge('value' => value)
+          elsif condition['conditiontype'] == Chef::Resource::ZabbixAction::ZabbixCondition::TYPE[:host_group]
+            value = @@zbx.hostgroups.get_id(:name => condition['value'])
+            condition.merge('value' => value)
+          else
+            condition
+          end
+        end
+
+        operations = data['operations'].map do |operation|
+          msg = operation['opmessage']
+          media_type = @@zbx.mediatypes.get_id(:description => msg['mediatypeid'])
+
+          raise "Media type with name #{msg['mediatypeid']} not found" unless media_type
+
+          if operation['opmessage_grp']
+            user_groups = @@zbx.usergroups.get(:name => operation['opmessage_grp'])
+            operation.merge('opmessage_grp' => user_groups, 'opmessage' => msg.merge('mediatypeid' => media_type))
+          else
+            operation.merge('opmessage' => msg.merge('mediatypeid' => media_type))
+          end
+        end
+
+
+        converge_by("Create zabbix action #{name}.") do
+          @@zbx.query(
+            :method => 'action.create',
+            :params => data.merge('conditions' => conditions, 'operations' => operations)
           )
         end
       end

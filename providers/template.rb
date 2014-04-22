@@ -27,40 +27,21 @@
 
 
 action :import do
-  if ZabbixConnect.zbx
-    check_path = new_resource.path + '.imported'
+  check_path = new_resource.path + '.imported'
 
-    unless ::File.exists? check_path
-      Chef::Log.info "Importing template #{new_resource.path}"
-      ZabbixConnect.import_template(::File.new(new_resource.path))
-      ::File.open check_path, 'w'
-    end
+  unless ::File.exists? check_path
+    Chef::Log.info "Importing template #{new_resource.path}"
+    result = ZabbixConnect.import_template(::File.new(new_resource.path))
+    ::File.open(check_path, 'w') if result
   end
 end
 
 action :add do
-  if ZabbixConnect.zbx
-    if new_resource.host_name && !new_resource.host_name.blank?
-      host = ZabbixConnect.zbx.hosts.get_id(:host => new_resource.host_name)
-    else
-      host = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
-    end
-
-    if host
-      template = ZabbixConnect.zbx.templates.get_id(:host => new_resource.path)
-
-      if template
-        ZabbixConnect.zbx.templates.mass_add(
-          :hosts_id => [host],
-          :templates_id => [template]
-        )
-      else
-        Chef::Log.info "Zabbix Template #{new_resource.path} not found"
-      end
-    else
-      Chef::Log.info "Zabbix Host #{new_resource.host_name} not found"
-    end
+  if new_resource.host_name && !new_resource.host_name.blank?
+    fqdn = new_resource.host_name
   else
-    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
+    fqdn = node.fqdn
   end
+
+  add_data(node, fqdn, 'templates' => { new_resource.path => fqdn })
 end
