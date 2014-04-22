@@ -79,6 +79,7 @@ class ZabbixItem
     @multiplier = '0'
     @delta = DELTA_TYPES[:as_is]
     @formula = ''
+    @frequency = 60
 
     instance_eval(&block)
   end

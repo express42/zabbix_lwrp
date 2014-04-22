@@ -30,72 +30,13 @@ def whyrun_supported?
 end
 
 action :sync do
-  if ZabbixConnect.zbx
-
-    if @current_resource.exists
-      Chef::Log.info "#{new_resource} already exists."
-    else
-      converge_by("Create #{new_resource}.") do
-        ZabbixConnect.zbx.screens.create(:name => new_resource.name, :hsize => new_resource.hsize,
-                                    :vsize => new_resource.vsize)
-        @screen = ZabbixConnect.zbx.query(
-          :method => 'screen.get',
-          :params => {
-            :filter => {:name => new_resource.name},
-            :output => 'extend',
-            :selectScreenItems => 'extend'}).first
-      end
-    end
-
-    @host_id = ZabbixConnect.zbx.hosts.get_id(:host => node.fqdn)
-
-    @screen['screenitems'] = new_resource.screen_items.inject([]) do |res, item|
-      case item.to_hash[:resourcetype]
-      when 0 # graph resource type
-        g = ZabbixConnect.zbx.query(
-          :method => 'graph.get',
-          :params => {
-            :hostids => @host_id,
-            :filter => {
-              :name => item.name
-            }
-          }
-        ).first
-        raise "Graph '#{item.name}' not found" unless g
-        @resource_id = g["graphid"]
-      else
-        raise 'Incorrect resource type for screen item'
-      end
-
-      res << item.to_hash.merge(:resourceid => @resource_id)
-      res
-    end
-
-    @screen.delete('templateid')
-
-    ZabbixConnect.zbx.query(
-      :method => 'screen.update',
-      :params => @screen)
-  else
-    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
-  end
-end
-
-def load_current_resource
-  if ZabbixConnect.zbx
-    @current_resource = Chef::Resource::ZabbixScreen.new(new_resource.name)
-
-    @screen = ZabbixConnect.zbx.query(
-      :method => 'screen.get',
-      :params => {
-        :filter => {:name => new_resource.name},
-        :output => 'extend',
-        :selectScreenItems => 'extend'}).first
-
-    unless @screen.nil?
-      @current_resource.exists = true
-    end
-  else
-    Chef::Log.warn "Zabbix connection not exists, #{new_resource} not created"
+  converge_by("Create data for #{new_resource}.") do
+    add_data(node, node.fqdn, :screens => {
+      new_resource.name => {
+        :hsize => new_resource.hsize,
+        :vsize => new_resource.vsize,
+        :screenitems => new_resource.screen_items.map { |i| i.to_hash }
+      }
+    })
   end
 end

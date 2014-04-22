@@ -39,12 +39,9 @@ TYPE = {
 
 
 action :create do
-  if ZabbixConnect.zbx
-    if @current_resource.exists
-      Chef::Log.info "#{new_resource} already exists."
-    else
-      converge_by("Create #{new_resource}.") do
-        ZabbixConnect.zbx.mediatypes.create_or_update(
+  converge_by("Create #{new_resource}.") do
+    add_data(node, node.fqdn, { 'media_types' => {
+        new_resource.name => {
           :description => new_resource.name,
           :type        => TYPE[new_resource.type],
           :server      => new_resource.server,
@@ -54,20 +51,8 @@ action :create do
           :modem       => new_resource.modem,
           :username    => new_resource.username,
           :password    => new_resource.password
-          )
-      end
-    end
-  end
-end
-
-def load_current_resource
-  @current_resource = Chef::Resource::ZabbixMediaType.new(new_resource.name)
-
-  if ZabbixConnect.zbx
-    @media_type = ZabbixConnect.zbx.mediatypes.get(:description => new_resource.name).first
-
-    unless @media_type.nil?
-      @current_resource.exists = true
-    end
+        }
+      }
+    })
   end
 end

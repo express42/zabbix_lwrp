@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: postgresql
-# Provider:: default
+# Cookbook Name:: zabbix
+# Provider:: connect
 #
 # Author:: LLC Express 42 (info@express42.com)
 #
@@ -24,12 +24,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-
-def self.zbx
-  if defined?(@@zbx) && @@zbx
-    @@zbx
-  end
-end
 
 def self.import_template(file_handler)
   require 'cgi'
@@ -103,7 +97,340 @@ action :make do
       :user => user,
       :password => pass
     )
+
   rescue Exception => e
     Chef::Log.warn "Couldn't connect to zabbix server, all zabbix provider are non-working." + e.message
+  end
+
+  create_hosts
+  create_applications
+  create_graphs
+  create_screens
+  create_media_types
+  create_user_groups
+  create_user_macros
+end
+
+
+def create_hosts
+  if Chef::Config[:solo]
+    hosts = [node]
+  else
+  end
+
+  hosts.each do |host|
+    fqdn, values = host['zabbix']['hosts'].to_a.first
+
+    group_id = @@zbx.hostgroups.get_or_create(:name => values['host_group'])
+
+    host_id = @@zbx.hosts.create_or_update(
+      :host => fqdn,
+      :interfaces => [
+        {
+          :type => 1,
+          :main => 1,
+          :ip => values['ip_address'],
+          :dns => values['dns'] || '',
+          :port => 10050,
+          :useip => values['use_ip'] ? 1 : 0
+        }
+      ],
+      :groups => [ :groupid => group_id ]
+    )
+
+    tmp = @@zbx.query(
+      :method => 'host.get',
+      :params => {
+        :hostids => host_id,
+        :selectInterfaces => 'refer'
+      }).first
+
+    add_data(host, fqdn, { 'host_id' => host_id, 'interface_id' => tmp['interfaces'].first['interfaceid'] })
+  end
+end
+
+def create_applications
+  if Chef::Config[:solo]
+    hosts = [node]
+  else
+  end
+
+  hosts.each do |host|
+    fqdn, values = host['zabbix']['hosts'].to_a.first
+    host_id = values['host_id']
+    interface_id = values['interface_id']
+
+    values['applications'].each do |app_name, app_data|
+      if app_data['app_id']
+        app_id = app_data['app_id']
+      else
+        app = @@zbx.query(
+          :method => 'application.get',
+          :params => {
+            :hostids => host_id,
+            :filter => {
+              :name => app_name
+            }
+          }
+        ).first
+
+        if app
+          app_id = app['applicationid']
+        else
+          app_id = @@zbx.applications.create(:hostid => host_id, :name => app_name)
+        end
+
+        add_data(host, fqdn, {'applications' => {app_name => {'app_id' => app_id}}})
+      end
+
+      current_items = @@zbx.query(
+        :method => 'item.get',
+        :params => {:hostids => host_id, :applicationids => app_id, :output => 'extend'}
+      )
+
+      current_triggers = @@zbx.query(
+        :method => 'trigger.get',
+        :params => {:hostids => host_id, :output => 'extend'}
+      )
+
+      app_data['items'].each do |key, item|
+        if current_item = current_items.find { |i| i["key_"] == key }
+          current_items.delete current_item
+
+          converge_by("Update item #{item}") do
+            @@zbx.items.update(item.to_hash.merge(
+              :itemid => current_item["itemid"],
+              :hostid => host_id,
+              :interfaceid => interface_id,
+              :applications => [app_id]))
+          end
+        else
+          converge_by("Create new item #{item}") do
+            @@zbx.items.create(item.to_hash.merge(
+              :hostid => host_id,
+              :interfaceid => interface_id,
+              :applications => [app_id]))
+          end
+        end
+      end
+
+      # now delete unused items
+      current_items.each do |item|
+        converge_by("Destroy item #{item}") do
+          item.destroy
+        end
+      end
+
+    # # triggers' part
+    # new_resource.triggers.each do |trigger|
+    #   if current_trigger = @current_triggers.find { |i| i["description"] == trigger.description }
+    #     @current_triggers.delete current_trigger
+    #
+    #     converge_by("Update #{trigger.description}") do
+    #       ZabbixConnect.zbx.triggers.update(trigger.to_hash.merge(
+    #         :triggerid => current_trigger["triggerid"]))
+    #     end
+    #   else
+    #     converge_by("Create #{trigger.description}") do
+    #       ZabbixConnect.zbx.triggers.create(trigger.to_hash)
+    #     end
+    #   end
+    # end
+    end
+  end
+end
+
+
+def create_graphs
+  if Chef::Config[:solo]
+    hosts = [node]
+  else
+  end
+
+  hosts.each do |host|
+    _, values = host['zabbix']['hosts'].to_a.first
+    host_id = values['host_id']
+
+    values['graphs'].each do |graph_name, graph_value|
+      graph = @@zbx.query(
+        :method => 'graph.get',
+        :params => {
+          :hostids => host_id,
+          :filter => {
+            :name => graph_name
+          }
+        }
+      ).first
+
+      if graph
+      else
+        converge_by("Create zabbix graph #{graph_name}") do
+          graph_items = graph_value['gitems'].map do |gi|
+            {
+              :itemid => get_item_id(gi[:key], host_id),
+              :color   => gi[:color],
+              :yaxisside => gi[:yaxisside]
+            }
+          end
+
+          graph = @@zbx.graphs.create(:name => graph_name, :height => graph_value['height'],
+                                    :width => graph_value['width'], :gitems => graph_items)
+        end
+      end
+    end
+  end
+end
+
+def get_item_id(key, host_id)
+  item = @@zbx.query(
+    :method => 'item.get',
+    :params => {
+      :hostids => host_id,
+      :filter => {
+        :key_ => key
+      }
+    }
+  ).first
+
+  return item['itemid'] if item
+end
+
+def create_screens
+  if Chef::Config[:solo]
+    hosts = [node]
+  else
+  end
+
+  hosts.each do |host|
+    _, values = host['zabbix']['hosts'].to_a.first
+    host_id = values['host_id']
+
+    values['screens'].each do |screen_name, screen_data|
+      screen = @@zbx.query(
+        :method => 'screen.get',
+        :params => {
+          :filter => {:name => screen_name},
+          :output => 'extend',
+          :selectScreenItems => 'extend'}).first
+
+      unless screen
+        converge_by("Create zabbix screen #{screen_name}.") do
+          @@zbx.screens.create(:name => screen_name, :hsize => screen_data['hsize'],
+                                      :vsize => screen_data['vsize'])
+          screen = @@zbx.query(
+            :method => 'screen.get',
+            :params => {
+              :filter => {:name => screen_name},
+              :output => 'extend',
+              :selectScreenItems => 'extend'}).first
+        end
+      end
+
+      screen['screenitems'] = screen_data['screenitems'].inject([]) do |res, item|
+        case item['resourcetype']
+        when 0 # graph resource type
+          g = @@zbx.query(
+            :method => 'graph.get',
+            :params => {
+              :hostids => host_id,
+              :filter => {
+                :name => item['name']
+              }
+            }
+          ).first
+          raise "Graph '#{item.name}' not found" unless g
+          resource_id = g['graphid']
+        else
+          raise 'Incorrect resource type for screen item'
+        end
+
+        res << item.to_hash.merge(:resourceid => resource_id)
+        res
+      end
+
+      screen.delete('templateid')
+
+      @@zbx.query(
+        :method => 'screen.update',
+        :params => screen)
+    end
+  end
+end
+
+def create_media_types
+  if Chef::Config[:solo]
+    hosts = [node]
+  else
+  end
+
+  hosts.each do |host|
+    _, values = host['zabbix']['hosts'].to_a.first
+
+    values['media_types'].each do |media_type_name, media_type_data|
+      @@zbx.mediatypes.create_or_update(
+        :description => media_type_data['description'],
+        :type        => media_type_data['type'],
+        :server      => media_type_data['server'],
+        :helo        => media_type_data['helo'],
+        :email       => media_type_data['email'],
+        :path        => media_type_data['path'],
+        :modem       => media_type_data['modem'],
+        :username    => media_type_data['username'],
+        :password    => media_type_data['password']
+      )
+    end
+  end
+end
+
+def create_user_groups
+  if Chef::Config[:solo]
+    hosts = [node]
+  else
+  end
+
+  hosts.each do |host|
+    _, values = host['zabbix']['hosts'].to_a.first
+
+    values['user_groups'].each do |user_group_name|
+      user_group = @@zbx.usergroups.get(:name => user_group_name).first
+      @@zbx.usergroups.create(:name => user_group_name) unless user_group
+    end
+  end
+end
+
+def create_user_macros
+  if Chef::Config[:solo]
+    hosts = [node]
+  else
+  end
+
+  hosts.each do |host|
+    _, values = host['zabbix']['hosts'].to_a.first
+    host_id = values['host_id']
+
+    values['user_macros'].each do |macro, value|
+      user_macro = @@zbx.query(
+        :method => 'usermacro.get',
+        :params => {
+          :hostids => [host_id],
+          :filter => {
+            :macro => "{$#{macro.upcase}}",
+          }
+        }
+      ).first
+
+      unless user_macro
+        converge_by("Create zabbix macro #{macro}.") do
+          @@zbx.query(
+            :method => 'usermacro.create',
+            :params => {
+              :macro => "{$#{macro.upcase}}",
+              :hostid => host_id,
+              :value => value
+            }
+          )
+        end
+      end
+    end
   end
 end
