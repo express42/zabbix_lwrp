@@ -17,8 +17,8 @@
 # limitations under the License.
 #
 
-apt_repository "obs-zabbix" do
+apt_repository 'obs-zabbix2.2' do
   action :add
-  uri "http://obs.express42.com/web/precise/ ./"
-  key "http://obs.express42.com/web/precise/Release.key"
+  uri 'http://obs.express42.com/project_root:/zabbix2.2/precise/ ./'
+  key 'http://obs.express42.com/project_root:/zabbix2.2/precise/Release.key'
 end

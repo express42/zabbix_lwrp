@@ -1,0 +1,46 @@
+DEPENDENCIES
+  base
+    git: git://github.com/express42-cookbooks/base.git
+    revision: 86ecb1f43f87ccfaaf892ba1337691481d007747
+  partition
+    git: git@github.com:express42-cookbooks/partition
+    revision: 2fa3aa3b1c9badaebcaeb63f05db37b138dec369
+  zabbix
+    path: .
+    metadata: true
+  zabbix-server
+    git: git@github.com:express42-cookbooks/zabbix-server
+    revision: 4758f157736ecc18ef60172ce6cbcc6e0e20cfdc
+
+GRAPH
+  apt (2.3.8)
+  base (0.1.2)
+  bluepill (2.3.1)
+    rsyslog (>= 0.0.0)
+  build-essential (2.0.0)
+  lvm (1.1.0)
+  nginx (2.6.2)
+    apt (~> 2.2)
+    bluepill (~> 2.3)
+    build-essential (~> 2.0)
+    ohai (~> 1.1)
+    runit (~> 1.2)
+    yum-epel (~> 0.3)
+  ohai (1.1.12)
+  partition (0.2.0)
+    lvm (>= 0.8.6)
+    zabbix (>= 0.1.1)
+  rsyslog (1.12.2)
+  runit (1.5.10)
+    build-essential (>= 0.0.0)
+    yum (~> 3.0)
+    yum-epel (>= 0.0.0)
+  yum (3.2.0)
+  yum-epel (0.3.6)
+    yum (~> 3.0)
+  zabbix (0.3.0)
+    apt (>= 0.0.0)
+  zabbix-server (0.1.0)
+    lvm (>= 0.8.6)
+    nginx (>= 2.2.0)
+    partition (>= 0.1.0)

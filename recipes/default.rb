@@ -26,6 +26,7 @@ end
 
 package "zabbix-agent" do
   action :upgrade
+  version '2.2'
 end
 
 service "zabbix-agent" do
