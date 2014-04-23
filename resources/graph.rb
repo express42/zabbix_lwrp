@@ -29,9 +29,9 @@ actions :create
 
 default_action :create
 
-attribute :name,        :kind_of => String,  :name_attribute => true
-attribute :height,      :kind_of => Integer, :required => true
-attribute :width,       :kind_of => Integer, :required => true
-attribute :graph_items, :kind_of => Array,   :required => true
+attribute :name,        kind_of: String,  name_attribute: true
+attribute :height,      kind_of: Integer, required: true
+attribute :width,       kind_of: Integer, required: true
+attribute :graph_items, kind_of: Array,   required: true
 
 attr_accessor :exists

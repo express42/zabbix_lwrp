@@ -26,11 +26,11 @@
 #
 
 def initialize(*args)
-    super
-    @action = :add
+  super
+  @action = :add
 end
 
 actions :import, :add
 
-attribute :host_name, :kind_of => String
-attribute :path, :kind_of => String, :name_attribute => true
+attribute :host_name, kind_of: String
+attribute :path,      kind_of: String, name_attribute: true

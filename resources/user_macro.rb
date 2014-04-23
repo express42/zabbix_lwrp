@@ -30,6 +30,6 @@ attr_accessor :exists
 actions :create
 default_action :create
 
-attribute :name, :kind_of => String, :name_attribute => true
-attribute :value,:kind_of => String, :required => true
-attribute :host_name, :kind_of => String
+attribute :name,      kind_of: String, name_attribute: true
+attribute :value,     kind_of: String, required: true
+attribute :host_name, kind_of: String

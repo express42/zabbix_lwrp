@@ -29,8 +29,8 @@ actions :make
 
 default_action :make
 
-attribute :name,        :kind_of => String,  :name_attribute => true
-attribute :databag,      :kind_of => String
-attribute :apiurl,       :kind_of => String, :required => true
-attribute :user,      :kind_of => String
-attribute :password,      :kind_of => String
+attribute :name,      kind_of: String, name_attribute: true
+attribute :databag,   kind_of: String
+attribute :apiurl,    kind_of: String, required: true
+attribute :user,      kind_of: String
+attribute :password,  kind_of: String

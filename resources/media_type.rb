@@ -30,19 +30,19 @@ attr_accessor :exists
 actions :create
 default_action :create
 
-attribute :name, :kind_of => String, :name_attribute => true
-attribute :type, :kind_of => Symbol
+attribute :name, kind_of: String, name_attribute: true
+attribute :type, kind_of: Symbol
 
-attribute :server, :kind_of => String
-attribute :helo, :kind_of => String
-attribute :email, :kind_of => String
+attribute :server, kind_of: String
+attribute :helo,   kind_of: String
+attribute :email,  kind_of: String
 
 # script
-attribute :path, :kind_of => String
+attribute :path, kind_of: String
 
 # sms
-attribute :modem, :kind_of => String
+attribute :modem, kind_of: String
 
 # jabber
-attribute :username, :kind_of => String
-attribute :password, :kind_of => String
+attribute :username, kind_of: String
+attribute :password, kind_of: String

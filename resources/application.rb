@@ -22,11 +22,10 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 #
 
-
 actions :sync
 default_action :sync
 
-attribute :name, :kind_of => String, :name_attribute => true
+attribute :name, kind_of: String, name_attribute: true
 
 attr_accessor :exists
 attr_reader :items, :triggers
@@ -150,12 +149,12 @@ end
 
 class ZabbixTrigger
   PRIORITY = {
-      :not_classified => 0,
-      :information    => 1,
-      :warning        => 2,
-      :average        => 3,
-      :high           => 4,
-      :disaster       => 5
+    not_classified: 0,
+    information:    1,
+    warning:        2,
+    average:        3,
+    high:           4,
+    disaster:       5
   }.freeze
 
   def initialize(description, context, &block)
@@ -169,9 +168,7 @@ class ZabbixTrigger
     @context.node
   end
 
-  def description
-    @description
-  end
+  attr_reader :description
 
   def expression(value)
     @expression = value
@@ -183,9 +180,9 @@ class ZabbixTrigger
 
   def to_hash
     {
-      :description => @description,
-      :expression => @expression,
-      :priority => @priority
+      description: @description,
+      expression: @expression,
+      priority: @priority
     }
   end
 end

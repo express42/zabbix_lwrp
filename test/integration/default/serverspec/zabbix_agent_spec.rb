@@ -9,10 +9,10 @@ RSpec.configure do |c|
   end
 end
 
-describe "Zabbix Agetn" do
+describe 'Zabbix Agetn' do
 
-  it "has a running service of zabbix-agent" do
-    expect(service("zabbix-agent")).to be_running
+  it 'has a running service of zabbix-agent' do
+    expect(service('zabbix-agent')).to be_running
   end
 
 end
