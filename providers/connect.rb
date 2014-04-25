@@ -35,6 +35,8 @@ def self.import_template(file_handler)
     'rules[host][createMissing]'             => 1,
     'rules[templates][updateExisting]'       => 1,
     'rules[templates][createMissing]'        => 1,
+    'rules[templateScreens][updateExisting]' => 1,
+    'rules[templateScreens][createMissing]'  => 1,
     'rules[templateLinkage][createMissing]'  => 1,
     'rules[items][updateExisting]'           => 1,
     'rules[items][createMissing]'            => 1,
