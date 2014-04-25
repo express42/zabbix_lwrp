@@ -27,7 +27,7 @@
 
 
 action :import do
-  add_data(node, fqdn, 'import_templates' => [new_resource.path])
+  add_data(node, node.fqdn, 'import_templates' => [new_resource.path])
 end
 
 action :add do
