@@ -368,7 +368,7 @@ def create_user_groups
   get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
 
-    values['user_groups'].each do |user_group_name|
+    (values['user_groups'] || []).each do |user_group_name|
       user_group = @@zbx.usergroups.get(:name => user_group_name).first
       @@zbx.usergroups.create(:name => user_group_name) unless user_group
     end
@@ -380,7 +380,7 @@ def create_user_macros
     _, values = host['zabbix']['hosts'].to_a.first
     host_id = values['host_id']
 
-    values['user_macros'].each do |macro, value|
+    (values['user_macros'] || []).each do |macro, value|
       user_macro = @@zbx.query(
         :method => 'usermacro.get',
         :params => {
@@ -421,7 +421,7 @@ def create_templates
   get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
 
-    values['templates'].each do |template, hostname|
+    (values['templates'] || []).each do |template, hostname|
       host_id = @@zbx.hosts.get_id(:host => hostname)
       template = @@zbx.templates.get_id(:host => template)
 
@@ -439,7 +439,7 @@ def create_actions
   get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
 
-    values['actions'].each do |name, data|
+    (values['actions'] || []).each do |name, data|
       action = @@zbx.query(:method => 'action.get', :params => {:filter => {:name => name}}).first
 
       unless action
