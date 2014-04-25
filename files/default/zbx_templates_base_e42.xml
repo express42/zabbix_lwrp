@@ -15,8 +15,8 @@
     </groups>
     <templates>
         <template>
-            <template>Chef_E42_Template</template>
-            <name>Chef_E42_Template</name>
+            <template>Chef_Template</template>
+            <name>Chef_Template</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -77,8 +77,8 @@
             <screens/>
         </template>
         <template>
-            <template>CPU_E42_Template</template>
-            <name>CPU_E42_Template</name>
+            <template>CPU_Template</template>
+            <name>CPU_Template</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -601,8 +601,8 @@
             <screens/>
         </template>
         <template>
-            <template>FileSystem_Root_E42_Template</template>
-            <name>FileSystem_Root_E42_Template</name>
+            <template>FileSystem_Root_Template</template>
+            <name>FileSystem_Root_Template</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -957,8 +957,8 @@
             <screens/>
         </template>
         <template>
-            <template>FileSystem_Var_E42_Template</template>
-            <name>FileSystem_Var_E42_Template</name>
+            <template>FileSystem_Var_Template</template>
+            <name>FileSystem_Var_Template</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -1313,8 +1313,8 @@
             <screens/>
         </template>
         <template>
-            <template>Interfaces_E42_Template</template>
-            <name>Interfaces_E42_Template</name>
+            <template>Interfaces_Template</template>
+            <name>Interfaces_Template</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -2005,8 +2005,8 @@
             <screens/>
         </template>
         <template>
-            <template>Linux_E42_Template</template>
-            <name>Linux_E42_Template</name>
+            <template>Linux_Template</template>
+            <name>Linux_Template</name>
             <groups>
                 <group>
                     <name>OS</name>
@@ -2021,41 +2021,41 @@
             <macros/>
             <templates>
                 <template>
-                    <name>Chef_E42_Template</name>
+                    <name>Chef_Template</name>
                 </template>
                 <template>
-                    <name>CPU_E42_Template</name>
+                    <name>CPU_Template</name>
                 </template>
                 <template>
-                    <name>FileSystem_Root_E42_Template</name>
+                    <name>FileSystem_Root_Template</name>
                 </template>
                 <template>
-                    <name>FileSystem_Var_E42_Template</name>
+                    <name>FileSystem_Var_Template</name>
                 </template>
                 <template>
-                    <name>Interfaces_E42_Template</name>
+                    <name>Interfaces_Template</name>
                 </template>
                 <template>
-                    <name>MEM_E42_Template</name>
+                    <name>MEM_Template</name>
                 </template>
                 <template>
-                    <name>Ntpd_E42_Template</name>
+                    <name>Ntpd_Template</name>
                 </template>
                 <template>
-                    <name>Root_Disk_E42_Template</name>
+                    <name>Root_Disk_Template</name>
                 </template>
                 <template>
-                    <name>Sshd_E42_Template</name>
+                    <name>Sshd_Template</name>
                 </template>
                 <template>
-                    <name>System_E42_Template</name>
+                    <name>System_Template</name>
                 </template>
             </templates>
             <screens/>
         </template>
         <template>
-            <template>MEM_E42_Template</template>
-            <name>MEM_E42_Template</name>
+            <template>MEM_Template</template>
+            <name>MEM_Template</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -2494,8 +2494,8 @@
             <screens/>
         </template>
         <template>
-            <template>Ntpd_E42_Template</template>
-            <name>Ntpd_E42_Template</name>
+            <template>Ntpd_Template</template>
+            <name>Ntpd_Template</name>
             <groups>
                 <group>
                     <name>Apps</name>
@@ -2601,8 +2601,8 @@
             <screens/>
         </template>
         <template>
-            <template>Root_Disk_E42_Template</template>
-            <name>Root_Disk_E42_Template</name>
+            <template>Root_Disk_Template</template>
+            <name>Root_Disk_Template</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -2957,8 +2957,8 @@
             <screens/>
         </template>
         <template>
-            <template>Sshd_E42_Template</template>
-            <name>Sshd_E42_Template</name>
+            <template>Sshd_Template</template>
+            <name>Sshd_Template</name>
             <groups>
                 <group>
                     <name>Apps</name>
@@ -3027,8 +3027,8 @@
             <screens/>
         </template>
         <template>
-            <template>System_E42_Template</template>
-            <name>System_E42_Template</name>
+            <template>System_Template</template>
+            <name>System_Template</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -3217,7 +3217,7 @@
     </templates>
     <triggers>
         <trigger>
-            <expression>{Chef_E42_Template:proc.num[,,,&quot;chef/client.rb&quot;].max(600)}=0</expression>
+            <expression>{Chef_Template:proc.num[,,,&quot;chef/client.rb&quot;].max(600)}=0</expression>
             <name>Chef client is not running</name>
             <url/>
             <status>0</status>
@@ -3227,7 +3227,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{Ntpd_E42_Template:ntpd.status.last(0)}=1</expression>
+            <expression>{Ntpd_Template:ntpd.status.last(0)}=1</expression>
             <name>Clock is not synchronised</name>
             <url/>
             <status>0</status>
@@ -3237,7 +3237,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{Ntpd_E42_Template:ntpd.status.last(0)}=2</expression>
+            <expression>{Ntpd_Template:ntpd.status.last(0)}=2</expression>
             <name>Clock state is indeterminant</name>
             <url/>
             <status>0</status>
@@ -3247,7 +3247,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>({Linux_E42_Template:system.cpu.load[,avg1].avg(900)}&gt;(4*{Linux_E42_Template:system.cpu.num.last(0)})) | ({Linux_E42_Template:system.cpu.load[,avg1].avg(1800)}&gt;(2*{Linux_E42_Template:system.cpu.num.last(0)}))</expression>
+            <expression>({Linux_Template:system.cpu.load[,avg1].avg(900)}&gt;(4*{Linux_E42_Template:system.cpu.num.last(0)})) | ({Linux_E42_Template:system.cpu.load[,avg1].avg(1800)}&gt;(2*{Linux_E42_Template:system.cpu.num.last(0)}))</expression>
             <name>CPU Load too high</name>
             <url/>
             <status>0</status>
@@ -3257,7 +3257,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_E42_Template:vfs.fs.inode[/,pfree].last(0)}=0</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.inode[/,pfree].last(0)}=0</expression>
             <name>Free inodes on /, 0%</name>
             <url/>
             <status>0</status>
@@ -3267,7 +3267,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_E42_Template:vfs.fs.inode[/,pfree].last(0)}&lt;5</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.inode[/,pfree].last(0)}&lt;5</expression>
             <name>Free inodes on /, 5%</name>
             <url/>
             <status>0</status>
@@ -3277,7 +3277,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_E42_Template:vfs.fs.inode[/,pfree].last(0)}&lt;10</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.inode[/,pfree].last(0)}&lt;10</expression>
             <name>Free inodes on /, 10%</name>
             <url/>
             <status>0</status>
@@ -3287,7 +3287,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_E42_Template:vfs.fs.inode[/,pfree].last(0)}&lt;15</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.inode[/,pfree].last(0)}&lt;15</expression>
             <name>Free inodes on /, 15%</name>
             <url/>
             <status>0</status>
@@ -3297,7 +3297,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_E42_Template:vfs.fs.inode[/var,pfree].last(0)}=0</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.inode[/var,pfree].last(0)}=0</expression>
             <name>Free inodes on /var, 0%</name>
             <url/>
             <status>0</status>
@@ -3307,7 +3307,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_E42_Template:vfs.fs.inode[/var,pfree].last(0)}&lt;5</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.inode[/var,pfree].last(0)}&lt;5</expression>
             <name>Free inodes on /var, 5%</name>
             <url/>
             <status>0</status>
@@ -3317,7 +3317,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_E42_Template:vfs.fs.inode[/var,pfree].last(0)}&lt;10</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.inode[/var,pfree].last(0)}&lt;10</expression>
             <name>Free inodes on /var, 10%</name>
             <url/>
             <status>0</status>
@@ -3327,7 +3327,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_E42_Template:vfs.fs.inode[/var,pfree].last(0)}&lt;15</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.inode[/var,pfree].last(0)}&lt;15</expression>
             <name>Free inodes on /var, 15%</name>
             <url/>
             <status>0</status>
@@ -3337,7 +3337,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_E42_Template:vfs.fs.size[/,pused].last(0)}=100</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.size[/,pused].last(0)}=100</expression>
             <name>Free space on /, 0%</name>
             <url/>
             <status>0</status>
@@ -3347,7 +3347,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_E42_Template:vfs.fs.size[/,pused].last(0)}&gt;95</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.size[/,pused].last(0)}&gt;95</expression>
             <name>Free space on /, 5%</name>
             <url/>
             <status>0</status>
@@ -3357,7 +3357,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_E42_Template:vfs.fs.size[/,pused].last(0)}&gt;90 | {FileSystem_Root_E42_Template:vfs.fs.size[/,free].last(0)}&lt; 1000000000</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.size[/,pused].last(0)}&gt;90 | {FileSystem_Root_E42_Template:vfs.fs.size[/,free].last(0)}&lt; 1000000000</expression>
             <name>Free space on /, 10%</name>
             <url/>
             <status>0</status>
@@ -3367,7 +3367,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_E42_Template:vfs.fs.size[/,pused].last(0)}&gt;80</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.size[/,pused].last(0)}&gt;80</expression>
             <name>Free space on /, 20%</name>
             <url/>
             <status>0</status>
@@ -3377,7 +3377,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_E42_Template:vfs.fs.size[/var,pused].last(0)}=100</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.size[/var,pused].last(0)}=100</expression>
             <name>Free space on /var, 0%</name>
             <url/>
             <status>0</status>
@@ -3387,7 +3387,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_E42_Template:vfs.fs.size[/var,pused].last(0)}&gt;95</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.size[/var,pused].last(0)}&gt;95</expression>
             <name>Free space on /var, 5%</name>
             <url/>
             <status>0</status>
@@ -3397,7 +3397,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_E42_Template:vfs.fs.size[/var,pused].last(0)}&gt;90 | {FileSystem_Var_E42_Template:vfs.fs.size[/var,free].last(0)}&lt; 1000000000</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.size[/var,pused].last(0)}&gt;90 | {FileSystem_Var_E42_Template:vfs.fs.size[/var,free].last(0)}&lt; 1000000000</expression>
             <name>Free space on /var, 10%</name>
             <url/>
             <status>0</status>
@@ -3407,7 +3407,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_E42_Template:vfs.fs.size[/var,pused].last(0)}&gt;80</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.size[/var,pused].last(0)}&gt;80</expression>
             <name>Free space on /var, 20%</name>
             <url/>
             <status>0</status>
@@ -3417,7 +3417,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{MEM_E42_Template:vm.memory.size.pused.min(600)}&gt;80</expression>
+            <expression>{MEM_Template:vm.memory.size.pused.min(600)}&gt;80</expression>
             <name>High RAM usage</name>
             <url/>
             <status>0</status>
@@ -3427,7 +3427,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{MEM_E42_Template:system.swap.size[,pused].last(0)}&gt;50</expression>
+            <expression>{MEM_Template:system.swap.size[,pused].last(0)}&gt;50</expression>
             <name>High swap usage</name>
             <url/>
             <status>0</status>
@@ -3437,7 +3437,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>({CPU_E42_Template:system.cpu.load[,avg1].avg(900)}&gt;(4*{CPU_E42_Template:system.cpu.num.last(0)})) | ({CPU_E42_Template:system.cpu.load[,avg1].avg(1800)}&gt;(2*{CPU_E42_Template:system.cpu.num.last(0)}))</expression>
+            <expression>({CPU_Template:system.cpu.load[,avg1].avg(900)}&gt;(4*{CPU_E42_Template:system.cpu.num.last(0)})) | ({CPU_E42_Template:system.cpu.load[,avg1].avg(1800)}&gt;(2*{CPU_E42_Template:system.cpu.num.last(0)}))</expression>
             <name>Load Average too high</name>
             <url/>
             <status>0</status>
@@ -3447,7 +3447,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{MEM_E42_Template:vm.memory.size.pused.min(600)}&gt;90 &amp; {MEM_E42_Template:system.swap.size[,pused].avg(600)}&gt;10</expression>
+            <expression>{MEM_Template:vm.memory.size.pused.min(600)}&gt;90 &amp; {MEM_E42_Template:system.swap.size[,pused].avg(600)}&gt;10</expression>
             <name>Low free RAM</name>
             <url/>
             <status>0</status>
@@ -3457,7 +3457,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{Ntpd_E42_Template:proc.num[ntpd].last(0)}=0</expression>
+            <expression>{Ntpd_Template:proc.num[ntpd].last(0)}=0</expression>
             <name>Ntpd availability</name>
             <url/>
             <status>0</status>
@@ -3467,7 +3467,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{System_E42_Template:agent.ping.last(0)}=0</expression>
+            <expression>{System_Template:agent.ping.last(0)}=0</expression>
             <name>ping</name>
             <url/>
             <status>0</status>
@@ -3477,7 +3477,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{System_E42_Template:status.last(0)}=2</expression>
+            <expression>{System_Template:status.last(0)}=2</expression>
             <name>server availability</name>
             <url/>
             <status>0</status>
@@ -3487,7 +3487,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{Sshd_E42_Template:net.tcp.port[,{$SSHD_PORT}].last(0)}=0</expression>
+            <expression>{Sshd_Template:net.tcp.port[,{$SSHD_PORT}].last(0)}=0</expression>
             <name>Sshd availability</name>
             <url/>
             <status>0</status>
@@ -3497,7 +3497,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{Root_Disk_E42_Template:vfs.dev.common_ops.root_disk.min(500)}&gt;500</expression>
+            <expression>{Root_Disk_Template:vfs.dev.common_ops.root_disk.min(500)}&gt;500</expression>
             <name>Total IO operations is too high</name>
             <url/>
             <status>0</status>
@@ -3534,7 +3534,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>FileSystem_Root_E42_Template</host>
+                        <host>FileSystem_Root_Template</host>
                         <key>vfs.fs.size[/,pused]</key>
                     </item>
                 </graph_item>
@@ -3566,7 +3566,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>FileSystem_Var_E42_Template</host>
+                        <host>FileSystem_Var_Template</host>
                         <key>vfs.fs.size[/var,pused]</key>
                     </item>
                 </graph_item>
@@ -3598,7 +3598,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth0,bytes]</key>
                     </item>
                 </graph_item>
@@ -3610,7 +3610,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth0,bytes]</key>
                     </item>
                 </graph_item>
@@ -3642,7 +3642,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth0,packets]</key>
                     </item>
                 </graph_item>
@@ -3654,7 +3654,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth0,dropped]</key>
                     </item>
                 </graph_item>
@@ -3666,7 +3666,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth0,bytes]</key>
                     </item>
                 </graph_item>
@@ -3678,7 +3678,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth0,errors]</key>
                     </item>
                 </graph_item>
@@ -3710,7 +3710,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth0,packets]</key>
                     </item>
                 </graph_item>
@@ -3722,7 +3722,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth0,errors]</key>
                     </item>
                 </graph_item>
@@ -3734,7 +3734,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth0,dropped]</key>
                     </item>
                 </graph_item>
@@ -3746,7 +3746,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth0,bytes]</key>
                     </item>
                 </graph_item>
@@ -3778,7 +3778,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth1,bytes]</key>
                     </item>
                 </graph_item>
@@ -3790,7 +3790,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth1,bytes]</key>
                     </item>
                 </graph_item>
@@ -3822,7 +3822,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth1,errors]</key>
                     </item>
                 </graph_item>
@@ -3834,7 +3834,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth1,dropped]</key>
                     </item>
                 </graph_item>
@@ -3846,7 +3846,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth1,bytes]</key>
                     </item>
                 </graph_item>
@@ -3858,7 +3858,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.in[eth1,packets]</key>
                     </item>
                 </graph_item>
@@ -3890,7 +3890,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth1,errors]</key>
                     </item>
                 </graph_item>
@@ -3902,7 +3902,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth1,dropped]</key>
                     </item>
                 </graph_item>
@@ -3914,7 +3914,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth1,packets]</key>
                     </item>
                 </graph_item>
@@ -3926,7 +3926,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Interfaces_E42_Template</host>
+                        <host>Interfaces_Template</host>
                         <key>net.if.out[eth1,bytes]</key>
                     </item>
                 </graph_item>
@@ -3958,7 +3958,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.switches.chg</key>
                     </item>
                 </graph_item>
@@ -3990,7 +3990,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.util[,user,avg1]</key>
                     </item>
                 </graph_item>
@@ -4002,7 +4002,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.util[,iowait,avg1]</key>
                     </item>
                 </graph_item>
@@ -4014,7 +4014,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.util[,interrupt,avg1]</key>
                     </item>
                 </graph_item>
@@ -4026,7 +4026,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.util[,nice,avg1]</key>
                     </item>
                 </graph_item>
@@ -4038,7 +4038,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.util[,system,avg1]</key>
                     </item>
                 </graph_item>
@@ -4070,7 +4070,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Root_Disk_E42_Template</host>
+                        <host>Root_Disk_Template</host>
                         <key>vfs.dev.write[{$MAIN_DISK},ops,avg1]</key>
                     </item>
                 </graph_item>
@@ -4082,7 +4082,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Root_Disk_E42_Template</host>
+                        <host>Root_Disk_Template</host>
                         <key>vfs.dev.read[{$MAIN_DISK},ops,avg1]</key>
                     </item>
                 </graph_item>
@@ -4094,7 +4094,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Root_Disk_E42_Template</host>
+                        <host>Root_Disk_Template</host>
                         <key>vfs.dev.common_ops.root_disk</key>
                     </item>
                 </graph_item>
@@ -4126,7 +4126,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.load[,avg5]</key>
                     </item>
                 </graph_item>
@@ -4138,7 +4138,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.load[,avg1]</key>
                     </item>
                 </graph_item>
@@ -4150,7 +4150,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>CPU_E42_Template</host>
+                        <host>CPU_Template</host>
                         <key>system.cpu.load[,avg15]</key>
                     </item>
                 </graph_item>
@@ -4173,7 +4173,7 @@
             <ymax_type_1>2</ymax_type_1>
             <ymin_item_1>0</ymin_item_1>
             <ymax_item_1>
-                <host>Linux_E42_Template</host>
+                <host>Linux_Template</host>
                 <key>vm.memory.size[total]</key>
             </ymax_item_1>
             <graph_items>
@@ -4185,7 +4185,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Linux_E42_Template</host>
+                        <host>Linux_Template</host>
                         <key>vm.memory.size[buffers]</key>
                     </item>
                 </graph_item>
@@ -4197,7 +4197,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Linux_E42_Template</host>
+                        <host>Linux_Template</host>
                         <key>vm.memory.size[free]</key>
                     </item>
                 </graph_item>
@@ -4209,7 +4209,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Linux_E42_Template</host>
+                        <host>Linux_Template</host>
                         <key>vm.memory.size[cached]</key>
                     </item>
                 </graph_item>
@@ -4221,7 +4221,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Linux_E42_Template</host>
+                        <host>Linux_Template</host>
                         <key>vm.memory.size[total]</key>
                     </item>
                 </graph_item>
@@ -4233,7 +4233,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Linux_E42_Template</host>
+                        <host>Linux_Template</host>
                         <key>vm.memory.used_without_cache</key>
                     </item>
                 </graph_item>
@@ -4265,7 +4265,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Linux_E42_Template</host>
+                        <host>Linux_Template</host>
                         <key>system.swap.size[,used]</key>
                     </item>
                 </graph_item>
@@ -4277,7 +4277,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Linux_E42_Template</host>
+                        <host>Linux_Template</host>
                         <key>system.swap.size[,free]</key>
                     </item>
                 </graph_item>
@@ -4309,7 +4309,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Root_Disk_E42_Template</host>
+                        <host>Root_Disk_Template</host>
                         <key>vfs.dev.common_bps.root_disk</key>
                     </item>
                 </graph_item>
@@ -4321,7 +4321,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Root_Disk_E42_Template</host>
+                        <host>Root_Disk_Template</host>
                         <key>vfs.dev.write_bps.root_disk</key>
                     </item>
                 </graph_item>
@@ -4333,8 +4333,167 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Root_Disk_E42_Template</host>
+                        <host>Root_Disk_Template</host>
                         <key>vfs.dev.read_bps.root_disk</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+        <graph>
+            <name>Memory: Swap Usage</name>
+            <width>900</width>
+            <height>200</height>
+            <yaxismin>0.0000</yaxismin>
+            <yaxismax>100.0000</yaxismax>
+            <show_work_period>0</show_work_period>
+            <show_triggers>0</show_triggers>
+            <type>1</type>
+            <show_legend>1</show_legend>
+            <show_3d>0</show_3d>
+            <percent_left>0.0000</percent_left>
+            <percent_right>0.0000</percent_right>
+            <ymin_type_1>0</ymin_type_1>
+            <ymax_type_1>0</ymax_type_1>
+            <ymin_item_1>0</ymin_item_1>
+            <ymax_item_1>0</ymax_item_1>
+            <graph_items>
+                <graph_item>
+                    <sortorder>1</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>00C800</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>MEM_Template</host>
+                        <key>system.swap.size[,free]</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>0</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>C80000</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>MEM_Template</host>
+                        <key>system.swap.size[,used]</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+        <graph>
+            <name>Memory: Triggers</name>
+            <width>900</width>
+            <height>200</height>
+            <yaxismin>0.0000</yaxismin>
+            <yaxismax>100.0000</yaxismax>
+            <show_work_period>1</show_work_period>
+            <show_triggers>1</show_triggers>
+            <type>0</type>
+            <show_legend>1</show_legend>
+            <show_3d>0</show_3d>
+            <percent_left>0.0000</percent_left>
+            <percent_right>0.0000</percent_right>
+            <ymin_type_1>1</ymin_type_1>
+            <ymax_type_1>1</ymax_type_1>
+            <ymin_item_1>0</ymin_item_1>
+            <ymax_item_1>0</ymax_item_1>
+            <graph_items>
+                <graph_item>
+                    <sortorder>0</sortorder>
+                    <drawtype>5</drawtype>
+                    <color>C80000</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>MEM_Template</host>
+                        <key>vm.memory.size.pused</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>1</sortorder>
+                    <drawtype>2</drawtype>
+                    <color>00C800</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>MEM_Template</host>
+                        <key>system.swap.size[,pused]</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+        <graph>
+            <name>Memory: Usage</name>
+            <width>900</width>
+            <height>200</height>
+            <yaxismin>0.0000</yaxismin>
+            <yaxismax>100.0000</yaxismax>
+            <show_work_period>1</show_work_period>
+            <show_triggers>1</show_triggers>
+            <type>1</type>
+            <show_legend>1</show_legend>
+            <show_3d>0</show_3d>
+            <percent_left>0.0000</percent_left>
+            <percent_right>0.0000</percent_right>
+            <ymin_type_1>0</ymin_type_1>
+            <ymax_type_1>2</ymax_type_1>
+            <ymin_item_1>0</ymin_item_1>
+            <ymax_item_1>
+                <host>MEM_Template</host>
+                <key>vm.memory.size[total]</key>
+            </ymax_item_1>
+            <graph_items>
+                <graph_item>
+                    <sortorder>0</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>BB0000</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>MEM_Template</host>
+                        <key>vm.memory.used_without_cache</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>1</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>0000AA</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>MEM_Template</host>
+                        <key>vm.memory.size[cached]</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>2</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>66FFFF</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>MEM_Template</host>
+                        <key>vm.memory.size[buffers]</key>
+                    </item>
+                </graph_item>
+                <graph_item>
+                    <sortorder>3</sortorder>
+                    <drawtype>0</drawtype>
+                    <color>9999FF</color>
+                    <yaxisside>0</yaxisside>
+                    <calc_fnc>2</calc_fnc>
+                    <type>0</type>
+                    <item>
+                        <host>MEM_Template</host>
+                        <key>vm.memory.size[free]</key>
                     </item>
                 </graph_item>
             </graph_items>

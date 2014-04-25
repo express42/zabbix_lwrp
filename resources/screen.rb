@@ -134,7 +134,8 @@ class ZabbixScreenItem
       y:             @y || 0,
       sort_triggers: @sort_triggers,
       style:         @style,
-      url:           @url
+      url:           @url,
+      name:          @name
     }
   end
 end
