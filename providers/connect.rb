@@ -348,7 +348,7 @@ def create_media_types
   get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
 
-    values['media_types'].each do |media_type_name, media_type_data|
+    (values['media_types'] || []).each do |media_type_name, media_type_data|
       @@zbx.mediatypes.create_or_update(
         :description => media_type_data['description'],
         :type        => media_type_data['type'],

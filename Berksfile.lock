@@ -1,7 +1,7 @@
 DEPENDENCIES
   base
     git: git://github.com/express42-cookbooks/base.git
-    revision: 86ecb1f43f87ccfaaf892ba1337691481d007747
+    revision: 0bc3a41df48202065451f32c7700abba10b465fa
   partition
     git: git@github.com:express42-cookbooks/partition
     revision: 2fa3aa3b1c9badaebcaeb63f05db37b138dec369
