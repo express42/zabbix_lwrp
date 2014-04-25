@@ -3247,7 +3247,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>({Linux_Template:system.cpu.load[,avg1].avg(900)}&gt;(4*{Linux_E42_Template:system.cpu.num.last(0)})) | ({Linux_E42_Template:system.cpu.load[,avg1].avg(1800)}&gt;(2*{Linux_E42_Template:system.cpu.num.last(0)}))</expression>
+            <expression>({Linux_Template:system.cpu.load[,avg1].avg(900)}&gt;(4*{Linux_Template:system.cpu.num.last(0)})) | ({Linux_Template:system.cpu.load[,avg1].avg(1800)}&gt;(2*{Linux_Template:system.cpu.num.last(0)}))</expression>
             <name>CPU Load too high</name>
             <url/>
             <status>0</status>
@@ -3357,7 +3357,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Root_Template:vfs.fs.size[/,pused].last(0)}&gt;90 | {FileSystem_Root_E42_Template:vfs.fs.size[/,free].last(0)}&lt; 1000000000</expression>
+            <expression>{FileSystem_Root_Template:vfs.fs.size[/,pused].last(0)}&gt;90 | {FileSystem_Root_Template:vfs.fs.size[/,free].last(0)}&lt; 1000000000</expression>
             <name>Free space on /, 10%</name>
             <url/>
             <status>0</status>
@@ -3397,7 +3397,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{FileSystem_Var_Template:vfs.fs.size[/var,pused].last(0)}&gt;90 | {FileSystem_Var_E42_Template:vfs.fs.size[/var,free].last(0)}&lt; 1000000000</expression>
+            <expression>{FileSystem_Var_Template:vfs.fs.size[/var,pused].last(0)}&gt;90 | {FileSystem_Var_Template:vfs.fs.size[/var,free].last(0)}&lt; 1000000000</expression>
             <name>Free space on /var, 10%</name>
             <url/>
             <status>0</status>
@@ -3437,7 +3437,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>({CPU_Template:system.cpu.load[,avg1].avg(900)}&gt;(4*{CPU_E42_Template:system.cpu.num.last(0)})) | ({CPU_E42_Template:system.cpu.load[,avg1].avg(1800)}&gt;(2*{CPU_E42_Template:system.cpu.num.last(0)}))</expression>
+            <expression>({CPU_Template:system.cpu.load[,avg1].avg(900)}&gt;(4*{CPU_Template:system.cpu.num.last(0)})) | ({CPU_Template:system.cpu.load[,avg1].avg(1800)}&gt;(2*{CPU_Template:system.cpu.num.last(0)}))</expression>
             <name>Load Average too high</name>
             <url/>
             <status>0</status>
@@ -3447,7 +3447,7 @@
             <dependencies/>
         </trigger>
         <trigger>
-            <expression>{MEM_Template:vm.memory.size.pused.min(600)}&gt;90 &amp; {MEM_E42_Template:system.swap.size[,pused].avg(600)}&gt;10</expression>
+            <expression>{MEM_Template:vm.memory.size.pused.min(600)}&gt;90 &amp; {MEM_Template:system.swap.size[,pused].avg(600)}&gt;10</expression>
             <name>Low free RAM</name>
             <url/>
             <status>0</status>
