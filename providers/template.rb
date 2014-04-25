@@ -27,13 +27,7 @@
 
 
 action :import do
-  check_path = new_resource.path + '.imported'
-
-  unless ::File.exists? check_path
-    Chef::Log.info "Importing template #{new_resource.path}"
-    result = ZabbixConnect.import_template(::File.new(new_resource.path))
-    ::File.open(check_path, 'w') if result
-  end
+  add_data(node, fqdn, 'import_templates' => [new_resource.path])
 end
 
 action :add do

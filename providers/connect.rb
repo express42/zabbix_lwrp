@@ -107,6 +107,7 @@ action :make do
     Chef::Log.warn "Couldn't connect to zabbix server, all zabbix provider are non-working." + e.message
   end
 
+  create_import_templates
   create_hosts
   create_templates
   create_applications
@@ -476,6 +477,23 @@ def create_actions
             :params => data.merge('conditions' => conditions, 'operations' => operations)
           )
         end
+      end
+    end
+  end
+end
+
+def create_import_templates
+  get_hosts do |host|
+    _, values = host['zabbix']['hosts'].to_a.first
+
+    (values['import_templates'] || []).each do |name|
+
+      check_path = name + '.imported'
+
+      unless ::File.exists? check_path
+        Chef::Log.info "Importing template #{name}"
+        result = self.class.import_template(::File.new(name))
+        ::File.open(check_path, 'w') if result
       end
     end
   end
