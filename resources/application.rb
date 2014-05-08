@@ -30,44 +30,45 @@ attribute :name, kind_of: String, name_attribute: true
 attr_accessor :exists
 attr_reader :items, :triggers
 
-def initialize(name, run_context=nil)
+def initialize(name, run_context = nil)
   super
   @items = []
   @triggers = []
 end
 
+# Describe zabbix item
 class ZabbixItem
   TYPES = {
-    :zabbix     => 0,
-    :snmpv1     => 1,
-    :trapper    => 2,
-    :simple     => 3,
-    :snmpv2c    => 4,
-    :internal   => 5,
-    :snmpv3     => 6,
-    :active     => 7,
-    :aggregate  => 8,
-    :httptest   => 9,
-    :external   => 10,
-    :db_monitor => 11,
-    :ipmi       => 12,
-    :ssh        => 13,
-    :telnet     => 14,
-    :calculated => 15
+    zabbix:      0,
+    snmpv1:      1,
+    trapper:     2,
+    simple:      3,
+    snmpv2c:     4,
+    internal:    5,
+    snmpv3:      6,
+    active:      7,
+    aggregate:   8,
+    httptest:    9,
+    external:    10,
+    db_monitor:  11,
+    ipmi:        12,
+    ssh:         13,
+    telnet:      14,
+    calculated:  15
   }.freeze
 
   VALUE_TYPES = {
-    :float        => 0,         # Numeric (float)
-    :character    => 1,         # Character
-    :log_line     => 2,         # Log
-    :unsigned_int => 3,         # Numeric (unsigned)
-    :text         => 4          # Text
+    float:         0,         # Numeric (float)
+    character:     1,         # Character
+    log_line:      2,         # Log
+    unsigned_int:  3,         # Numeric (unsigned)
+    text:          4          # Text
   }.freeze
 
   DELTA_TYPES = {
-    :as_is     => 0,
-    :speed_per_second       => 1,
-    :delta => 2
+    as_is:      0,
+    speed_per_second:        1,
+    delta:  2
   }.freeze
 
   def initialize(key, &block)
@@ -108,7 +109,7 @@ class ZabbixItem
   end
 
   def value_type(value)
-    raise "Value type should be one of #{VALUE_TYPES.keys.join(", ")}" unless VALUE_TYPES.keys.include? value
+    fail "Value type should be one of #{VALUE_TYPES.keys.join(', ')}" unless VALUE_TYPES.keys.include? value
     @value_type = VALUE_TYPES[value]
   end
 
@@ -134,19 +135,20 @@ class ZabbixItem
 
   def to_hash
     {
-      :key_       => @key,
-      :type       => @type,
-      :name       => @name,
-      :delay      => @frequency,
-      :history    => @history || 7,
-      :trends     => @trends || 365,
-      :value_type => @value_type || VALUE_TYPES[:unsigned_int],
-      :delta      => @delta,
-      :params     => @formula
+      key_:        @key,
+      type:        @type,
+      name:        @name,
+      delay:       @frequency,
+      history:     @history || 7,
+      trends:      @trends || 365,
+      value_type:  @value_type || VALUE_TYPES[:unsigned_int],
+      delta:       @delta,
+      params:      @formula
     }
   end
 end
 
+# Describe zabbix trigger
 class ZabbixTrigger
   PRIORITY = {
     not_classified: 0,

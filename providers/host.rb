@@ -25,15 +25,11 @@
 # SOFTWARE.
 #
 
-
 action :create do
   add_data(node, new_resource.host_name,
-    {
-      :host_group => new_resource.host_group,
-      :ip_address => new_resource.ip_address,
-      :dns => new_resource.dns,
-      :use_ip => new_resource.use_ip,
-    }
+           host_group: new_resource.host_group,
+           ip_address: new_resource.ip_address,
+           dns:        new_resource.dns,
+           use_ip:     new_resource.use_ip
   )
 end
-

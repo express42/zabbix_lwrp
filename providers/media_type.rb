@@ -30,29 +30,29 @@ def whyrun_supported?
 end
 
 TYPE = {
-  :email      => 0,
-  :script     => 1,
-  :sms        => 2,
-  :jabber     => 3,
-  :ez_texting => 100
+  email:      0,
+  script:     1,
+  sms:        2,
+  jabber:     3,
+  ez_texting: 100
 }.freeze
-
 
 action :create do
   converge_by("Create #{new_resource}.") do
-    add_data(node, node.fqdn, { 'media_types' => {
+    add_data(node, node.fqdn, 'media_types' =>
+      {
         new_resource.name => {
-          :description => new_resource.name,
-          :type        => TYPE[new_resource.type],
-          :server      => new_resource.server,
-          :helo        => new_resource.helo,
-          :email       => new_resource.email,
-          :path        => new_resource.path,
-          :modem       => new_resource.modem,
-          :username    => new_resource.username,
-          :password    => new_resource.password
+          description: new_resource.name,
+          type:        TYPE[new_resource.type],
+          server:      new_resource.server,
+          helo:        new_resource.helo,
+          email:       new_resource.email,
+          path:        new_resource.path,
+          modem:       new_resource.modem,
+          username:    new_resource.username,
+          password:    new_resource.password
         }
       }
-    })
+    )
   end
 end

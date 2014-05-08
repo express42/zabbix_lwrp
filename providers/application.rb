@@ -37,16 +37,14 @@ action :sync do
   end
 
   new_resource.items.each do |item|
-    unless app[:items].has_key? item.key
-      app[:items][item.key] = item.to_hash
-    end
+    app[:items][item.key] = item.to_hash unless app[:items].key? item.key
   end
 
   new_resource.triggers.each do |trigger|
-    unless app[:triggers].has_key? trigger.description
+    unless app[:triggers].key? trigger.description
       app[:triggers][trigger.description] = trigger.to_hash
     end
   end
 
-  add_data(node, node.fqdn, {'applications' => {new_resource.name => app}})
+  add_data(node, node.fqdn, 'applications' => { new_resource.name => app })
 end

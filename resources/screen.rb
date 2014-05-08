@@ -37,6 +37,7 @@ def initialize(name, run_context = nil)
   @screen_items = []
 end
 
+# Describe screen items in zabbix
 class ZabbixScreenItem
   RESOURCE_TYPE = {
     graph:                    0,

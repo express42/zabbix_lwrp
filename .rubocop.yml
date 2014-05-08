@@ -1,4 +1,10 @@
 LineLength:
-    Enabled: false
+  Enabled: false
 SingleSpaceBeforeFirstArg:
-    Enabled: false
+  Enabled: false
+TrivialAccessors:
+  Enabled: false
+CyclomaticComplexity:
+  Enabled: false
+MethodLength:
+  Max: 20

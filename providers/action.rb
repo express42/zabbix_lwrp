@@ -26,9 +26,9 @@
 #
 
 EVENT_SOURCE = {
-  :triggers          => 0,
-  :discovery         => 1,
-  :auto_registration => 2
+  triggers:          0,
+  discovery:         1,
+  auto_registration: 2
 }.freeze
 
 def whyrun_supported?
@@ -43,19 +43,20 @@ action :sync do
 
     add_data(node, node.fqdn, 'actions' => { new_resource.name =>
       {
-        :evaltype        => 0,
-        :name            => new_resource.name,
-        :eventsource     => EVENT_SOURCE[new_resource.event_source],
-        :esc_period      => new_resource.escalation_time,
-        :status          => new_resource.enabled ? 1 : 0,
-        :def_shortdata   => new_resource.message_subject || "",
-        :def_longdata    => new_resource.message_body || "",
-        :recovery_msg    => new_resource.send_recovery_message ? 1 : 0,
-        :r_shortdata     => new_resource.recovery_message_subject || "",
-        :r_longdata      => new_resource.recovery_message_body || "",
-        :operations      => operations,
-        :conditions      => new_resource.conditions.map(&:to_hash)
-      }}
+        evaltype:      0,
+        name:          new_resource.name,
+        eventsource:   EVENT_SOURCE[new_resource.event_source],
+        esc_period:    new_resource.escalation_time,
+        status:        new_resource.enabled ? 1 : 0,
+        def_shortdata: new_resource.message_subject || '',
+        def_longdata:  new_resource.message_body || '',
+        recovery_msg:  new_resource.send_recovery_message ? 1 : 0,
+        r_shortdata:   new_resource.recovery_message_subject || '',
+        r_longdata:    new_resource.recovery_message_body || '',
+        operations:    operations,
+        conditions:    new_resource.conditions.map(&:to_hash)
+      }
+    }
     )
   end
 end

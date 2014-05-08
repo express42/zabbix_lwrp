@@ -31,6 +31,6 @@ end
 
 action :create do
   converge_by("Create #{new_resource}.") do
-    add_data(node, node.fqdn, 'user_macros' => {new_resource.name => new_resource.value })
+    add_data(node, node.fqdn, 'user_macros' => { new_resource.name => new_resource.value })
   end
 end

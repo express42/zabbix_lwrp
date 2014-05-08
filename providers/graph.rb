@@ -33,17 +33,21 @@ action :create do
   converge_by("Creating data for #{new_resource}") do
     graph_items = new_resource.graph_items.map do |gi|
       {
-        :key => gi[:key],
-        :color   => gi[:color],
-        :yaxisside => gi[:yaxisside]
+        key: gi[:key],
+        color: gi[:color],
+        yaxisside: gi[:yaxisside]
       }
     end
 
-    add_data(node, node.fqdn, :graphs => { new_resource.name => {
-        :height => new_resource.height,
-        :width => new_resource.width,
-        :gitems => graph_items
+    add_data(node, node.fqdn, graphs:
+      {
+        new_resource.name =>
+        {
+          height: new_resource.height,
+          width:  new_resource.width,
+          gitems: graph_items
+        }
       }
-    })
+    )
   end
 end

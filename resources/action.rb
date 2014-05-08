@@ -25,24 +25,23 @@
 # SOFTWARE.
 #
 
-
 actions :sync
 default_action :sync
 
 attr_accessor :exists
 attr_reader :operations, :conditions
 
-attribute :name, :kind_of => String, :name_attribute => true
-attribute :event_source,             :required => true, :equal_to => [:triggers]
-attribute :escalation_time,          :default => 60
-attribute :enabled,                  :default => true
+attribute :name, kind_of: String, name_attribute: true
+attribute :event_source,             required: true, equal_to: [:triggers]
+attribute :escalation_time,          default: 60
+attribute :enabled,                  default: true
 attribute :message_subject
 attribute :message_body
-attribute :send_recovery_message,    :default => false
+attribute :send_recovery_message,    default: false
 attribute :recovery_message_subject
 attribute :recovery_message_body
 
-def initialize(name, run_context=nil)
+def initialize(name, run_context = nil)
   super
   @operations = []
   @conditions = []
@@ -56,74 +55,74 @@ def condition(*cond, &block)
   @conditions << ZabbixCondition.new(self, *cond, &block)
 end
 
+# Describe Zabbix condition in action
 class ZabbixCondition
   TYPE = {
-    :host_group         => 0,
-    :host               => 1,
-    :trigger            => 2,
-    :trigger_name       => 3,
-    :trigger_severity   => 4,
-    :trigger_value      => 5,
-    :time_period        => 6,
-    :dhost_ip           => 7,
-    :dservice_type      => 8,
-    :dservice_port      => 9,
-    :dstatus            => 10,
-    :duptime            => 11,
-    :dvalue             => 12,
-    :host_template      => 13,
-    :event_acknowledged => 14,
-    :application        => 15,
-    :maintenance        => 16,
-    :node               => 17,
-    :drule              => 18,
-    :dcheck             => 19,
-    :proxy              => 20,
-    :dobject            => 21,
-    :host_name          => 22
+    host_group:          0,
+    host:                1,
+    trigger:             2,
+    trigger_name:        3,
+    trigger_severity:    4,
+    trigger_value:       5,
+    time_period:         6,
+    dhost_ip:            7,
+    dservice_type:       8,
+    dservice_port:       9,
+    dstatus:             10,
+    duptime:             11,
+    dvalue:              12,
+    host_template:       13,
+    event_acknowledged:  14,
+    application:         15,
+    maintenance:         16,
+    node:                17,
+    drule:               18,
+    dcheck:              19,
+    proxy:               20,
+    dobject:             21,
+    host_name:           22
   }.freeze
-
 
   OPERATOR = {
-    :equal      => 0,
-    :not_equal  => 1,
-    :like       => 2,
-    :not_like   => 3,
-    :in         => 4,
-    :gte        => 5,
-    :lte        => 6,
-    :not_in     => 7
+    equal:       0,
+    not_equal:   1,
+    like:        2,
+    not_like:    3,
+    in:          4,
+    gte:         5,
+    lte:         6,
+    not_in:      7
   }.freeze
 
-  TRIGGER_VALUES = { :ok => 0, :problem => 1 }.freeze
+  TRIGGER_VALUES = { ok:  0, problem:  1 }.freeze
   TRIGGER_SEVERITY = {
-    :info     => 1,
-    :warn     => 2,
-    :avg      => 3,
-    :high     => 4,
-    :disaster => 5  }.freeze
+    info:      1,
+    warn:      2,
+    avg:       3,
+    high:      4,
+    disaster:  5  }.freeze
 
-  def initialize(context, *cond, &block)
+  def initialize(_context, *cond, &block)
     if cond
       if cond.is_a?(Array) && cond.size == 3
         @type, @operator, @value = cond
       else
-        raise 'condition should have 3 elements - type, operator and value'
+        fail 'condition should have 3 elements - type, operator and value'
       end
     else
       instance_eval(&block)
     end
   end
 
-  def type value
+  def type(value)
     @type = value
   end
 
-  def operator value
+  def operator(value)
     @operator = value
   end
 
-  def value v
+  def value(v)
     @value = v
   end
 
@@ -132,60 +131,61 @@ class ZabbixCondition
     when :trigger, :host_group
       value = @value
     when :trigger_value
-      raise "Only #{TRIGGER_VALUES.keys.join(' ')} is allowed for trigger value" unless TRIGGER_VALUES.has_key? @value
+      fail "Only #{TRIGGER_VALUES.keys.join(' ')} is allowed for trigger value" unless TRIGGER_VALUES.key? @value
       value = TRIGGER_VALUES[@value]
     when :trigger_severity
-      raise "Only #{TRIGGER_SEVERITY.keys.join(' ')} is allowed for trigger severity" unless TRIGGER_SEVERITY.has_key? @value
+      fail "Only #{TRIGGER_SEVERITY.keys.join(' ')} is allowed for trigger severity" unless TRIGGER_SEVERITY.key? @value
       value = TRIGGER_SEVERITY[@value]
     when :maintenance
       value = ''
     else
-      raise "Unknown action's condition type '#{@type}'"
+      fail "Unknown action's condition type '#{@type}'"
     end
 
     {
-      :conditiontype => TYPE[@type],
-      :operator => OPERATOR[@operator],
-      :value => value
+      conditiontype:  TYPE[@type],
+      operator:  OPERATOR[@operator],
+      value:  value
     }
   end
 end
 
+# Describe Zabbix operation in actions
 class ZabbixOperation
   TYPE = {
-    :message           => 0,
-    :command           => 1,
-    :host_add          => 2,
-    :host_remove       => 3,
-    :host_group_add    => 4,
-    :host_group_remove => 5,
-    :template_add      => 6,
-    :template_remove   => 7,
-    :host_enable       => 8,
-    :host_disable      => 9
+    message:            0,
+    command:            1,
+    host_add:           2,
+    host_remove:        3,
+    host_group_add:     4,
+    host_group_remove:  5,
+    template_add:       6,
+    template_remove:    7,
+    host_enable:        8,
+    host_disable:       9
   }.freeze
 
-  def initialize(context, &block)
+  def initialize(_context, &block)
     instance_eval(&block)
   end
 
-  def type value
+  def type(value)
     @type = value
   end
 
-  def escalation_time value
+  def escalation_time(value)
     @escalation_time = value
   end
 
-  def start value
+  def start(value)
     @start = value
   end
 
-  def stop value
+  def stop(value)
     @stop = value
   end
 
-  def user_groups value
+  def user_groups(value)
     @user_groups = value
   end
 
@@ -195,41 +195,41 @@ class ZabbixOperation
 
   def to_hash
     {
-      :operationtype => TYPE[@type || :message],
-      :opmessage_grp => @user_groups,
-      :opmessage => @message.to_hash
+      operationtype:  TYPE[@type || :message],
+      opmessage_grp:  @user_groups,
+      opmessage:  @message.to_hash
     }
   end
 end
 
+# Describe zabbix message in actions
 class ZabbixMessage
-
   def initialize(&block)
     instance_eval(&block)
   end
 
-  def use_default_message value
+  def use_default_message(value)
     @use_default_message = value
   end
 
-  def subject value
+  def subject(value)
     @subject = value
   end
 
-  def message value
+  def message(value)
     @message = value
   end
 
-  def media_type value
+  def media_type(value)
     @media_type = value
   end
 
   def to_hash
     {
-      :subject     => @subject,
-      :default_msg => @use_default_message ? 1 : 0,
-      :message     => @message,
-      :mediatypeid => @media_type
+      subject:      @subject,
+      default_msg:  @use_default_message ? 1 : 0,
+      message:      @message,
+      mediatypeid:  @media_type
     }
   end
 end

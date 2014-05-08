@@ -31,12 +31,14 @@ end
 
 action :sync do
   converge_by("Create data for #{new_resource}.") do
-    add_data(node, node.fqdn, :screens => {
-      new_resource.name => {
-        :hsize => new_resource.hsize,
-        :vsize => new_resource.vsize,
-        :screenitems => new_resource.screen_items.map { |i| i.to_hash }
+    add_data(node, node.fqdn, screens:
+      {
+        new_resource.name => {
+          hsize:       new_resource.hsize,
+          vsize:       new_resource.vsize,
+          screenitems: new_resource.screen_items.map { |i| i.to_hash }
+        }
       }
-    })
+    )
   end
 end
