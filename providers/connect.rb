@@ -55,25 +55,25 @@ def self.import_template(file_handler)
 
     auth = @@zbx.client.instance_variable_get(:@auth_hash)
 
-    uri = uri.parse(path)
+    uri = URI.parse(path)
     data = {}.tap do |wrapped|
       data.each_pair do |key, value|
         if value.respond_to?(:read)
-          # we are going to assume it's always xml we're uploading.
-          wrapped[key] = uploadio.new(value, 'application/xml', ::file.basename(value.path))
+          # We are going to assume it's always XML we're uploading.
+          wrapped[key] = UploadIO.new(value, 'application/xml', ::File.basename(value.path))
         else
           wrapped[key] = value
         end
       end
     end
 
-    request = net::http::post::multipart.new(uri.path, data).tap do |req|
-      req['cookie'] = "zbx_sessionid=#{cgi.escape(auth)}"
+    request = Net::HTTP::Post::Multipart.new(uri.path, data).tap do |req|
+      req['Cookie'] = "zbx_sessionid=#{CGI.escape(auth)}"
     end
 
-    net::http.new(uri.host, uri.port).request(request)
+    Net::HTTP.new(uri.host, uri.port).request(request)
   else
-    chef::log.warn('use import_template after zabbix_connect')
+    Chef::Log.warn('Use import_template after zabbix_connect')
     false
   end
 end
@@ -85,7 +85,7 @@ action :make do
   apiurl = new_resource.apiurl
 
   if credentials_databag
-    user = 'admin'
+    user = 'Admin'
     pass = data_bag_item(credentials_databag, 'admin')['pass']
   end
 
@@ -102,16 +102,16 @@ action :make do
   require 'zabbixapi'
 
   begin
-    @@zbx = zabbixapi.connect( # rubocop: disable classvars
+    @@zbx = ZabbixApi.connect( # rubocop: disable ClassVars
       url:      apiurl,
       user:     user,
       password: pass
     )
-  rescue exception => e # rubocop: disable rescueexception
-    chef::log.warn "couldn't connect to zabbix server, all zabbix provider are non-working." + e.message
+  rescue Exception => e # rubocop: disable RescueException
+    Chef::Log.warn "Couldn't connect to zabbix server, all zabbix provider are non-working." + e.message
   end
 
-  if defined?(@@zbx)
+  if @@zbx
     create_import_templates
     create_hosts
     create_templates
@@ -150,7 +150,7 @@ def create_hosts
       method: 'host.get',
       params: {
         hostids: host_id,
-        selectinterfaces: 'refer'
+        selectInterfaces: 'refer'
       }).first
 
     add_data(host, fqdn, 'host_id' => host_id, 'interface_id' => tmp['interfaces'].first['interfaceid'])
@@ -201,7 +201,7 @@ def create_applications
         if current_item
           current_items.delete current_item
 
-          converge_by("update item #{item}") do
+          converge_by("Update item #{item}") do
             @@zbx.items.update(item.to_hash.merge(
               itemid: current_item['itemid'],
               hostid: host_id,
@@ -209,7 +209,7 @@ def create_applications
               applications: [app_id]))
           end
         else
-          converge_by("create new item #{item}") do
+          converge_by("Create new item #{item}") do
             @@zbx.items.create(item.to_hash.merge(
               hostid: host_id,
               interfaceid: interface_id,
@@ -220,7 +220,7 @@ def create_applications
 
       # now delete unused items
       current_items.each do |item|
-        converge_by("destroy item #{item}") do
+        converge_by("Destroy item #{item}") do
           item.destroy
         end
       end
@@ -230,13 +230,13 @@ def create_applications
     #   if current_trigger = @current_triggers.find { |i| i["description"] == trigger.description }
     #     @current_triggers.delete current_trigger
     #
-    #     converge_by("update #{trigger.description}") do
-    #       zabbixconnect.zbx.triggers.update(trigger.to_hash.merge(
+    #     converge_by("Update #{trigger.description}") do
+    #       ZabbixConnect.zbx.triggers.update(trigger.to_hash.merge(
     #         :triggerid => current_trigger["triggerid"]))
     #     end
     #   else
-    #     converge_by("create #{trigger.description}") do
-    #       zabbixconnect.zbx.triggers.create(trigger.to_hash)
+    #     converge_by("Create #{trigger.description}") do
+    #       ZabbixConnect.zbx.triggers.create(trigger.to_hash)
     #     end
     #   end
     # end
@@ -262,7 +262,7 @@ def create_graphs
 
       if graph
       else
-        converge_by("create zabbix graph #{graph_name}") do
+        converge_by("Create zabbix graph #{graph_name}") do
           graph_items = graph_value['gitems'].map do |gi|
             {
               itemid:    get_item_id(gi[:key], host_id),
@@ -304,10 +304,10 @@ def create_screens
         params: {
           filter: { name: screen_name },
           output: 'extend',
-          selectscreenitems: 'extend' }).first
+          selectScreenItems: 'extend' }).first
 
       unless screen
-        converge_by("create zabbix screen #{screen_name}.") do
+        converge_by("Create zabbix screen #{screen_name}.") do
           @@zbx.screens.create(name: screen_name, hsize: screen_data['hsize'],
                                vsize: screen_data['vsize'])
           screen = @@zbx.query(
@@ -315,7 +315,7 @@ def create_screens
             params: {
               filter: { name: screen_name },
               output: 'extend',
-              selectscreenitems: 'extend' }).first
+              selectScreenItems: 'extend' }).first
         end
       end
 
@@ -331,10 +331,10 @@ def create_screens
               }
             }
           ).first
-          fail "graph '#{item.name}' not found" unless g
+          fail "Graph '#{item.name}' not found" unless g
           resource_id = g['graphid']
         else
-          fail 'incorrect resource type for screen item'
+          fail 'Incorrect resource type for screen item'
         end
 
         res << item.to_hash.merge(resourceid: resource_id)
@@ -388,7 +388,7 @@ def create_user_macros
       ).first
 
       unless user_macro
-        converge_by("create zabbix macro #{macro}.") do
+        converge_by("Create zabbix macro #{macro}.") do
           @@zbx.query(
             method: 'usermacro.create',
             params: {
@@ -404,7 +404,7 @@ def create_user_macros
 end
 
 def get_hosts(&block)
-  if chef::config[:solo]
+  if Chef::Config[:solo]
     block.call node
   else
     search(:node, 'hosts:*').each do |host|
@@ -440,10 +440,10 @@ def create_actions
 
       unless action
         conditions = data['conditions'].map do |condition|
-          if condition['conditiontype'] == chef::resource::zabbixaction::zabbixcondition::type[:trigger]
+          if condition['conditiontype'] == Chef::Resource::ZabbixAction::ZabbixCondition::TYPE[:trigger]
             value = @@zbx.triggers.get_id(description: condition['value'])
             condition.merge('value' => value)
-          elsif condition['conditiontype'] == chef::resource::zabbixaction::zabbixcondition::type[:host_group]
+          elsif condition['conditiontype'] == Chef::Resource::ZabbixAction::ZabbixCondition::TYPE[:host_group]
             value = @@zbx.hostgroups.get_id(name: condition['value'])
             condition.merge('value' => value)
           else
@@ -455,7 +455,7 @@ def create_actions
           msg = operation['opmessage']
           media_type = @@zbx.mediatypes.get_id(description: msg['mediatypeid'])
 
-          fail "media type with name #{msg['mediatypeid']} not found" unless media_type
+          fail "Media type with name #{msg['mediatypeid']} not found" unless media_type
 
           if operation['opmessage_grp']
             user_groups = @@zbx.usergroups.get(name: operation['opmessage_grp'])
@@ -465,7 +465,7 @@ def create_actions
           end
         end
 
-        converge_by("create zabbix action #{name}.") do
+        converge_by("Create zabbix action #{name}.") do
           @@zbx.query(
             method: 'action.create',
             params: data.merge('conditions' => conditions, 'operations' => operations)
@@ -481,9 +481,9 @@ def create_import_templates
     _, values = host['zabbix']['hosts'].to_a.first
 
     (values['import_templates'] || []).each do |name|
-      chef::log.info "importing template #{name}"
-      self.class.import_template(::file.new(name))
+      Chef::Log.info "Importing template #{name}"
+      self.class.import_template(::File.new(name))
     end
   end
 end
-# rubocop: enable methodlength
+# rubocop: enable MethodLength
