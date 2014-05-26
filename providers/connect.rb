@@ -298,7 +298,7 @@ def create_screens
     _, values = host['zabbix']['hosts'].to_a.first
     host_id = values['host_id']
 
-    values['screens'].each do |screen_name, screen_data|
+    (values['screens'] || []).each do |screen_name, screen_data|
       screen = @@zbx.query(
         method: 'screen.get',
         params: {
