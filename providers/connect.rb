@@ -111,7 +111,7 @@ action :make do
     Chef::Log.warn "Couldn't connect to zabbix server, all zabbix provider are non-working." + e.message
   end
 
-  if @@zbx
+  if defined?(@@zbx)
     create_import_templates
     create_hosts
     create_templates
