@@ -478,7 +478,7 @@ end
 
 def create_import_templates
   get_hosts do |host|
-    _, values = host['zabbix']['hosts'].to_a.first
+    _, values = host['zabbix']['hosts'].to_a.first || {}
 
     (values['import_templates'] || []).each do |name|
       Chef::Log.info "Importing template #{name}"
