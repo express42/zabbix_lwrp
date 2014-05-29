@@ -47,6 +47,8 @@ def self.import_template(file_handler)
     'rules[graphs][createMissing]'           => 1,
     'rules[screens][updateExisting]'         => 1,
     'rules[screens][createMissing]'          => 1,
+    'rules[discoveryRules][updateExisting]'  => 1,
+    'rules[discoveryRules][createMissing]'   => 1,
     :import_file                             => file_handler
   }
 
