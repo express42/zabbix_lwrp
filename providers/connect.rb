@@ -410,7 +410,11 @@ def get_hosts(&block)
     block.call node
   else
     search(:node, 'hosts:*').each do |host|
-      block.call host
+      if host['fqdn'] == node['fqdn']
+        block.call node
+      else
+        block.call host
+      end
     end
   end
 end
