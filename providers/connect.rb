@@ -165,7 +165,7 @@ def create_applications
     host_id = values['host_id']
     interface_id = values['interface_id']
 
-    values['applications'].each do |app_name, app_data|
+    (values['applications'] || {}).each do |app_name, app_data|
       if app_data['app_id']
         app_id = app_data['app_id']
       else
@@ -251,7 +251,7 @@ def create_graphs
     _, values = host['zabbix']['hosts'].to_a.first
     host_id = values['host_id']
 
-    values['graphs'].each do |graph_name, graph_value|
+    (values['graphs'] || {}).each do |graph_name, graph_value|
       graph = @@zbx.query(
         method: 'graph.get',
         params: {
