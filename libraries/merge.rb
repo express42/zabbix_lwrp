@@ -10,6 +10,4 @@ def add_data(node, fqdn, hash)
   result = dm.merge existing_data, hash
 
   node.normal['zabbix']['hosts'][fqdn] = result
-
-  node.save unless Chef::Config[:solo]
 end
