@@ -116,13 +116,13 @@ action :make do
   if defined?(@@zbx)
     create_import_templates
     create_hosts
+    create_user_macros
     create_templates
     create_applications
     create_graphs
     create_screens
     create_media_types
     create_user_groups
-    create_user_macros
     create_actions
   end
 end
