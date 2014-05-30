@@ -376,7 +376,16 @@ end
 def create_user_macros
   get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
-    host_id = host['fqdn']
+        host_id = @@zbx.query(
+          method: 'host.get',
+          params: {
+            output: 'extend',
+            filter: {
+              host: host['fqdn']
+            }
+          }
+        ).first['hostid']
+
 
     (values['user_macros'] || []).each do |macro, value|
       user_macro = @@zbx.query(
