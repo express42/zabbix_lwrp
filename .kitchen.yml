@@ -1,0 +1,26 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+  data_bags_path: test/fixtures/data_bags
+
+platforms:
+  - name: ubuntu-12.04
+    driver:
+      box: express42/ubuntu12.04-chef11
+  - name: ubuntu-14.04
+    driver:
+      box: express42/ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[zabbix_lwrp_test]
+    attributes:
+      zabbix:
+        server:
+          config:
+            db:
+              ip: 127.0.0.1

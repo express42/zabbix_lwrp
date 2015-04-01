@@ -1,0 +1,2 @@
+zabbix-server-pgsql zabbix-server-pgsql/dbconfig-install boolean false
+zabbix-server-pgsql zabbix-server-pgsql/internal/skip-preseed boolean true

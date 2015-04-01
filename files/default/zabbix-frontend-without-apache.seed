@@ -1,0 +1,2 @@
+zabbix-frontend-php zabbix-frontend-php/configure-apache boolean false
+zabbix-frontend-php zabbix-frontend-php/restart-webserver boolean false
