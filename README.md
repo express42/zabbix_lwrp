@@ -11,7 +11,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 ## Cookbooks:
 
 * apt
-* helpers-express42
+* helpers_express42
 * lvm
 * nginx
 * postgresql_lwrp

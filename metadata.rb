@@ -7,7 +7,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '1.0.0'
 
 depends          'apt'
-depends          'helpers-express42'
+depends          'helpers_express42'
 depends          'lvm'
 depends          'nginx'
 depends          'postgresql_lwrp'
