@@ -3,7 +3,7 @@ source 'https://supermarket.chef.io'
 metadata
 
 cookbook 'apt'
-cookbook 'helpers-express42', git: 'git@github.com:express42-cookbooks/helpers-express42.git'
+cookbook 'helpers_express42', git: 'git@github.com:express42-cookbooks/helpers_express42.git'
 cookbook 'lvm'
 cookbook 'nginx', git: 'git@github.com:evilmartians/chef-nginx.git', tag: 'v2.2.4'
 cookbook 'php', git: 'git@github.com:express42-cookbooks/php.git'
