@@ -484,7 +484,7 @@ def create_import_templates
               createMissing: true,
               updateExisting: true
             },
-            trigger: {
+            triggers: {
               createMissing: true,
               updateExisting: true
             },
