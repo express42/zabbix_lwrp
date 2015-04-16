@@ -1,8 +1,6 @@
 node.default['zabbix']['agent']['serverhost'] = node['ipaddress']
 
 include_recipe 'apt'
-include_recipe 'postgresql_lwrp::apt_official_repository'
-include_recipe 'nginx::official-repo'
 include_recipe 'zabbix_lwrp::default'
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
