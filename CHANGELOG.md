@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.0:
+
+* Change name for all zabbix resources from zabbix_lwrp_* to zabbix_*
+
 ## 1.0.1:
 
 * Fix import triggers from xml template
