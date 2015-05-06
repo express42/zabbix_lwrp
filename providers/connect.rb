@@ -403,10 +403,10 @@ def create_actions
 
       unless action
         conditions = data['conditions'].map do |condition|
-          if condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixLwrpCondition::TYPE[:trigger]
+          if condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:trigger]
             value = @@zbx.triggers.get_id(description: condition['value'])
             condition.merge('value' => value)
-          elsif condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixLwrpCondition::TYPE[:host_group]
+          elsif condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:host_group]
             value = @@zbx.hostgroups.get_id(name: condition['value'])
             condition.merge('value' => value)
           else

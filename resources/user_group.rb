@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_user_group
+resource_name :zabbix_user_group
+
 attr_accessor :exists
 
 actions :create

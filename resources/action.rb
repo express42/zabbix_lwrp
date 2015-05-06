@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_action
+resource_name :zabbix_action
+
 actions :sync
 default_action :sync
 

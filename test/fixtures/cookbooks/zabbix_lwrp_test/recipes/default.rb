@@ -8,14 +8,14 @@ include_recipe 'zabbix_lwrp::web'
 
 ip_mon = net_get_private(node).empty? ? net_get_public(node)[0][1] : net_get_private(node)[0][1]
 
-zabbix_lwrp_host node['fqdn'] do
+zabbix_host node['fqdn'] do
   action :create
   host_group 'Main'
   use_ip true
   ip_address ip_mon
 end
 
-zabbix_lwrp_application 'Test application' do
+zabbix_application 'Test application' do
   action :sync
 
   (0..5).each do |i|
@@ -32,7 +32,7 @@ zabbix_lwrp_application 'Test application' do
 end
 
 (0..5).each do |i|
-  zabbix_lwrp_graph "Graph #{i}" do
+  zabbix_graph "Graph #{i}" do
     action :create
     width 640
     height 480
@@ -40,7 +40,7 @@ end
   end
 end
 
-zabbix_lwrp_screen 'Screen 1' do
+zabbix_screen 'Screen 1' do
   action :sync
   hsize 1
   vsize 6
@@ -54,17 +54,17 @@ zabbix_lwrp_screen 'Screen 1' do
   end
 end
 
-zabbix_lwrp_media_type 'sms' do
+zabbix_media_type 'sms' do
   action :create
   type :sms
   modem '/dev/modem'
 end
 
-zabbix_lwrp_user_group 'My Beloved group' do
+zabbix_user_group 'My Beloved group' do
   action :create
 end
 
-zabbix_lwrp_action 'My favorite action' do
+zabbix_action 'My favorite action' do
   event_source :triggers
   operation do
     user_groups 'My Beloved group'
@@ -86,12 +86,12 @@ zabbix_lwrp_action 'My favorite action' do
   condition :maintenance, :not_in, :maintenance
 end
 
-zabbix_lwrp_user_macro 'my_macro' do
+zabbix_user_macro 'my_macro' do
   action :create
   value 'foobar'
 end
 
-zabbix_lwrp_connect 'default' do
+zabbix_connect 'default' do
   action :make
   apiurl 'http://localhost/api_jsonrpc.php'
   databag 'zabbix'

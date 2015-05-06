@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_host
+resource_name :zabbix_host
+
 def initialize(*args)
   super
   @action = :create

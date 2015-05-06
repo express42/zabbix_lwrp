@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_graph
+resource_name :zabbix_graph
+
 actions :create
 
 default_action :create

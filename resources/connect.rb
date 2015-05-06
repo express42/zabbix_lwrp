@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_connect
+resource_name :zabbix_connect
+
 actions :make
 
 default_action :make

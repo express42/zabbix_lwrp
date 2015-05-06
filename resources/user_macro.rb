@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_user_macro
+resource_name :zabbix_user_macro
+
 attr_accessor :exists
 
 actions :create

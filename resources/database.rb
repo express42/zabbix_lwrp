@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_database
+resource_name :zabbix_database
+
 actions :create
 
 default_action :create

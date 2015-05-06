@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_media_type
+resource_name :zabbix_media_type
+
 attr_accessor :exists
 
 actions :create

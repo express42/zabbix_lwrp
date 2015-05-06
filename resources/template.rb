@@ -25,6 +25,9 @@
 # SOFTWARE.
 #
 
+provides :zabbix_template
+resource_name :zabbix_template
+
 def initialize(*args)
   super
   @action = :add
