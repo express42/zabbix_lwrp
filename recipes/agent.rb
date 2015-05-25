@@ -35,9 +35,6 @@ service 'zabbix-agent' do
   action [:enable, :start]
 end
 
-ip_mon = net_get_private(node).empty? ? net_get_public(node)[0][1] : net_get_private(node)[0][1]
-calculate_ip = node['zabbix']['agent']['calculate_ip']
-
 directory node['zabbix']['agent']['include'] do
   owner 'zabbix'
   group 'zabbix'
@@ -64,7 +61,7 @@ template '/etc/zabbix/zabbix_agentd.conf' do
     include:                node['zabbix']['agent']['include'],
     timeout:                node['zabbix']['agent']['timeout'],
     enable_remote_commands: node['zabbix']['agent']['enable_remote_commands'],
-    listen_ip:              calculate_ip ? ip_mon : '0.0.0.0',
+    listen_ip:              node['zabbix']['agent']['listen_ip'],
     user_params:            node['zabbix']['agent']['user_params']
   )
   notifies :restart, 'service[zabbix-agent]', :delayed

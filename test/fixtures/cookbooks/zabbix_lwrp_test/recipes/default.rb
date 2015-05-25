@@ -6,13 +6,11 @@ include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'
 
-ip_mon = net_get_private(node).empty? ? net_get_public(node)[0][1] : net_get_private(node)[0][1]
-
 zabbix_host node['fqdn'] do
   action :create
   host_group 'Main'
   use_ip true
-  ip_address ip_mon
+  ip_address node['zabbix']['agent']['serverhost']
 end
 
 zabbix_application 'Test application' do

@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.1:
+
+* Remove express42 helpers dependencies
+
 ## 1.1.0:
 
 * Change name for all zabbix resources from zabbix_lwrp_* to zabbix_*

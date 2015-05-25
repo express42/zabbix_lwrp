@@ -30,7 +30,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['agent']['remotecmds']` -  Defaults to `"0"`.
 * `node['zabbix']['agent']['timeout']` -  Defaults to `"3"`.
 * `node['zabbix']['agent']['enable_remote_commands']` -  Defaults to `"0"`.
-* `node['zabbix']['agent']['calculate_ip']` -  Defaults to `"true"`.
+* `node['zabbix']['agent']['listen_ip']` -  Defaults to `"0.0.0.0"`.
 * `node['zabbix']['agent']['serverhost']` -  Defaults to `"127.0.0.1"`.
 * `node['zabbix']['agent']['user_params']` -  Defaults to `"{ ... }"`.
 
