@@ -19,9 +19,12 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 # Attributes
 
+## Common attributes
+
 * `node['zabbix']['version']` -  Defaults to `"2.4"`.
 * `node['zabbix']['api-version']` -  Defaults to `"2.4.2"`.
 
+## Agent attributes
 
 * `node['zabbix']['agent']['include']` -  Defaults to `"/opt/zabbix/etc"`.
 * `node['zabbix']['agent']['scripts']` -  Defaults to `"/opt/zabbix/scripts"`.
@@ -34,6 +37,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['agent']['serverhost']` -  Defaults to `"127.0.0.1"`.
 * `node['zabbix']['agent']['user_params']` -  Defaults to `"{ ... }"`.
 
+## Database attributes
 
 * `node['zabbix']['server']['database']['lvm_group']` -  Defaults to `"shared"`.
 * `node['zabbix']['server']['database']['partition_size']` -  Defaults to `"10G"`.
@@ -53,6 +57,9 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['database']['configuration']['log_min_duration_statement']` -  Defaults to `"1000"`.
 * `node['zabbix']['server']['database']['configuration']['archive_mode']` -  Defaults to `"on"`.
 * `node['zabbix']['server']['database']['configuration']['archive_command']` -  Defaults to `"exit 0"`.
+
+## Server attributes
+
 * `node['zabbix']['server']['service']` -  Defaults to `"zabbix-server"`.
 * `node['zabbix']['server']['credentials']['databag']` -  Defaults to `"zabbix"`.
 * `node['zabbix']['server']['config']['listenip']` -  Defaults to `"0.0.0.0"`.
@@ -63,6 +70,9 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['config']['timeouts']` -  Defaults to `"{ ... }"`.
 * `node['zabbix']['server']['config']['global']` -  Defaults to `"{ ... }"`.
 * `node['zabbix']['server']['config']['alerts']` -  Defaults to `"{ ... }"`.
+
+## Frontend attributes
+
 * `node['zabbix']['server']['web']['server_name']` -  Defaults to `"localhost"`.
 * `node['zabbix']['server']['web']['listen']` -  Defaults to `"127.0.0.1"`.
 * `node['zabbix']['server']['web']['port']` -  Defaults to `"9200"`.
