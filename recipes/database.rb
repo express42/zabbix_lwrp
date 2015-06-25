@@ -25,11 +25,6 @@
 include_recipe 'postgresql_lwrp::apt_official_repository'
 include_recipe 'postgresql_lwrp::default'
 
-directory node['zabbix']['server']['database']['mount_point'] do
-  owner 'postgres'
-  group 'postgres'
-end
-
 if node['zabbix']['server']['database']['databag'].nil? ||
    node['zabbix']['server']['database']['databag'].empty? ||
    !data_bag(node['zabbix']['server']['database']['databag']).include?('databases')
