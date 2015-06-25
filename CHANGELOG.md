@@ -2,6 +2,17 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.3:
+
+* Switch to php-fpm cookbook
+* Fix issues
+
+## 1.1.2:
+
+* Add partition, host and connect recipes
+* Add build-essential cookbook
+* Fix issues
+
 ## 1.1.1:
 
 * Remove express42 helpers dependencies
