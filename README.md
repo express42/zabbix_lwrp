@@ -13,7 +13,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * apt
 * build-essential
 * lvm
-* nginx
+* [nginx](https://github.com/evilmartians/chef-nginx)
 * postgresql_lwrp
 * php-fpm
 
