@@ -23,31 +23,19 @@
 # SOFTWARE.
 
 db_name = 'zabbix'
-db_node = node
 
-# Find zabbix database address and port
-if node['recipes'].include?('zabbix_lwrp::database')
-  if node['zabbix']['server']['database']['configuration']['listen_addresses'] == '*' || '0.0.0.0'
-    db_node_ip = '127.0.0.1'
-  else
-    db_node_ip = node['zabbix']['server']['database']['configuration']['listen_addresses']
-  end
-else
-  db_node = search(:node, "recipe:zabbix_lwrp::database AND chef_environment:#{node.chef_environment}").first # ~FC003
-  db_node_ip = db_node['ipaddress']
-end
-
-db_node_port = db_node['zabbix']['server']['database']['configuration']['port']
+db_host = node['zabbix']['server']['database']['configuration']['listen_addresses']
+db_port = node['zabbix']['server']['database']['configuration']['port']
 
 # Get user and database information from data bag
 
-if db_node['zabbix']['server']['database']['databag'].nil? ||
-   db_node['zabbix']['server']['database']['databag'].empty? ||
-   data_bag(db_node['zabbix']['server']['database']['databag']).empty?
+if node['zabbix']['server']['database']['databag'].nil? ||
+   node['zabbix']['server']['database']['databag'].empty? ||
+   data_bag(node['zabbix']['server']['database']['databag']).empty?
   fail "You should specify databag name for zabbix db user in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should exists"
 end
 
-db_user_data = data_bag_item(db_node['zabbix']['server']['database']['databag'], 'users')['users']
+db_user_data = data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users']
 db_user = db_user_data.keys.first
 db_pass = db_user_data[db_user]['options']['password']
 
@@ -58,8 +46,8 @@ db_config = {
     DBName: db_name,
     DBPassword: db_pass,
     DBUser: db_user,
-    DBHost: db_node_ip,
-    DBPort: db_node_port
+    DBHost: db_host,
+    DBPort: db_port
   }
 }
 
@@ -75,8 +63,8 @@ package 'snmp-mibs-downloader'
 zabbix_database db_name do
   db_user db_user
   db_pass db_pass
-  db_node_ip db_node_ip
-  db_node_port db_node_port
+  db_host db_host
+  db_port db_port
   action :create
 end
 

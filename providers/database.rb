@@ -75,10 +75,10 @@ action :create do
   db_name = new_resource.db_name
   db_user = new_resource.db_user
   db_pass = new_resource.db_pass
-  db_node_ip = new_resource.db_node_ip
-  db_node_port = new_resource.db_node_port
+  db_host = new_resource.db_host
+  db_port = new_resource.db_port
 
-  db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_node_ip} -p #{db_node_port} -U #{db_user} -d #{db_name}"
+  db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
 
   execute 'Provisioning zabbix database' do
     command "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \

@@ -35,5 +35,5 @@ default_action :create
 attribute :db_name, name_attribute: true, kind_of: String
 attribute :db_user, kind_of: String
 attribute :db_pass, kind_of: String
-attribute :db_node_ip, kind_of: String
-attribute :db_node_port, kind_of: String
+attribute :db_host, kind_of: String
+attribute :db_port, kind_of: String
