@@ -120,18 +120,18 @@ For examples see fixture data bag `test/fixtures/databags/zabbix/`
 # LWRP
 
 This cookbooks provides next resources:
-* [zabbix_lwrp_action](#zabbix_lwrp_action)
-* [zabbix_lwrp_application](#zabbix_lwrp_application)
-* [zabbix_lwrp_graph](#zabbix_lwrp_graph)
-* [zabbix_lwrp_host](#zabbix_lwrp_host)
-* [zabbix_lwrp_media_type](#zabbix_lwrp_media_type)
-* [zabbix_lwrp_screen](#zabbix_lwrp_screen)
-* [zabbix_lwrp_template](#zabbix_lwrp_template)
-* [zabbix_lwrp_user_group](#zabbix_lwrp_user_group)
+* [zabbix_action](#zabbix_action)
+* [zabbix_application](#zabbix_application)
+* [zabbix_graph](#zabbix_graph)
+* [zabbix_host](#zabbix_host)
+* [zabbix_media_type](#zabbix_media_type)
+* [zabbix_screen](#zabbix_screen)
+* [zabbix_template](#zabbix_template)
+* [zabbix_user_group](#zabbix_user_group)
 
-## zabbix_lwrp_action
+## zabbix_action
 
-zabbix_lwrp_action LWRP creates zabbix action with operations, conditions and messages.
+zabbix_action LWRP creates zabbix action with operations, conditions and messages.
 
 ### Actions
 <table>
@@ -308,7 +308,7 @@ Attributes for message.
 
 ### Examples
 ```ruby
-zabbix_lwrp_action 'Some disturbance in force' do
+zabbix_action 'Some disturbance in force' do
   event_source :triggers
   operation do
     user_groups 'Ultimate Question Group'
@@ -324,10 +324,10 @@ end
 ```
 
 
-## zabbix_lwrp_application
+## zabbix_application
 
-zabbix_lwrp_application lwrp creates application, items and triggers. You should think about items and triggers like nested
-resources inside zabbix_lwrp_application lwrp.
+zabbix_application lwrp creates application, items and triggers. You should think about items and triggers like nested
+resources inside zabbix_application lwrp.
 
 ### Actions
 <table>
@@ -436,7 +436,7 @@ Create/update zabbix item
 
 ### Examples
 ```ruby
-zabbix_lwrp_application "Test application" do
+zabbix_application "Test application" do
   action :sync
 
   item 'vfs.fs.size[/var/log,free]' do
@@ -453,52 +453,52 @@ zabbix_lwrp_application "Test application" do
 end
 ```
 
-## zabbix_lwrp_graph
+## zabbix_graph
 
 ### Examples
 ```ruby
 
-zabbix_lwrp_graph 'Graph 1' do
+zabbix_graph 'Graph 1' do
   width 640
   height 480
   graph_items [:key => 'vfs.fs.size[/var/log,free]', :color => '111111']
 end
 ```
 
-## zabbix_lwrp_host
+## zabbix_host
 
 ### Examples
 ```ruby
-zabbix_lwrp_host node.fqdn do
+zabbix_host node.fqdn do
   host_group 'My Favorite Host Group'
   use_ip true
   ip_address '127.0.0.1'
 end
 ```
 
-## zabbix_lwrp_media_type
+## zabbix_media_type
 
 ### Examples
 ```ruby
-zabbix_lwrp_media_type 'sms' do
+zabbix_media_type 'sms' do
   type :sms
   modem '/dev/modem'
 end
 ```
 
-## zabbix_lwrp_screen
+## zabbix_screen
 
 
 ### Examples
 ```ruby
-zabbix_lwrp_screen 'Screen 1' do
+zabbix_screen 'Screen 1' do
   screen_item 'Graph 1' do
     resource_type :graph
   end
 end
 ```
 
-## zabbix_lwrp_template
+## zabbix_template
 
 ### Actions
 <table>
@@ -537,14 +537,14 @@ end
 
 ### Examples
 ```ruby
-zabbix_lwrp_template '/tmp/zbx_templates_linux.xml' do
+zabbix_template '/tmp/zbx_templates_linux.xml' do
   action :import
 end
 
-zabbix_lwrp_template 'Linux_Template'
+zabbix_template 'Linux_Template'
 ```
 
-## zabbix_lwrp_user_group
+## zabbix_user_group
 
 ### Actions
 <table>
@@ -574,7 +574,7 @@ zabbix_lwrp_template 'Linux_Template'
 
 ### Examples
 ```ruby
-zabbix_lwrp_user_group 'Ultimate Question Group'
+zabbix_user_group 'Ultimate Question Group'
 ```
 
 
