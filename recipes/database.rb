@@ -22,16 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_recipe 'lvm'
 include_recipe 'postgresql_lwrp::apt_official_repository'
 include_recipe 'postgresql_lwrp::default'
-
-lvm_logical_volume 'zabbix-psql-db' do
-  group node['zabbix']['server']['database']['lvm_group']
-  size node['zabbix']['server']['database']['partition_size']
-  filesystem 'ext4'
-  mount_point node['zabbix']['server']['database']['mount_point']
-end
 
 directory node['zabbix']['server']['database']['mount_point'] do
   owner 'postgres'
