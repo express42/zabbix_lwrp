@@ -42,7 +42,7 @@ end
 describe file('/var/lib/postgresql') do
   it { should be_directory }
   it { should be_writable.by_user('postgres') }
-  it { should be_mounted.with(options: { device: '/dev/mapper/shared-zabbix--psql--db' }) }
+  it { should be_mounted.with(options: { device: '/dev/mapper/shared-zabbix--database' }) }
 end
 
 describe command('pg_lsclusters ') do
@@ -81,9 +81,8 @@ describe package('zabbix-frontend-php') do
   it { should be_installed }
 end
 
-describe file('/etc/php5/fpm/pool.d/zabbix-runtime.conf') do
+describe file('/etc/php5/fpm/pool.d/zabbix.conf') do
   it { should be_file }
-  it { should contain 'Chef generated configuration' }
   it { should contain 'listen = 127.0.0.1:9200' }
 end
 
