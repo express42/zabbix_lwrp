@@ -11,7 +11,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 ## Cookbooks:
 
 * apt
-* helpers_express42
+* build-essential
 * lvm
 * nginx
 * postgresql_lwrp
@@ -19,7 +19,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 # Attributes
 
-## Common attributes
+## Default attributes
 
 * `node['zabbix']['version']` -  Defaults to `"2.4"`.
 * `node['zabbix']['api-version']` -  Defaults to `"2.4.2"`.
@@ -39,14 +39,16 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 ## Database attributes
 
-* `node['zabbix']['server']['database']['lvm_group']` -  Defaults to `"shared"`.
-* `node['zabbix']['server']['database']['partition_size']` -  Defaults to `"10G"`.
-* `node['zabbix']['server']['database']['databag']` -  Defaults to `"zabbix"`.
-* `node['zabbix']['server']['database']['network']` -  Defaults to `"127.0.0.0/8"`.
-* `node['zabbix']['server']['database']['version']` -  Defaults to `"9.4"`.
-* `node['zabbix']['server']['database']['cluster']` -  Defaults to `"main"`.
-* `node['zabbix']['server']['database']['locale']` -  Defaults to `"en_US.utf8"`.
-* `node['zabbix']['server']['database']['mount_point']` -  Defaults to `"/var/lib/postgresql"`.
+* `node['zabbix']['server']['database']['filesystem']` -  Defaults to `ext4`.
+* `node['zabbix']['server']['database']['lvm_group']` -  Defaults to `shared`.
+* `node['zabbix']['server']['database']['lvm_volume']` -  Defaults to `/dev/sda3`.
+* `node['zabbix']['server']['database']['partition_size']` -  Defaults to `10G`.
+* `node['zabbix']['server']['database']['cluster']` -  Defaults to `main`.
+* `node['zabbix']['server']['database']['databag']` -  Defaults to `zabbix`.
+* `node['zabbix']['server']['database']['locale']` -  Defaults to `en_US.utf8`.
+* `node['zabbix']['server']['database']['mount_point']` -  Defaults to `/var/lib/postgresql`.
+* `node['zabbix']['server']['database']['network']` -  Defaults to `127.0.0.0/8`.
+* `node['zabbix']['server']['database']['version']` -  Defaults to `9.4`.
 * `node['zabbix']['server']['database']['configuration']['listen_addresses']` -  Defaults to `"127.0.0.1"`.
 * `node['zabbix']['server']['database']['configuration']['port']` -  Defaults to `"5432"`.
 * `node['zabbix']['server']['database']['configuration']['max_connections']` -  Defaults to `"300"`.
@@ -95,8 +97,11 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 # Recipes
 
 * zabbix_lwrp::agent - Installs and configures Zabbix agent.
+* zabbix_lwrp::connect - Connects to Zabbix API to sync configuration.
 * zabbix_lwrp::default - Installs and configures Zabbix official repository and agent.
 * zabbix_lwrp::database - Installs and configures Zabbix database.
+* zabbix_lwrp::host - Creates host via Zabbix API.
+* zabbix_lwrp::partition - Configures LVM for Zabbix database.
 * zabbix_lwrp::repository - Installs Zabbix official repository.
 * zabbix_lwrp::server - Installs and configures Zabbix server.
 * zabbix_lwrp::web - Installs and configures Zabbix frontend.
