@@ -39,6 +39,6 @@ action :sync do
           screenitems: new_resource.screen_items.map(&:to_hash)
         }
       }
-    )
+            )
   end
 end

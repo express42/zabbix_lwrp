@@ -25,7 +25,6 @@
 # SOFTWARE.
 #
 
-
 provides :zabbix_application
 resource_name :zabbix_application
 

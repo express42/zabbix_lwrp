@@ -53,6 +53,6 @@ action :create do
           password:    new_resource.password
         }
       }
-    )
+            )
   end
 end

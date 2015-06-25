@@ -48,6 +48,6 @@ action :create do
           gitems: graph_items
         }
       }
-    )
+            )
   end
 end

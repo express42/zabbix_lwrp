@@ -55,6 +55,6 @@ action :sync do
         conditions:    new_resource.conditions.map(&:to_hash)
       }
     }
-    )
+            )
   end
 end

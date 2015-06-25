@@ -31,5 +31,5 @@ action :create do
            ip_address: new_resource.ip_address,
            dns:        new_resource.dns,
            use_ip:     new_resource.use_ip
-  )
+          )
 end
