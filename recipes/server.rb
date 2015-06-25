@@ -72,7 +72,7 @@ end
 
 package 'snmp-mibs-downloader'
 
-zabbix_lwrp_database db_name do
+zabbix_database db_name do
   db_user db_user
   db_pass db_pass
   db_node_ip db_node_ip
