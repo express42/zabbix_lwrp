@@ -22,10 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class Chef::Recipe # rubocop: disable Documentation, ClassAndModuleChildren
-  include Express42::Network
-end
-
 package 'zabbix-agent'
 
 package 'zabbix-sender'
