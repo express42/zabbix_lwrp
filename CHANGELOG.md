@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.4:
+
+* Remove chef search from server and web recipes
+
 ## 1.1.3:
 
 * Switch to php-fpm cookbook
