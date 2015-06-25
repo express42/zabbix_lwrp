@@ -15,7 +15,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * lvm
 * nginx
 * postgresql_lwrp
-* php
+* php-fpm
 
 # Attributes
 
@@ -75,24 +75,23 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 ## Frontend attributes
 
-* `node['zabbix']['server']['web']['server_name']` -  Defaults to `"localhost"`.
-* `node['zabbix']['server']['web']['listen']` -  Defaults to `"127.0.0.1"`.
-* `node['zabbix']['server']['web']['port']` -  Defaults to `"9200"`.
-* `node['zabbix']['server']['web']['limits']['core']` -  Defaults to `"0"`.
-* `node['zabbix']['server']['web']['limits']['files']` -  Defaults to `"1024"`.
-* `node['zabbix']['server']['web']['limits']['requests']` -  Defaults to `"500"`.
-* `node['zabbix']['server']['web']['limits']['children']` -  Defaults to `"5"`.
-* `node['zabbix']['server']['web']['limits']['spare_children']['min']` -  Defaults to `"1"`.
-* `node['zabbix']['server']['web']['limits']['spare_children']['max']` -  Defaults to `"3"`.
-* `node['zabbix']['server']['web']['configuration']['register_globals']` -  Defaults to `"true"`.
-* `node['zabbix']['server']['web']['configuration']['display_errors']` -  Defaults to `"false"`.
-* `node['zabbix']['server']['web']['configuration']['max_execution_time']` -  Defaults to `"600"`.
-* `node['zabbix']['server']['web']['configuration']['error_reporting']` -  Defaults to `"E_ALL &amp; ~E_DEPRECATED"`.
-* `node['zabbix']['server']['web']['configuration']['date.timezone']` -  Defaults to `"UTC"`.
-* `node['zabbix']['server']['web']['configuration']['error_log']` -  Defaults to `"/var/log/zabbix-php-error.log"`.
-* `node['zabbix']['server']['web']['configuration']['memory_limit']` -  Defaults to `"128M"`.
-* `node['zabbix']['server']['web']['configuration']['post_max_size']` -  Defaults to `"32M"`.
-* `node['zabbix']['server']['web']['configuration']['max_input_time']` -  Defaults to `"300"`.
+* `node['zabbix']['server']['web']['server_name']` -  Defaults to `localhost`.
+* `node['zabbix']['server']['web']['listen']` -  Defaults to `127.0.0.1`.
+* `node['zabbix']['server']['web']['port']` -  Defaults to `9200`.
+* `node['zabbix']['server']['web']['max_requests']` -  Defaults to `500`.
+* `node['zabbix']['server']['web']['max_children']` -  Defaults to `5`.
+* `node['zabbix']['server']['web']['min_spare_servers']` -  Defaults to `1`.
+* `node['zabbix']['server']['web']['max_spare_servers']` -  Defaults to `3`.
+* `node['zabbix']['server']['web']['process_manager']` -  Defaults to `dynamic`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_value[date.timezone]']` -  Defaults to `UTC`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_flag[display_errors]']` -  Defaults to `false`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_value[error_reporting]']` -  Defaults to `E_ALL &amp; ~E_DEPRECATED`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_value[error_log]']` -  Defaults to `/var/log/zabbix-php-error.log`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_value[max_execution_time]']` -  Defaults to `600`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_value[max_input_time]']` -  Defaults to `300`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_value[memory_limit]']` -  Defaults to `128M`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_value[post_max_size]']` -  Defaults to `32M`.
+* `node['zabbix']['server']['web']['configuration']['php_admin_flag[register_globals]']` -  Defaults to `true`.
 
 # Recipes
 
