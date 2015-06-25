@@ -1,17 +1,10 @@
-node.default['zabbix']['agent']['serverhost'] = node['ipaddress']
-
 include_recipe 'apt'
 include_recipe 'zabbix_lwrp::default'
+include_recipe 'zabbix_lwrp::partition'
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'
-
-zabbix_host node['fqdn'] do
-  action :create
-  host_group 'Main'
-  use_ip true
-  ip_address node['zabbix']['agent']['serverhost']
-end
+include_recipe 'zabbix_lwrp::host'
 
 zabbix_application 'Test application' do
   action :sync
@@ -38,7 +31,7 @@ end
   end
 end
 
-zabbix_screen 'Screen 1' do
+zabbix_screen 'Test Screen' do
   action :sync
   hsize 1
   vsize 6
@@ -58,14 +51,14 @@ zabbix_media_type 'sms' do
   modem '/dev/modem'
 end
 
-zabbix_user_group 'My Beloved group' do
+zabbix_user_group 'Test group' do
   action :create
 end
 
-zabbix_action 'My favorite action' do
+zabbix_action 'Test action' do
   event_source :triggers
   operation do
-    user_groups 'My Beloved group'
+    user_groups 'Test group'
     message do
       use_default_message false
       subject 'Test {TRIGGER.SEVERITY}: {HOSTNAME1} {TRIGGER.STATUS}: {TRIGGER.NAME}'
@@ -84,13 +77,9 @@ zabbix_action 'My favorite action' do
   condition :maintenance, :not_in, :maintenance
 end
 
-zabbix_user_macro 'my_macro' do
+zabbix_user_macro 'Test_macro' do
   action :create
   value 'foobar'
 end
 
-zabbix_connect 'default' do
-  action :make
-  apiurl 'http://localhost/api_jsonrpc.php'
-  databag 'zabbix'
-end
+include_recipe 'zabbix_lwrp::connect'
