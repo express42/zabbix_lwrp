@@ -4,7 +4,7 @@ metadata
 
 cookbook 'apt'
 cookbook 'nginx', git: 'git@github.com:evilmartians/chef-nginx.git', tag: 'v2.2.4'
-cookbook 'php', git: 'git@github.com:express42-cookbooks/php.git'
+cookbook 'php-fpm'
 cookbook 'postgresql_lwrp'
 
 group :integration do

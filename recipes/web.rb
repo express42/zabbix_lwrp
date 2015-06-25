@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_recipe 'php'
+include_recipe 'php-fpm'
 include_recipe 'nginx::official-repo'
 include_recipe 'nginx::default'
 
@@ -60,12 +60,14 @@ package 'zabbix-frontend-php' do
   action [:install, :reconfig]
 end
 
-php_pool 'zabbix-runtime' do
-  address node['zabbix']['server']['web']['listen']
-  port node['zabbix']['server']['web']['port']
-  limits node['zabbix']['server']['web']['limits']
-  php_var node['zabbix']['server']['web']['configuration']
-  action :add
+php_fpm_pool 'zabbix' do
+  listen "#{node['zabbix']['server']['web']['listen']}:#{node['zabbix']['server']['web']['port']}"
+  max_children node['zabbix']['server']['web']['max_children']
+  max_requests node['zabbix']['server']['web']['max_requests']
+  min_spare_servers node['zabbix']['server']['web']['min_spare_servers']
+  max_spare_servers node['zabbix']['server']['web']['max_spare_servers']
+  process_manager node['zabbix']['server']['web']['process_manager']
+  php_options node['zabbix']['server']['web']['configuration']
 end
 
 template '/etc/zabbix/web/zabbix.conf.php' do
