@@ -45,6 +45,7 @@ action :sync do
       app[:triggers][trigger.description] = trigger.to_hash
     end
   end
-
-  add_data(node, node['fqdn'], 'applications' => { new_resource.name => app })
+  converge_by("Create #{new_resource}.") do
+    add_data(node, node['fqdn'], 'applications' => { new_resource.name => app })
+  end
 end

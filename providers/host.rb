@@ -25,11 +25,17 @@
 # SOFTWARE.
 #
 
+def whyrun_supported?
+  true
+end
+
 action :create do
-  add_data(node, new_resource.host_name,
-           host_group: new_resource.host_group,
-           ip_address: new_resource.ip_address,
-           dns:        new_resource.dns,
-           use_ip:     new_resource.use_ip
-          )
+  converge_by("Create #{new_resource}.") do
+    add_data(node, new_resource.host_name,
+             host_group: new_resource.host_group,
+             ip_address: new_resource.ip_address,
+             dns:        new_resource.dns,
+             use_ip:     new_resource.use_ip
+            )
+  end
 end

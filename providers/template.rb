@@ -25,8 +25,14 @@
 # SOFTWARE.
 #
 
+def whyrun_supported?
+  true
+end
+
 action :import do
-  add_data(node, node['fqdn'], 'import_templates' => [new_resource.path])
+  converge_by("Import #{new_resource}.") do
+    add_data(node, node['fqdn'], 'import_templates' => [new_resource.path])
+  end
 end
 
 action :add do
@@ -35,6 +41,7 @@ action :add do
   else
     fqdn = node['fqdn']
   end
-
-  add_data(node, fqdn, 'templates' => { new_resource.path => fqdn })
+  converge_by("Add #{new_resource}.") do
+    add_data(node, fqdn, 'templates' => { new_resource.path => fqdn })
+  end
 end

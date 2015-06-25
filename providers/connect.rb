@@ -25,6 +25,8 @@
 # SOFTWARE.
 #
 
+use_inline_resources
+
 action :make do
   credentials_databag = new_resource.databag
   user = new_resource.user
@@ -499,4 +501,3 @@ def create_import_templates
     end
   end
 end
-# rubocop: enable MethodLength
