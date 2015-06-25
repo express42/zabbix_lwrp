@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/express42-cookbooks/zabbix_lwrp.svg?branch=master)](https://travis-ci.org/express42-cookbooks/zabbix_lwrp)
+
 # Description
 
 Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provides LWRP for creating and modifying Zabbix objects.
