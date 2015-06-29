@@ -26,6 +26,7 @@
 #
 
 use_inline_resources
+provides :zabbix_database
 
 require 'English'
 require 'digest/md5'

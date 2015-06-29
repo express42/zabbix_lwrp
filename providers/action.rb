@@ -25,6 +25,8 @@
 # SOFTWARE.
 #
 
+provides :zabbix_action
+
 EVENT_SOURCE = {
   triggers:          0,
   discovery:         1,

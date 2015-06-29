@@ -25,6 +25,8 @@
 # SOFTWARE.
 #
 
+provides :zabbix_template
+
 def whyrun_supported?
   true
 end

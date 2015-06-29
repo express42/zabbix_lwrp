@@ -25,6 +25,8 @@
 # SOFTWARE.
 #
 
+provides :zabbix_screen
+
 def whyrun_supported?
   true
 end
