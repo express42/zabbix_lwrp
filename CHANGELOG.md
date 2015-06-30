@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.7:
+
+* Update docs
+
 ## 1.1.6:
 
 * Use the latest Chef client

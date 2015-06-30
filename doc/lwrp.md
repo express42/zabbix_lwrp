@@ -3,16 +3,19 @@
 This cookbooks provides next resources:
 * [zabbix_action](#zabbix_action)
 * [zabbix_application](#zabbix_application)
+* [zabbix_connect](#zabbix_connect)
+* [zabbix_database](#zabbix_database)
 * [zabbix_graph](#zabbix_graph)
 * [zabbix_host](#zabbix_host)
 * [zabbix_media_type](#zabbix_media_type)
 * [zabbix_screen](#zabbix_screen)
 * [zabbix_template](#zabbix_template)
 * [zabbix_user_group](#zabbix_user_group)
+* [zabbix_user_macro](#zabbix_user_macro)
 
 ## zabbix_action
 
-zabbix_action LWRP creates zabbix action with operations, conditions and messages.
+Creates zabbix action with operations, conditions and messages.
 
 ### Actions
 <table>
@@ -189,16 +192,26 @@ Attributes for message.
 
 ### Examples
 ```ruby
-zabbix_action 'Some disturbance in force' do
+zabbix_action 'Test action' do
+  action :sync
   event_source :triggers
   operation do
-    user_groups 'Ultimate Question Group'
+    user_groups 'Test group'
+    message do
+      use_default_message false
+      subject 'Test {TRIGGER.SEVERITY}: {HOSTNAME1} {TRIGGER.STATUS}: {TRIGGER.NAME}'
+      message "Trigger: {TRIGGER.NAME}\n"\
+        "Trigger status: {TRIGGER.STATUS}\n" \
+        "Trigger severity: {TRIGGER.SEVERITY}\n" \
+        "\n" \
+        "Item values:\n" \
+        '{ITEM.NAME1} ({HOSTNAME1}:{TRIGGER.KEY1}): {ITEM.VALUE1}'
+      media_type 'sms'
+    end
   end
 
-  condition :trigger, :equal, "#{node.fqdn}: Number of free inodes on log < 10%"
-  condition :trigger_value, :equal, :problem
   condition :trigger_severity, :gte, :high
-  condition :host_group, :equal, 'My Favorite Host Group'
+  condition :host_group, :equal, 'Main'
   condition :maintenance, :not_in, :maintenance
 end
 
@@ -207,7 +220,7 @@ end
 
 ## zabbix_application
 
-zabbix_application lwrp creates application, items and triggers. You should think about items and triggers like nested
+Creates application, items and triggers. You should think about items and triggers like nested
 resources inside zabbix_application lwrp.
 
 ### Actions
@@ -334,12 +347,39 @@ zabbix_application "Test application" do
 end
 ```
 
+## zabbix_connect
+
+### Examples
+```ruby
+
+zabbix_connect 'default' do
+  action :make
+  apiurl 'http://localhost/api_jsonrpc.php'
+  databag 'zabbix'
+end
+```
+
+## zabbix_database
+
+### Examples
+```ruby
+
+zabbix_database db_name do
+  db_user db_user
+  db_pass db_pass
+  db_host db_host
+  db_port db_port
+  action :create
+end
+```
+
 ## zabbix_graph
 
 ### Examples
 ```ruby
 
-zabbix_graph 'Graph 1' do
+zabbix_graph 'Test Graph' do
+  action :create
   width 640
   height 480
   graph_items [:key => 'vfs.fs.size[/var/log,free]', :color => '111111']
@@ -350,10 +390,11 @@ end
 
 ### Examples
 ```ruby
-zabbix_host node.fqdn do
-  host_group 'My Favorite Host Group'
+zabbix_host node['fqdn'] do
+  action :create
+  host_group 'Hosts'
   use_ip true
-  ip_address '127.0.0.1'
+  ip_address node['ipaddress']
 end
 ```
 
@@ -362,6 +403,7 @@ end
 ### Examples
 ```ruby
 zabbix_media_type 'sms' do
+  action :create
   type :sms
   modem '/dev/modem'
 end
@@ -369,11 +411,11 @@ end
 
 ## zabbix_screen
 
-
 ### Examples
 ```ruby
-zabbix_screen 'Screen 1' do
-  screen_item 'Graph 1' do
+zabbix_screen 'Test Screen' do
+  action :sync
+  screen_item 'Test Graph' do
     resource_type :graph
   end
 end
@@ -418,11 +460,13 @@ end
 
 ### Examples
 ```ruby
-zabbix_template '/tmp/zbx_templates_linux.xml' do
+zabbix_template '/opt/zabbix/templates/zbx_templates_linux.xml' do
   action :import
 end
 
 zabbix_template 'Linux_Template'
+  action :add
+end
 ```
 
 ## zabbix_user_group
@@ -455,5 +499,17 @@ zabbix_template 'Linux_Template'
 
 ### Examples
 ```ruby
-zabbix_user_group 'Ultimate Question Group'
+zabbix_user_group 'Test group' do
+  action :create
+end
+```
+
+## zabbix_user_macro
+
+### Examples
+```ruby
+zabbix_user_macro 'Test_macro' do
+  action :create
+  value 'foobar'
+end
 ```
