@@ -1,4 +1,5 @@
 include_recipe 'apt'
+include_recipe 'postgresql_lwrp::apt_official_repository'
 include_recipe 'zabbix_lwrp::default'
 include_recipe 'zabbix_lwrp::partition'
 include_recipe 'zabbix_lwrp::database'
