@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-provides :zabbix_user_macro
+provides :zabbix_user_macro if defined? provides
 
 def whyrun_supported?
   true

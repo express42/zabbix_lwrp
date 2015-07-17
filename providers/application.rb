@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-provides :zabbix_application
+provides :zabbix_application if defined? provides
 
 def whyrun_supported?
   true

@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-provides :zabbix_host
+provides :zabbix_host if defined? provides
 
 def whyrun_supported?
   true

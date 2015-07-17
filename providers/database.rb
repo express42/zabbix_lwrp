@@ -26,7 +26,8 @@
 #
 
 use_inline_resources
-provides :zabbix_database
+
+provides :zabbix_database if defined? provides
 
 require 'English'
 require 'digest/md5'

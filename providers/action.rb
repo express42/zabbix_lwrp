@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-provides :zabbix_action
+provides :zabbix_action if defined? provides
 
 EVENT_SOURCE = {
   triggers:          0,

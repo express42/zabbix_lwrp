@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-provides :zabbix_media_type
+provides :zabbix_media_type if defined? provides
 
 def whyrun_supported?
   true

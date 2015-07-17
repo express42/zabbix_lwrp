@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-provides :zabbix_template
+provides :zabbix_template if defined? provides
 
 def whyrun_supported?
   true

@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-provides :zabbix_graph
+provides :zabbix_graph if defined? provides
 
 def whyrun_supported?
   true

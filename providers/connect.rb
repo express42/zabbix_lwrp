@@ -26,7 +26,8 @@
 #
 
 use_inline_resources
-provides :zabbix_connect
+
+provides :zabbix_connect if defined? provides
 
 action :make do
   credentials_databag = new_resource.databag

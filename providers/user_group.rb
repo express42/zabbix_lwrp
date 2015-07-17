@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-provides :zabbix_user_group
+provides :zabbix_user_group if defined? provides
 
 def whyrun_supported?
   true
