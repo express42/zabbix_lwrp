@@ -4,7 +4,7 @@ maintainer_email 'cookbooks@express42.com'
 license          'MIT'
 description      'Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provides LWRP for creating and modifying Zabbix objects.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '1.1.8'
+version          '1.1.9'
 
 depends          'apt'
 depends          'build-essential'
