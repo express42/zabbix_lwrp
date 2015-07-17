@@ -23,7 +23,6 @@
 # SOFTWARE.
 
 include_recipe 'php-fpm'
-include_recipe 'nginx::official-repo'
 include_recipe 'nginx::default'
 
 db_name = 'zabbix'
