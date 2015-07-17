@@ -22,7 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_recipe 'postgresql_lwrp::apt_official_repository'
 include_recipe 'postgresql_lwrp::default'
 
 if node['zabbix']['server']['database']['databag'].nil? ||
