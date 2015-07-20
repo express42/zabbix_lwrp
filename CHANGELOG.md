@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.10:
+
+* Remove official nginx repository setup
+
 ## 1.1.9:
 
 * Remove setup official postgresql repository setup
