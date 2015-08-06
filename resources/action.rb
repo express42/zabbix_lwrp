@@ -40,7 +40,7 @@ attribute :escalation_time,          default: 60
 attribute :enabled,                  default: true
 attribute :message_subject
 attribute :message_body
-attribute :send_recovery_message,    default: false
+attribute :send_recovery_message, default: false
 attribute :recovery_message_subject
 attribute :recovery_message_body
 
@@ -97,13 +97,13 @@ class ZabbixCondition
     not_in:      7
   }.freeze
 
-  TRIGGER_VALUES = { ok:  0, problem:  1 }.freeze
+  TRIGGER_VALUES = { ok: 0, problem: 1 }.freeze
   TRIGGER_SEVERITY = {
     info:      1,
     warn:      2,
     avg:       3,
     high:      4,
-    disaster:  5  }.freeze
+    disaster:  5 }.freeze
 
   def initialize(_context, *cond, &block)
     if cond
@@ -146,9 +146,9 @@ class ZabbixCondition
     end
 
     {
-      conditiontype:  TYPE[@type],
-      operator:  OPERATOR[@operator],
-      value:  value
+      conditiontype: TYPE[@type],
+      operator: OPERATOR[@operator],
+      value: value
     }
   end
 end
@@ -200,7 +200,7 @@ class ZabbixOperation
     {
       operationtype:  TYPE[@type || :message],
       opmessage_grp:  @user_groups,
-      opmessage:  @message.to_hash
+      opmessage: @message.to_hash
     }
   end
 end

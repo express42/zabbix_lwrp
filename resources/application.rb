@@ -73,8 +73,8 @@ class ZabbixItem
 
   DELTA_TYPES = {
     as_is:      0,
-    speed_per_second:        1,
-    delta:  2
+    speed_per_second: 1,
+    delta: 2
   }.freeze
 
   def initialize(key, &block)
