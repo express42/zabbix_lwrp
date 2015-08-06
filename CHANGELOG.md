@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.11:
+* Fix bug with empty attributes
+* Fix rubocop issues
+* Add official nginx repo to fixture cookbook
+
 ## 1.1.10:
 
 * Remove official nginx repository setup
