@@ -76,6 +76,8 @@ def create_hosts
   get_hosts do |host|
     fqdn, values = host['zabbix']['hosts'].to_a.first
 
+    next unless values
+
     group_id = @@zbx.hostgroups.get_or_create(name: values['host_group'])
 
     host_id = @@zbx.hosts.create_or_update(
