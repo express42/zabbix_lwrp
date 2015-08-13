@@ -80,20 +80,26 @@ def create_hosts
 
     group_id = @@zbx.hostgroups.get_or_create(name: values['host_group'])
 
-    host_id = @@zbx.hosts.create_or_update(
-      host: fqdn,
-      interfaces: [
-        {
-          type: 1,
-          main: 1,
-          ip: values['ip_address'],
-          dns: values['dns'] || '',
-          port: 10_050,
-          useip: values['use_ip'] ? 1 : 0
-        }
-      ],
-      groups: [groupid: group_id]
-    )
+    h = @@zbx.hosts.get(host: fqdn).first
+
+    if h
+      host_id = h['hostid']
+    else
+      host_id = @@zbx.hosts.create(
+        host: fqdn,
+        interfaces: [
+          {
+            type: 1,
+            main: 1,
+            ip: values['ip_address'],
+            dns: values['dns'] || '',
+            port: 10_050,
+            useip: values['use_ip'] ? 1 : 0
+          }
+        ],
+        groups: [groupid: group_id]
+      )
+    end
 
     tmp = @@zbx.query(
       method: 'host.get',
