@@ -43,6 +43,7 @@ action :make do
   fail "there aren't user and password for connection to zabbix" if !user || !pass
 
   chef_gem 'zabbixapi' do
+    compile_time false
     version node['zabbix']['api-version']
   end
 
