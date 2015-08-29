@@ -6,5 +6,5 @@ default['zabbix']['agent']['remotecmds'] = 0
 default['zabbix']['agent']['timeout'] = 3
 default['zabbix']['agent']['listen_ip'] = '0.0.0.0'
 default['zabbix']['agent']['enable_remote_commands'] = 0
-default['zabbix']['agent']['serverhost'] = '127.0.0.1'
+default['zabbix']['agent']['serverhost'] = node['ipaddress']
 default['zabbix']['agent']['user_params'] = {}
