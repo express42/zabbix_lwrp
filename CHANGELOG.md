@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.13
+* Fix default serverhost for agent
+
 ## 1.1.12
 * Do not update hosts on each chef run, because in some cases it leads to error with items linked with interfaces.
 
