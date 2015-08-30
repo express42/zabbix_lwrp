@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.14
+* Update zabbix api version
+
 ## 1.1.13
 * Fix default serverhost for agent
 
