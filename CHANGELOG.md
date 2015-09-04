@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.15
+* Fix installation of zabbixapi gem
+
 ## 1.1.14
 * Update zabbix api version
 
