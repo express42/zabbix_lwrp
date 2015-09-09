@@ -34,9 +34,11 @@ end
 action :create do
   converge_by("Create #{new_resource}.") do
     add_data(node, new_resource.host_name,
+             type:       new_resource.type,
              host_group: new_resource.host_group,
              ip_address: new_resource.ip_address,
              dns:        new_resource.dns,
+             port:       new_resource.port,
              use_ip:     new_resource.use_ip
             )
   end
