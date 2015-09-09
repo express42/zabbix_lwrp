@@ -38,7 +38,7 @@ action :import do
 end
 
 action :add do
-  if new_resource.host_name && !new_resource.host_name.blank?
+  if new_resource.host_name && !new_resource.host_name.empty?
     fqdn = new_resource.host_name
   else
     fqdn = node['fqdn']

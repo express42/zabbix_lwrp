@@ -93,4 +93,8 @@ zabbix_host 'Test_snmp_host' do
   ip_address '127.0.0.1'
 end
 
+zabbix_template 'Linux_Template' do
+  host_name 'Test_snmp_host'
+end
+
 include_recipe 'zabbix_lwrp::connect'
