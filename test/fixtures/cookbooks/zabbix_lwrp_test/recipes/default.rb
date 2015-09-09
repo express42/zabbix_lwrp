@@ -85,4 +85,12 @@ zabbix_user_macro 'Test_macro' do
   value 'foobar'
 end
 
+zabbix_host 'Test_snmp_host' do
+  type 2
+  host_group 'Test group'
+  port 161
+  use_ip true
+  ip_address '127.0.0.1'
+end
+
 include_recipe 'zabbix_lwrp::connect'

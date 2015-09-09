@@ -35,6 +35,7 @@ end
 
 actions :create
 
+attribute :type,       kind_of: Integer, default: 1
 attribute :host_name,  kind_of: String,  name_attribute: true
 attribute :host_group, kind_of: String,  required: true
 attribute :port,       kind_of: Integer, default: 10_050
