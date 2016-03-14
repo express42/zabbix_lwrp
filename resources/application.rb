@@ -115,7 +115,7 @@ class ZabbixItem
   end
 
   def value_type(value)
-    fail "Value type should be one of #{VALUE_TYPES.keys.join(', ')}" unless VALUE_TYPES.keys.include? value
+    raise "Value type should be one of #{VALUE_TYPES.keys.join(', ')}" unless VALUE_TYPES.keys.include? value
     @value_type = VALUE_TYPES[value]
   end
 
