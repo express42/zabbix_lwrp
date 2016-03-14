@@ -16,7 +16,7 @@ Style/EachWithObject:
   Enabled: false
 Style/Next:
   Enabled: false
-Style/SingleSpaceBeforeFirstArg:
+Style/SpaceBeforeFirstArg:
   Enabled: false
 Style/TrivialAccessors:
   Enabled: false
