@@ -34,11 +34,11 @@ def whyrun_supported?
 end
 
 action :sync do
-  if node['zabbox'] && node['zabbix']['hosts']
-    app = node['zabbix']['hosts'][node['fqdn']]['applications'][new_resource.name] || { items: {}, triggers: {} }
-  else
-    app = { items: {}, triggers: {} }
-  end
+  app = if node['zabbox'] && node['zabbix']['hosts']
+          node['zabbix']['hosts'][node['fqdn']]['applications'][new_resource.name] || { items: {}, triggers: {} }
+        else
+          { items: {}, triggers: {} }
+        end
 
   new_resource.items.each do |item|
     app[:items][item.key] = item.to_hash unless app[:items].key? item.key

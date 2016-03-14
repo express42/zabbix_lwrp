@@ -28,11 +28,11 @@
 def add_data(node, fqdn, hash)
   dm = Chef::Mixin::DeepMerge
 
-  if node['zabbix'] && node['zabbix']['hosts'] && node['zabbix']['hosts'][fqdn]
-    existing_data = node.default['zabbix']['hosts'][fqdn]
-  else
-    existing_data = {}
-  end
+  existing_data = if node['zabbix'] && node['zabbix']['hosts'] && node['zabbix']['hosts'][fqdn]
+                    node.default['zabbix']['hosts'][fqdn]
+                  else
+                    {}
+                  end
 
   result = dm.merge existing_data, hash
 

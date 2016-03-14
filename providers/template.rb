@@ -40,11 +40,11 @@ action :import do
 end
 
 action :add do
-  if new_resource.host_name && !new_resource.host_name.empty?
-    fqdn = new_resource.host_name
-  else
-    fqdn = node['fqdn']
-  end
+  fqdn = if new_resource.host_name && !new_resource.host_name.empty?
+           new_resource.host_name
+         else
+           node['fqdn']
+         end
   converge_by("Add #{new_resource}.") do
     add_data(node, fqdn, 'templates' => { new_resource.path => fqdn })
   end
