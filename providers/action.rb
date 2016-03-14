@@ -25,6 +25,8 @@
 # SOFTWARE.
 #
 
+use_inline_resources
+
 provides :zabbix_action if defined? provides
 
 EVENT_SOURCE = {

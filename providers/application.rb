@@ -25,6 +25,8 @@
 # SOFTWARE.
 #
 
+use_inline_resources
+
 provides :zabbix_application if defined? provides
 
 def whyrun_supported?
