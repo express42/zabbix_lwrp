@@ -141,11 +141,11 @@ def create_applications
           }
         ).first
 
-        if app
-          app_id = app['applicationid']
-        else
-          app_id = @@zbx.applications.create(hostid: host_id, name: app_name)
-        end
+        app_id = if app
+                   app['applicationid']
+                 else
+                   @@zbx.applications.create(hostid: host_id, name: app_name)
+                 end
 
         add_data(host, fqdn, 'applications' => { app_name => { 'app_id' => app_id } })
       end
