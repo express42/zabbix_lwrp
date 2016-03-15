@@ -107,11 +107,8 @@ class ZabbixCondition
 
   def initialize(_context, *cond, &block)
     if cond
-      if cond.is_a?(Array) && cond.size == 3
-        @type, @operator, @value = cond
-      else
-        raise 'condition should have 3 elements - type, operator and value'
-      end
+      raise 'condition should have 3 elements - type, operator and value' unless cond.is_a?(Array) && cond.size == 3
+      @type, @operator, @value = cond
     else
       instance_eval(&block)
     end
