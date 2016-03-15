@@ -375,19 +375,21 @@ def create_user_macros
   end
 end
 
-def get_hosts(&block)
+# rubocop:disable Style/AccessorMethodName
+def get_hosts
   if Chef::Config[:solo]
-    block.call node
+    yield node
   else
     search(:node, 'hosts:*').each do |host|
       if host['fqdn'] == node['fqdn']
-        block.call node
+        yield node
       else
-        block.call host
+        yield host
       end
     end
   end
 end
+# rubocop:enable Style/AccessorMethodName
 
 def create_templates
   get_hosts do |host|
