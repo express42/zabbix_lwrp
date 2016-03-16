@@ -28,7 +28,7 @@ if node['zabbix']['server']['database']['databag'].nil? ||
    node['zabbix']['server']['database']['databag'].empty? ||
    !data_bag(node['zabbix']['server']['database']['databag']).include?('databases')
 
-  fail "You should specify databag name in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should contains key 'databases'"
+  raise "You should specify databag name in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should contains key 'databases'"
 end
 
 cluster_name = node['zabbix']['server']['database']['cluster']

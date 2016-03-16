@@ -32,7 +32,7 @@ db_port = node['zabbix']['server']['database']['configuration']['port']
 if node['zabbix']['server']['database']['databag'].nil? ||
    node['zabbix']['server']['database']['databag'].empty? ||
    data_bag(node['zabbix']['server']['database']['databag']).empty?
-  fail "You should specify databag name for zabbix db user in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should exists"
+  raise "You should specify databag name for zabbix db user in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should exist"
 end
 
 db_user_data = data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users']

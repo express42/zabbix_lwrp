@@ -107,11 +107,8 @@ class ZabbixCondition
 
   def initialize(_context, *cond, &block)
     if cond
-      if cond.is_a?(Array) && cond.size == 3
-        @type, @operator, @value = cond
-      else
-        fail 'condition should have 3 elements - type, operator and value'
-      end
+      raise 'condition should have 3 elements - type, operator and value' unless cond.is_a?(Array) && cond.size == 3
+      @type, @operator, @value = cond
     else
       instance_eval(&block)
     end
@@ -134,15 +131,15 @@ class ZabbixCondition
     when :trigger, :host_group
       value = @value
     when :trigger_value
-      fail "Only #{TRIGGER_VALUES.keys.join(' ')} is allowed for trigger value" unless TRIGGER_VALUES.key? @value
+      raise "Only #{TRIGGER_VALUES.keys.join(' ')} is allowed for trigger value" unless TRIGGER_VALUES.key? @value
       value = TRIGGER_VALUES[@value]
     when :trigger_severity
-      fail "Only #{TRIGGER_SEVERITY.keys.join(' ')} is allowed for trigger severity" unless TRIGGER_SEVERITY.key? @value
+      raise "Only #{TRIGGER_SEVERITY.keys.join(' ')} is allowed for trigger severity" unless TRIGGER_SEVERITY.key? @value
       value = TRIGGER_SEVERITY[@value]
     when :maintenance
       value = ''
     else
-      fail "Unknown action's condition type '#{@type}'"
+      raise "Unknown action's condition type '#{@type}'"
     end
 
     {

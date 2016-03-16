@@ -40,7 +40,7 @@ action :make do
     pass = data_bag_item(credentials_databag, 'admin')['pass']
   end
 
-  fail "there aren't user and password for connection to zabbix" if !user || !pass
+  raise "there aren't user and password for connection to zabbix" if !user || !pass
 
   chef_gem 'zabbixapi' do # ~FC009
     compile_time true if respond_to?(:compile_time)
@@ -141,11 +141,11 @@ def create_applications
           }
         ).first
 
-        if app
-          app_id = app['applicationid']
-        else
-          app_id = @@zbx.applications.create(hostid: host_id, name: app_name)
-        end
+        app_id = if app
+                   app['applicationid']
+                 else
+                   @@zbx.applications.create(hostid: host_id, name: app_name)
+                 end
 
         add_data(host, fqdn, 'applications' => { app_name => { 'app_id' => app_id } })
       end
@@ -295,10 +295,10 @@ def create_screens
               }
             }
           ).first
-          fail "Graph '#{item.name}' not found" unless g
+          raise "Graph '#{item.name}' not found" unless g
           resource_id = g['graphid']
         else
-          fail 'Incorrect resource type for screen item'
+          raise 'Incorrect resource type for screen item'
         end
 
         res << item.to_hash.merge(resourceid: resource_id)
@@ -375,19 +375,21 @@ def create_user_macros
   end
 end
 
-def get_hosts(&block)
+# rubocop:disable Style/AccessorMethodName
+def get_hosts
   if Chef::Config[:solo]
-    block.call node
+    yield node
   else
     search(:node, 'hosts:*').each do |host|
       if host['fqdn'] == node['fqdn']
-        block.call node
+        yield node
       else
-        block.call host
+        yield host
       end
     end
   end
 end
+# rubocop:enable Style/AccessorMethodName
 
 def create_templates
   get_hosts do |host|
@@ -431,7 +433,7 @@ def create_actions
           msg = operation['opmessage']
           media_type = @@zbx.mediatypes.get_id(description: msg['mediatypeid'])
 
-          fail "Media type with name #{msg['mediatypeid']} not found" unless media_type
+          raise "Media type with name #{msg['mediatypeid']} not found" unless media_type
 
           if operation['opmessage_grp']
             user_groups = @@zbx.usergroups.get(name: operation['opmessage_grp'])
