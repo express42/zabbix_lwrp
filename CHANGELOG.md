@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.17
+* Fix rubocop and foodcritic issues
+* Install zabbixapi gem at compile time
+
 ## 1.1.16
 * Add compile_time workaround for chef 11
 * Add test suite for chef 11
