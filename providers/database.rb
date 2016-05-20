@@ -82,10 +82,18 @@ action :create do
 
   db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
 
+  case  node['zabbix']['version']
+  when '3.0'
+    db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql/create.sql.gz | \
+                  PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
+  else
+    db_command = "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
+                  #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
+                  #{db_connect_string} -f /usr/share/zabbix-server-pgsql/data.sql;"
+  end
+
   execute 'Provisioning zabbix database' do
-    command "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
-             #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
-             #{db_connect_string} -f /usr/share/zabbix-server-pgsql/data.sql;"
+    command db_command
     only_if { check_zabbix_db(db_connect_string) }
     action :run
   end
