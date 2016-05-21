@@ -188,9 +188,7 @@ def create_applications
 
       # now delete unused items
       current_items.each do |item|
-        converge_by("Destroy item #{item}") do
-          @@zbx.items.delete item['itemid']
-        end
+        converge_by("Destroy item #{item}") { @@zbx.items.delete item['itemid'] }
       end
 
       # triggers' part
@@ -199,14 +197,10 @@ def create_applications
           current_triggers.delete current_trigger
 
           converge_by("Update #{trigger.description}") do
-            @@zbx.triggers.update(trigger.to_hash.merge(
-                                    triggerid: current_trigger['triggerid']
-            ))
+            @@zbx.triggers.update(trigger.to_hash.merge(triggerid: current_trigger['triggerid']))
           end
         else
-          converge_by("Create #{trigger.description}") do
-            @@zbx.triggers.create(trigger.to_hash)
-          end
+          converge_by("Create #{trigger.description}") { @@zbx.triggers.create(trigger.to_hash) }
         end
       end
     end
