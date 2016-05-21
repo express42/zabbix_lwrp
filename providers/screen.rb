@@ -42,7 +42,6 @@ action :sync do
           vsize:       new_resource.vsize,
           screenitems: new_resource.screen_items.map(&:to_hash)
         }
-      }
-            )
+      })
   end
 end

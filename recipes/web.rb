@@ -71,7 +71,8 @@ template '/etc/zabbix/web/zabbix.conf.php' do
     user_name: db_user,
     user_password: db_pass,
     server_host: 'localhost',
-    server_port: '10051')
+    server_port: '10051'
+  )
 end
 
 nginx_site node['zabbix']['server']['web']['server_name'] do

@@ -107,7 +107,8 @@ def create_hosts
       params: {
         hostids: host_id,
         selectInterfaces: 'extend'
-      }).first
+      }
+    ).first
 
     add_data(host, fqdn, 'host_id' => host_id, 'interface_id' => tmp['interfaces'].first['interfaceid'])
   end
@@ -123,7 +124,8 @@ def create_applications
           host: fqdn
         },
         selectInterfaces: 'extend'
-      }).first
+      }
+    ).first
     host_id = tmp['hostid']
     interface_id = tmp['interfaces'].first['interfaceid']
 
@@ -170,14 +172,16 @@ def create_applications
                                  itemid: current_item['itemid'],
                                  hostid: host_id,
                                  interfaceid: interface_id,
-                                 applications: [app_id]))
+                                 applications: [app_id]
+            ))
           end
         else
           converge_by("Create new item #{item}") do
             @@zbx.items.create(item.to_hash.merge(
                                  hostid: host_id,
                                  interfaceid: interface_id,
-                                 applications: [app_id]))
+                                 applications: [app_id]
+            ))
           end
         end
       end
@@ -196,7 +200,8 @@ def create_applications
 
           converge_by("Update #{trigger.description}") do
             @@zbx.triggers.update(trigger.to_hash.merge(
-                                    triggerid: current_trigger['triggerid']))
+                                    triggerid: current_trigger['triggerid']
+            ))
           end
         else
           converge_by("Create #{trigger.description}") do
@@ -268,7 +273,9 @@ def create_screens
         params: {
           filter: { name: screen_name },
           output: 'extend',
-          selectScreenItems: 'extend' }).first
+          selectScreenItems: 'extend'
+        }
+      ).first
 
       unless screen
         converge_by("Create zabbix screen #{screen_name}.") do
@@ -279,7 +286,9 @@ def create_screens
             params: {
               filter: { name: screen_name },
               output: 'extend',
-              selectScreenItems: 'extend' }).first
+              selectScreenItems: 'extend'
+            }
+          ).first
         end
       end
 
@@ -309,7 +318,8 @@ def create_screens
 
       @@zbx.query(
         method: 'screen.update',
-        params: screen)
+        params: screen
+      )
     end
   end
 end

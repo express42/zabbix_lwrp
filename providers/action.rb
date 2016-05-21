@@ -57,8 +57,6 @@ action :sync do
         r_longdata:    new_resource.recovery_message_body || '',
         operations:    operations,
         conditions:    new_resource.conditions.map(&:to_hash)
-      }
-    }
-            )
+      } })
   end
 end
