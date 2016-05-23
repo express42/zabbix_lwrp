@@ -22,6 +22,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+def configuration_hacks(configuration, server_version)
+  configuration['cache'].delete('HistoryTextCacheSize') if server_version.to_f >= 3.0
+end
+
 db_name = 'zabbix'
 
 db_host = node['zabbix']['server']['database']['configuration']['listen_addresses']
@@ -73,11 +77,15 @@ service node['zabbix']['server']['service'] do
   action [:enable]
 end
 
+configuration = Chef::Mixin::DeepMerge.merge(node['zabbix']['server']['config'].to_hash, db_config)
+
+configuration_hacks(configuration, node['zabbix']['version'])
+
 template '/etc/zabbix/zabbix_server.conf' do
   source 'zabbix-server.conf.erb'
   owner 'root'
   group 'root'
   mode '0640'
-  variables(node['zabbix']['server']['config'].merge(db_config).to_hash)
+  variables(configuration)
   notifies :restart, "service[#{node['zabbix']['server']['service']}]", :immediately
 end

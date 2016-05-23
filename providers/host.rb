@@ -41,7 +41,6 @@ action :create do
              ip_address: new_resource.ip_address,
              dns:        new_resource.dns,
              port:       new_resource.port,
-             use_ip:     new_resource.use_ip
-            )
+             use_ip:     new_resource.use_ip)
   end
 end

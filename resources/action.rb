@@ -103,7 +103,8 @@ class ZabbixCondition
     warn:      2,
     avg:       3,
     high:      4,
-    disaster:  5 }.freeze
+    disaster:  5
+  }.freeze
 
   def initialize(_context, *cond, &block)
     if cond

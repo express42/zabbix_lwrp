@@ -51,7 +51,6 @@ action :create do
           width:  new_resource.width,
           gitems: graph_items
         }
-      }
-            )
+      })
   end
 end

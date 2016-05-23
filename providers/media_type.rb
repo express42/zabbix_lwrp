@@ -56,7 +56,6 @@ action :create do
           username:    new_resource.username,
           password:    new_resource.password
         }
-      }
-            )
+      })
   end
 end
