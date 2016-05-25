@@ -6,7 +6,6 @@ default['zabbix']['server']['database']['partition_size'] = '10G'
 default['zabbix']['server']['database']['cluster'] = 'main'
 default['zabbix']['server']['database']['databag'] = 'zabbix'
 default['zabbix']['server']['database']['locale'] = 'en_US.utf8'
-default['zabbix']['server']['database']['mount_point'] = '/var/lib/postgresql'
 default['zabbix']['server']['database']['network'] = '127.0.0.0/8'
 default['zabbix']['server']['database']['version'] = '9.4'
 

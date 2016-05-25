@@ -32,6 +32,8 @@ actions :create
 
 default_action :create
 
+property :db_vendor, kind_of: String, default: 'postgresql'
+
 attribute :db_name, name_attribute: true, kind_of: String
 attribute :db_user, kind_of: String
 attribute :db_pass, kind_of: String

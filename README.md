@@ -49,7 +49,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['database']['cluster']` -  Defaults to `main`.
 * `node['zabbix']['server']['database']['databag']` -  Defaults to `zabbix`.
 * `node['zabbix']['server']['database']['locale']` -  Defaults to `en_US.utf8`.
-* `node['zabbix']['server']['database']['mount_point']` -  Defaults to `/var/lib/postgresql`.
+* `node['zabbix']['server']['database']['mount_point']` -  Defaults to `/var/lib/database`.
 * `node['zabbix']['server']['database']['network']` -  Defaults to `127.0.0.0/8`.
 * `node['zabbix']['server']['database']['version']` -  Defaults to `9.4`.
 * `node['zabbix']['server']['database']['configuration']['listen_addresses']` -  Defaults to `127.0.0.1`.

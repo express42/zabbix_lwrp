@@ -53,14 +53,16 @@ def change_admin_password(db_connect_string)
 end
 
 def check_zabbix_db(db_connect_string)
+  db_vendor = new_resource.db_vendor
+  cmd_key = db_vendor == 'mysql' ? '-e' : '-c'
   check_db_flag = false
   # Check connect to database
   log("Connect to postgres with connection string #{db_connect_string}")
-  psql_output = IO.popen("#{db_connect_string} -c 'SELECT 1'")
-  psql_output_res = psql_output.readlines
-  psql_output.close
+  sql_output = IO.popen("#{db_connect_string} #{cmd_key} 'SELECT 1'")
+  sql_output_res = sql_output.readlines
+  sql_output.close
 
-  if $CHILD_STATUS.exitstatus != 0 || psql_output_res[0].to_i != 1
+  if $CHILD_STATUS.exitstatus != 0 || sql_output_res[0].to_i != 1
     log("Couldn't connect to database, please check database server configuration")
     check_db_flag = false
   else
@@ -74,22 +76,35 @@ def check_zabbix_db(db_connect_string)
 end
 
 action :create do
+  db_vendor = new_resource.db_vendor
   db_name = new_resource.db_name
   db_user = new_resource.db_user
   db_pass = new_resource.db_pass
   db_host = new_resource.db_host
   db_port = new_resource.db_port
 
-  db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
+  if db_vendor == 'postgresql'
+    db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
 
-  case  node['zabbix']['version']
-  when '3.0'
-    db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql/create.sql.gz | \
-                  PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
-  else
-    db_command = "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
-                  #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
-                  #{db_connect_string} -f /usr/share/zabbix-server-pgsql/data.sql;"
+    case  node['zabbix']['version']
+    when '3.0'
+      db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql/create.sql.gz | \
+                    PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
+    else
+      db_command = "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
+                    #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
+                    #{db_connect_string} -f /usr/share/zabbix-server-pgsql/data.sql;"
+    end
+  elsif db_vendor == 'mysql'
+    db_connect_string = "mysql -h #{db_host} -P #{db_port} -u #{db_user} -p#{db_pass} -D #{db_name}"
+    case  node['zabbix']['version']
+    when '3.0'
+      db_command = "zcat /usr/share/doc/zabbix-server-mysql/create.sql.gz | mysql -h #{db_host} -P #{db_port} -u#{db_user} -p#{db_pass} -D #{db_name}"
+    else
+      db_command = "#{db_connect_string} < /usr/share/zabbix-server-mysql/schema.sql; \
+                    #{db_connect_string} < /usr/share/zabbix-server-mysql/images.sql; \
+                    #{db_connect_string} < /usr/share/zabbix-server-mysql/data.sql;"
+    end
   end
 
   execute 'Provisioning zabbix database' do

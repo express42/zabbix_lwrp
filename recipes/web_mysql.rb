@@ -25,24 +25,30 @@
 include_recipe 'php-fpm'
 include_recipe 'nginx::default'
 
+
 db_name = 'zabbix'
 
-db_host = node['zabbix']['server']['database']['configuration']['listen_addresses']
-db_port = node['zabbix']['server']['database']['configuration']['port']
+mysql_attr = node['zabbix']['server']['mysql']
+
+db_host = mysql_attr['listen_addresses']
+db_port = mysql_attr['port']
 
 # Get user and database information from data bag
 
-if node['zabbix']['server']['database']['databag'].nil? ||
-   node['zabbix']['server']['database']['databag'].empty? ||
-   data_bag(node['zabbix']['server']['database']['databag']).empty?
-  raise "You should specify databag name for zabbix db user in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should exist"
+if mysql_attr['databag'].nil? ||
+   mysql_attr['databag'].empty? ||
+   data_bag(mysql_attr['databag']).empty?
+  raise "You should specify databag name for zabbix db user in node['zabbix']['server']['mysql']['databag'] attibute (now: #{mysql_attr['databag']}) and databag should exist"
 end
 
-db_user_data = data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users']
-db_user = db_user_data.keys.first
-db_pass = db_user_data[db_user]['options']['password']
+unless data_bag_item(mysql_attr['databag'], 'mysql')['users'].key?('zabbix')
+  raise 'You should specify user zabbix in databag users'
+end
 
-package 'php5-pgsql'
+db_user = 'zabbix'
+db_pass = data_bag_item(mysql_attr['databag'], 'mysql')['users']['zabbix']['password']
+
+package 'php5-mysql'
 
 package 'zabbix-frontend-php' do
   response_file 'zabbix-frontend-without-apache.seed'
@@ -65,15 +71,14 @@ template '/etc/zabbix/web/zabbix.conf.php' do
   owner 'www-data'
   group 'www-data'
   variables(
-    db_vendor: 'POSTGRESQL',
+    db_vendor: 'MYSQL',
     db_host: db_host,
     db_name: db_name,
     db_port: db_port,
     user_name: db_user,
     user_password: db_pass,
     server_host: 'localhost',
-    server_port: '10051'
-  )
+    server_port: '10051')
 end
 
 nginx_site node['zabbix']['server']['web']['server_name'] do

@@ -24,6 +24,9 @@ suites:
       - recipe[zabbix_lwrp_test::zabbix24]
     provisioner:
       require_chef_omnibus: 11.18
+  - name: zabbix24-mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix24-mysql]
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]
