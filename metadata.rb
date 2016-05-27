@@ -14,7 +14,7 @@ depends          'lvm'
 depends          'nginx'
 depends          'postgresql_lwrp'
 depends          'mysql2_chef_gem', '~> 1.1.0'
-depends          'mysql'
+depends          'mysql', '~> 7.0'
 depends          'php-fpm'
 
 recipe           'zabbix_lwrp::agent', 'Installs and configures Zabbix agent.'

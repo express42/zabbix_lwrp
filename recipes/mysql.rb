@@ -24,51 +24,50 @@
 
 mysql2_chef_gem 'default'
 
-mysql_attr = node['zabbix']['server']['mysql']
+mysql_attr = node['zabbix']['server']['database']['mysql']
 
-# TODO: merge with postgresql recipe
 if mysql_attr['databag'].nil? ||
    mysql_attr['databag'].empty? ||
-   !data_bag(mysql_attr['databag']).include?('mysql')
+   !data_bag(mysql_attr['databag']).include?('users')
 
-  raise "You should specify databag name in node['zabbix']['server']['mysql']['databag'] attibute (now: #{mysql_attr['databag']}) and databag should contains key 'mysql'"
+  raise "You should specify databag name in node['zabbix']['server']['database']['mysql']['databag'] attibute (now: #{mysql_attr['databag']}) and databag should contains key 'users'"
 end
 
-unless data_bag_item(mysql_attr['databag'], 'mysql')['users'].key?('root')
+unless data_bag_item(mysql_attr['databag'], 'users')['users'].key?('root')
   raise 'You should specify user root in databag users'
 end
 
-unless data_bag_item(mysql_attr['databag'], 'mysql')['users'].key?('zabbix')
+unless data_bag_item(mysql_attr['databag'], 'users')['users'].key?('zabbix')
   raise 'You should specify user zabbix in databag users'
 end
 
-mysql_service data_bag_item(mysql_attr['databag'], 'mysql')['service']['name'] do
-  bind_address mysql_attr['listen_addresses']
-  port mysql_attr['port']
+mysql_service mysql_attr['service_name'] do
+  bind_address mysql_attr['configuration']['listen_addresses']
+  port mysql_attr['configuration']['port']
   version mysql_attr['version']
-  data_dir node['zabbix']['server']['database']['mount_point']
-  initial_root_password data_bag_item(mysql_attr['databag'], 'mysql')['users']['root']['password']
+  data_dir mysql_attr['mount_point']
+  initial_root_password data_bag_item(mysql_attr['databag'], 'users')['users']['root']['options']['password']
   action [:create, :start]
 end
 
 # create database
-db_name = data_bag_item(mysql_attr['databag'], 'mysql')['database']['name']
-db_connect_string = "mysql -h #{mysql_attr['listen_addresses']} \
-                     -P #{mysql_attr['port']} -u root \
-                     -p#{data_bag_item(mysql_attr['databag'], 'mysql')['users']['root']['password']}"
+db_name = mysql_attr['database_name']
+db_connect_string = "mysql -h #{mysql_attr['configuration']['listen_addresses']} \
+                     -P #{mysql_attr['configuration']['port']} -u root \
+                     -p#{data_bag_item(mysql_attr['databag'], 'users')['users']['root']['options']['password']}"
 
 execute 'Create Zabbix MySQL database' do
   command "#{db_connect_string} -e \"create database if not exists #{db_name} \
-           character set #{mysql_attr['character_set']} \
-           collate #{mysql_attr['collate']}\" "
+           character set #{mysql_attr['configuration']['character_set']} \
+           collate #{mysql_attr['configuration']['collate']}\" "
   action :run
 end
 
 # create users
-data_bag_item(mysql_attr['databag'], 'mysql')['users'].each_pair do |name, options|
+data_bag_item(mysql_attr['databag'], 'users')['users'].each_pair do |name, options|
   execute "Create MySQL database user #{name}" do
     only_if { name != 'root' }
-    command "#{db_connect_string} -e \"grant all privileges on #{db_name}.* to '#{name}'@'%' identified by '#{options['password']}'; \""
+    command "#{db_connect_string} -e \"grant all privileges on #{db_name}.* to '#{name}'@'%' identified by '#{options['options']['password']}'; \""
     action :run
   end
 end

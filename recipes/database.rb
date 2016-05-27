@@ -22,38 +22,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_recipe 'postgresql_lwrp::default'
-
-if node['zabbix']['server']['database']['databag'].nil? ||
-   node['zabbix']['server']['database']['databag'].empty? ||
-   !data_bag(node['zabbix']['server']['database']['databag']).include?('databases')
-
-  raise "You should specify databag name in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should contains key 'databases'"
-end
-
-cluster_name = node['zabbix']['server']['database']['cluster']
-
-postgresql cluster_name do
-  cluster_create_options 'locale' => node['zabbix']['server']['database']['locale']
-  cluster_version node['zabbix']['server']['database']['version']
-  configuration node['zabbix']['server']['database']['configuration']
-  hba_configuration(
-    [{ type: 'host', database: 'all', user: 'all', address: node['zabbix']['server']['database']['network'], method: 'md5' }]
-  )
-end
-
-data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users'].each_pair do |name, options|
-  postgresql_user name do
-    in_cluster cluster_name
-    in_version node['zabbix']['server']['database']['version']
-    unencrypted_password options['options']['password']
-  end
-end
-
-data_bag_item(node['zabbix']['server']['database']['databag'], 'databases')['databases'].each_pair do |name, options|
-  postgresql_database name do
-    in_cluster cluster_name
-    in_version node['zabbix']['server']['database']['version']
-    owner options['options']['owner']
-  end
+if node['zabbix']['db_vendor'] == 'postgresql'
+  include_recipe 'zabbix_lwrp::postgresql'
+elsif node['zabbix']['db_vendor'] == 'mysql'
+  include_recipe 'zabbix_lwrp::mysql'
+else
+  raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
 end
