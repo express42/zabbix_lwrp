@@ -29,7 +29,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 ## Default
 * `node['zabbix']['version']` -  Defaults to `2.4`.
 * `node['zabbix']['api-version']` -  Defaults to `2.4.4`.
-* `node['zabbix']['db_vendor']` -  Defaults to `postgresql`.
+* `node['zabbix']['db_vendor']` -  Defaults to `postgresql`. Make sure that is setup for MySQL.
 
 ## Agent
 * `node['zabbix']['agent']['include']` -  Defaults to `/opt/zabbix/etc`.
@@ -43,7 +43,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['agent']['serverhost']` -  Defaults to `node['ipaddress']`.
 * `node['zabbix']['agent']['user_params']` -  Defaults to `{ ... }`.
 
-## Database PostgreSQL
+## PostgreSQL
 * `node['zabbix']['server']['database']['postgresql']['filesystem']` -  Defaults to `ext4`.
 * `node['zabbix']['server']['database']['postgresql']['lvm_group']` -  Defaults to `shared`.
 * `node['zabbix']['server']['database']['postgresql']['lvm_volume']` -  Defaults to `/dev/sda3`.
@@ -65,12 +65,12 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['server']['database']['postgresql']['configuration']['archive_mode']` -  Defaults to `on`.
 * `node['zabbix']['server']['database']['postgresql']['configuration']['archive_command']` -  Defaults to `exit 0`.
 
-## Database MySQL
+## MySQL
 * `node['zabbix']['server']['database']['mysql']['filesystem']` - Defaults to `ext4`
 * `node['zabbix']['server']['database']['mysql']['lvm_group']` - Defaults to `shared`
 * `node['zabbix']['server']['database']['mysql']['lvm_volume']` - Defaults to `/dev/sda3`
 * `node['zabbix']['server']['database']['mysql']['partition_size']` - Defaults to `10G`
-* `node['zabbix']['server']['database']['mysql']['mount_point']` - Defaults to `/var/lib/mysql_zabbix`
+* `node['zabbix']['server']['database']['mysql']['mount_point']` - Defaults to `/var/lib/mysql_zabbix`. Do not set to `/var/lib/mysql` because it will conflict.
 * `node['zabbix']['server']['database']['mysql']['databag']` - Defaults to `zabbix`
 * `node['zabbix']['server']['database']['mysql']['version']` - Defaults to `5.5`
 * `node['zabbix']['server']['database']['mysql']['service_name']` - Defaults to `zabbix`
@@ -132,7 +132,9 @@ Data bag `zabbix` must contains the following items:
 * databases
 * users
 
-`databases` and `users` items related to the postgresql database (see [postgresql_lwrp](https://github.com/express42-cookbooks/postgresql) cookbook)
+`postgresql` and `users` items related to the postgresql database (see [postgresql_lwrp](https://github.com/express42-cookbooks/postgresql) cookbook)
+
+`users` item related to MySQL database, necessarily contains `root` and `zabbix` entries
 
 For examples see fixture data bag `test/fixtures/databags/zabbix/`
 
