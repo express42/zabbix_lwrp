@@ -39,7 +39,7 @@ describe package('zabbixapi') do
   it { should be_installed.by('gem') }
 end
 
-describe file('/var/lib/database') do
+describe file('/var/lib/postgresql') do
   it { should be_directory }
   it { should be_writable.by_user('postgres') }
   it { should be_mounted.with(options: { device: '/dev/mapper/shared-zabbix--database' }) }

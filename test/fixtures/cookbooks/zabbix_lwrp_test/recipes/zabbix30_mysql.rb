@@ -1,6 +1,9 @@
 include_recipe 'apt'
 include_recipe 'nginx::official-repo'
 
+node.default['zabbix']['version'] = '3.0'
+node.default['zabbix']['api-version'] = '2.4.7'
+
 include_recipe 'zabbix_lwrp::default'
 include_recipe 'zabbix_lwrp::partition'
 include_recipe 'zabbix_lwrp::database'

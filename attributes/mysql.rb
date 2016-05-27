@@ -13,4 +13,3 @@ default['zabbix']['server']['database']['mysql']['configuration']['listen_addres
 default['zabbix']['server']['database']['mysql']['configuration']['port'] = '3306'
 default['zabbix']['server']['database']['mysql']['configuration']['character_set'] = 'utf8'
 default['zabbix']['server']['database']['mysql']['configuration']['collate'] = 'utf8_bin'
-default['zabbix']['server']['database']['mysql']['configuration']['partitioning'] = false

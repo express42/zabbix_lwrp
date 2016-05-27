@@ -41,3 +41,8 @@ suites:
       require_chef_omnibus: 11.18
     excludes:
       - ubuntu-12.04
+  - name: zabbix30-mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_mysql]
+    attributes:
+      zabbix: { db_vendor: "mysql" }

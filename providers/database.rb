@@ -40,12 +40,14 @@ def change_admin_password(db_connect_string)
   rescue
     log('Using default password for user Admin ... (pass: zabbix)')
   end
+  db_vendor = new_resource.db_vendor
+  cmd_key = db_vendor == 'mysql' ? '-e' : '-c'
   admin_user_pass_md5 = Digest::MD5.hexdigest(admin_user_pass)
-  getdb_admin_user_pass_query = IO.popen("#{db_connect_string} -c \"select passwd from users where alias='Admin'\"")
+  getdb_admin_user_pass_query = IO.popen("#{db_connect_string} #{cmd_key} \"select passwd from users where alias='Admin'\"")
   getdb_admin_user_pass = getdb_admin_user_pass_query.readlines[0].to_s.gsub(/\s+/, '')
   getdb_admin_user_pass_query.close
   if getdb_admin_user_pass != admin_user_pass_md5
-    set_admin_pass_query = IO.popen("#{db_connect_string} -c \"update users set passwd='#{admin_user_pass_md5}' where alias = 'Admin';\"")
+    set_admin_pass_query = IO.popen("#{db_connect_string} #{cmd_key} \"update users set passwd='#{admin_user_pass_md5}' where alias = 'Admin';\"")
     set_admin_pass_query_res = set_admin_pass_query.readlines
     set_admin_pass_query.close
   end
@@ -54,10 +56,10 @@ end
 
 def check_zabbix_db(db_connect_string)
   db_vendor = new_resource.db_vendor
-  cmd_key = db_vendor == 'mysql' ? '-e' : '-c'
+  cmd_key = db_vendor == 'mysql' ? '-N -B -e' : '-c'
   check_db_flag = false
   # Check connect to database
-  log("Connect to postgres with connection string #{db_connect_string}")
+  log("Connect to database with connection string #{db_connect_string}")
   sql_output = IO.popen("#{db_connect_string} #{cmd_key} 'SELECT 1'")
   sql_output_res = sql_output.readlines
   sql_output.close
@@ -67,7 +69,7 @@ def check_zabbix_db(db_connect_string)
     check_db_flag = false
   else
     # Check if database exist
-    check_db_exist = IO.popen("#{db_connect_string} -c \"select count(*) from users where alias='Admin'\"")
+    check_db_exist = IO.popen("#{db_connect_string} #{cmd_key} \"select count(*) from users where alias='Admin'\"")
     check_db_exist_res = check_db_exist.readlines
     check_db_exist.close
     check_db_flag = !($CHILD_STATUS.exitstatus == 0 && check_db_exist_res[0].to_i == 1)

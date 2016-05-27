@@ -45,7 +45,7 @@ if sql_attr['databag'].nil? ||
 end
 
 db_user_data = data_bag_item(sql_attr['databag'], 'users')['users']
-db_user = db_vendor == 'postgresql' ? db_user_data.keys.first : 'root'
+db_user = db_vendor == 'postgresql' ? db_user_data.keys.first : 'zabbix'
 db_pass = db_user_data[db_user]['options']['password']
 
 # Generate DB config
