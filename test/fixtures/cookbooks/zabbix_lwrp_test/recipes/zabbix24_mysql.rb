@@ -1,6 +1,8 @@
 include_recipe 'apt'
 include_recipe 'nginx::official-repo'
 
+node.default['zabbix']['db_vendor'] = 'mysql'
+
 include_recipe 'zabbix_lwrp::default'
 include_recipe 'zabbix_lwrp::partition'
 include_recipe 'zabbix_lwrp::database'

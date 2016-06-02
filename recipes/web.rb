@@ -75,7 +75,7 @@ template '/etc/zabbix/web/zabbix.conf.php' do
   owner 'www-data'
   group 'www-data'
   variables(
-    db_vendor: db_vendor == 'postgresql' ? 'POSTGRESQL' : 'MYSQL',
+    db_vendor: db_vendor.upcase,
     db_host: db_host,
     db_name: db_name,
     db_port: db_port,

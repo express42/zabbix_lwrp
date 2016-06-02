@@ -27,8 +27,6 @@ suites:
   - name: zabbix24-mysql
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24_mysql]
-    attributes:
-      zabbix: { db_vendor: "mysql" }
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]

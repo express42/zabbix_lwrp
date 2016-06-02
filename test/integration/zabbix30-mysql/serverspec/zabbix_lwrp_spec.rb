@@ -4,6 +4,15 @@ describe file('/etc/apt/sources.list.d/zabbix-official.list') do
   it { should be_file }
 end
 
+describe port(3306) do
+  it { should be_listening }
+end
+
+describe service('mysql-zabbix') do
+  it { should be_enabled }
+  it { should be_running }
+end
+
 describe package('zabbix-agent') do
   it { should be_installed }
 end

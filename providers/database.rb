@@ -41,7 +41,7 @@ def change_admin_password(db_connect_string)
     log('Using default password for user Admin ... (pass: zabbix)')
   end
   db_vendor = new_resource.db_vendor
-  cmd_key = db_vendor == 'mysql' ? '-e' : '-c'
+  cmd_key = db_vendor == 'mysql' ? '-N -B -e' : '-c'
   admin_user_pass_md5 = Digest::MD5.hexdigest(admin_user_pass)
   getdb_admin_user_pass_query = IO.popen("#{db_connect_string} #{cmd_key} \"select passwd from users where alias='Admin'\"")
   getdb_admin_user_pass = getdb_admin_user_pass_query.readlines[0].to_s.gsub(/\s+/, '')
@@ -107,6 +107,8 @@ action :create do
                     #{db_connect_string} < /usr/share/zabbix-server-mysql/images.sql; \
                     #{db_connect_string} < /usr/share/zabbix-server-mysql/data.sql;"
     end
+  else
+    raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
   end
 
   execute 'Provisioning zabbix database' do

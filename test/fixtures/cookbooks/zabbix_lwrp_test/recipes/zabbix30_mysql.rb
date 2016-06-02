@@ -3,6 +3,7 @@ include_recipe 'nginx::official-repo'
 
 node.default['zabbix']['version'] = '3.0'
 node.default['zabbix']['api-version'] = '2.4.7'
+node.default['zabbix']['db_vendor'] = 'mysql'
 
 include_recipe 'zabbix_lwrp::default'
 include_recipe 'zabbix_lwrp::partition'
