@@ -25,24 +25,34 @@
 include_recipe 'php-fpm'
 include_recipe 'nginx::default'
 
+db_vendor = node['zabbix']['db_vendor']
+unless db_vendor == 'postgresql' || db_vendor == 'mysql'
+  raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
+end
 db_name = 'zabbix'
 
-db_host = node['zabbix']['server']['database']['configuration']['listen_addresses']
-db_port = node['zabbix']['server']['database']['configuration']['port']
+db_host = node['zabbix']['server']['database'][db_vendor]['configuration']['listen_addresses']
+db_port = node['zabbix']['server']['database'][db_vendor]['configuration']['port']
 
 # Get user and database information from data bag
 
-if node['zabbix']['server']['database']['databag'].nil? ||
-   node['zabbix']['server']['database']['databag'].empty? ||
-   data_bag(node['zabbix']['server']['database']['databag']).empty?
-  raise "You should specify databag name for zabbix db user in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should exist"
+if node['zabbix']['server']['database'][db_vendor]['databag'].nil? ||
+   node['zabbix']['server']['database'][db_vendor]['databag'].empty? ||
+   data_bag(node['zabbix']['server']['database'][db_vendor]['databag']).empty?
+  raise "You should specify databag name for zabbix db user in node['zabbix']['server']['database'][db_vendor]['databag'] attibute (now: #{node['zabbix']['server']['database'][db_vendor]['databag']}) and databag should exist"
 end
 
-db_user_data = data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users']
+db_user_data = data_bag_item(node['zabbix']['server']['database'][db_vendor]['databag'], 'users')['users']
 db_user = db_user_data.keys.first
 db_pass = db_user_data[db_user]['options']['password']
 
-package 'php5-pgsql'
+if db_vendor == 'postgresql'
+  package 'php5-pgsql'
+elsif db_vendor == 'mysql'
+  package 'php5-mysql'
+else
+  raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
+end
 
 package 'zabbix-frontend-php' do
   response_file 'zabbix-frontend-without-apache.seed'
@@ -65,6 +75,7 @@ template '/etc/zabbix/web/zabbix.conf.php' do
   owner 'www-data'
   group 'www-data'
   variables(
+    db_vendor: db_vendor.upcase,
     db_host: db_host,
     db_name: db_name,
     db_port: db_port,

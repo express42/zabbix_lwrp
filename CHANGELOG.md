@@ -2,6 +2,15 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.19
+* Add MySQL supports
+* Fix not filling gsm_modem API parameter for sms mediatype
+#### Breaking changes:
+* Rename databag item `database` to `postgresql`
+* Rename database default attrubutes
+
+## 1.1.18
+
 ## 1.1.17
 * Fix rubocop and foodcritic issues
 * Install zabbixapi gem at compile time

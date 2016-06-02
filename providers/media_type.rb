@@ -52,7 +52,7 @@ action :create do
           helo:        new_resource.helo,
           email:       new_resource.email,
           path:        new_resource.path,
-          modem:       new_resource.modem,
+          gsm_modem:   new_resource.modem,
           username:    new_resource.username,
           password:    new_resource.password
         }
