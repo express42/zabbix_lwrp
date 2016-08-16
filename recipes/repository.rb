@@ -26,5 +26,5 @@ apt_repository 'zabbix-official' do
   uri "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/ubuntu/"
   distribution node['lsb']['codename']
   components ['main']
-  key 'http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX'
+  key 'http://repo.zabbix.com/zabbix-official-repo.key'
 end
