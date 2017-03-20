@@ -5,6 +5,7 @@ default['zabbix']['server']['web']['port'] = '9200'
 default['zabbix']['server']['web']['max_requests'] = 500
 default['zabbix']['server']['web']['max_children'] = 5
 default['zabbix']['server']['web']['min_spare_servers'] = 1
+default['zabbix']['server']['web']['start_servers'] = 2
 default['zabbix']['server']['web']['max_spare_servers'] = 3
 default['zabbix']['server']['web']['process_manager'] = 'dynamic'
 

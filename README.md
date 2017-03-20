@@ -81,6 +81,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['web']['port']` -  Defaults to `9200`.
 * `node['zabbix']['server']['web']['max_requests']` -  Defaults to `500`.
 * `node['zabbix']['server']['web']['max_children']` -  Defaults to `5`.
+* `node['zabbix']['server']['web']['start_servers']` - Defaults to `2`.
 * `node['zabbix']['server']['web']['min_spare_servers']` -  Defaults to `1`.
 * `node['zabbix']['server']['web']['max_spare_servers']` -  Defaults to `3`.
 * `node['zabbix']['server']['web']['process_manager']` -  Defaults to `dynamic`.
