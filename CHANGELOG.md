@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.1.19
+* Add start_servers attributes to php-fpm configuration
+* Change repo key url
+* Fix issues
+
 ## 1.1.18
 * (change) official repo key url
 

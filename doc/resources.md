@@ -1,4 +1,4 @@
-# LWRP
+# Resources
 
 This cookbooks provides next resources:
 * [zabbix_action](#zabbix_action)
@@ -221,7 +221,7 @@ end
 ## zabbix_application
 
 Creates application, items and triggers. You should think about items and triggers like nested
-resources inside zabbix_application lwrp.
+resources inside zabbix_application resource.
 
 ### Actions
 <table>

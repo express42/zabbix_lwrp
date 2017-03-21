@@ -27,7 +27,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 ## Default
 * `node['zabbix']['version']` -  Defaults to `2.4`.
-* `node['zabbix']['api-version']` -  Defaults to `2.4.4`.
+* `node['zabbix']['api-version']` -  Defaults to `2.4.7`.
 
 ## Agent
 * `node['zabbix']['agent']['include']` -  Defaults to `/opt/zabbix/etc`.
@@ -81,8 +81,8 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['web']['port']` -  Defaults to `9200`.
 * `node['zabbix']['server']['web']['max_requests']` -  Defaults to `500`.
 * `node['zabbix']['server']['web']['max_children']` -  Defaults to `5`.
-* `node['zabbix']['server']['web']['start_servers']` - Defaults to `2`.
 * `node['zabbix']['server']['web']['min_spare_servers']` -  Defaults to `1`.
+* `node['zabbix']['server']['web']['start_servers']` -  Defaults to `2`.
 * `node['zabbix']['server']['web']['max_spare_servers']` -  Defaults to `3`.
 * `node['zabbix']['server']['web']['process_manager']` -  Defaults to `dynamic`.
 * `node['zabbix']['server']['web']['configuration']['php_admin_value[date.timezone]']` -  Defaults to `UTC`.
@@ -118,8 +118,7 @@ Data bag `zabbix` must contains the following items:
 
 For examples see fixture data bag `test/fixtures/databags/zabbix/`
 
-
-# LWRP
+# Resources
 
 This cookbooks provides next resources:
 * [zabbix_action](#zabbix_action)
@@ -636,7 +635,6 @@ zabbix_user_macro 'Test_macro' do
 end
 ```
 
-
 # Usage
 
 To install Zabbix agent just include `zabbix_lwrp` default recipe into your node's `run_list`:
@@ -672,5 +670,7 @@ For examples of LWRP see fixture cookbook in `tests/fixtures/cookbooks`.
 # License and Maintainer
 
 Maintainer:: LLC Express 42 (<cookbooks@express42.com>)
+Source:: https://github.com/express42-cookbooks/zabbix_lwrp
+Issues:: https://github.com/express42-cookbooks/zabbix_lwrp/issues
 
 License:: MIT
