@@ -54,6 +54,7 @@ php_fpm_pool 'zabbix' do
   max_children node['zabbix']['server']['web']['max_children']
   max_requests node['zabbix']['server']['web']['max_requests']
   min_spare_servers node['zabbix']['server']['web']['min_spare_servers']
+  start_servers node['zabbix']['server']['web']['start_servers']
   max_spare_servers node['zabbix']['server']['web']['max_spare_servers']
   process_manager node['zabbix']['server']['web']['process_manager']
   php_options node['zabbix']['server']['web']['configuration']
