@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 include_recipe 'php-fpm'
-include_recipe 'nginx::default'
+include_recipe 'chef_nginx::default'
 
 db_name = 'zabbix'
 
@@ -42,7 +42,7 @@ db_user_data = data_bag_item(node['zabbix']['server']['database']['databag'], 'u
 db_user = db_user_data.keys.first
 db_pass = db_user_data[db_user]['options']['password']
 
-nginx_site node['zabbix']['server']['web']['server_name'] do
+chef_nginx_site node['zabbix']['server']['web']['server_name'] do
   action :enable
   template 'zabbix-site.conf.erb'
   variables(
@@ -62,7 +62,6 @@ end
 package 'zabbix-frontend-php' do
   response_file 'zabbix-frontend-without-apache.seed'
   action [:install,:reconfig]
-  notifies :restart,resources(service: 'nginx'),:delayed
 end
 
 if node['platform_version'].to_f >= 16.04

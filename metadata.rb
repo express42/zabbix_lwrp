@@ -11,7 +11,7 @@ issues_url       'https://github.com/express42-cookbooks/zabbix_lwrp/issues' if 
 depends          'apt'
 depends          'build-essential'
 depends          'lvm'
-depends          'nginx'
+depends          'chef_nginx'
 depends          'postgresql_lwrp'
 depends          'php-fpm'
 
