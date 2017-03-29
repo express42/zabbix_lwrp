@@ -54,14 +54,14 @@ end
 if node['platform_version'].to_f < 16.04
   package 'php5-pgsql'
 else
-  package 'php-pgsql'
-  package 'php-mbstring'
-  package 'apache2'
+  %w(php-pgsql php-mbstring apache2 php-bcmath php-gd).each  do |pkg|
+    package pkg
+  end
 end
 
 package 'zabbix-frontend-php' do
   response_file 'zabbix-frontend-without-apache.seed'
-  action [:install,:reconfig]
+  action [:install, :reconfig]
 end
 
 if node['platform_version'].to_f >= 16.04
