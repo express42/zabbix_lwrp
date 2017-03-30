@@ -1,4 +1,4 @@
-[![Chef cookbook](https://img.shields.io/cookbook/v/zabbix_lwrp.svg)](https://github.com/express42-cookbooks/zabbix_lwrp)
+![Chef cookbook](https://img.shields.io/cookbook/v/zabbix_lwrp.svg)](https://github.com/express42-cookbooks/zabbix_lwrp)
 [![Code Climate](https://codeclimate.com/github/express42-cookbooks/zabbix_lwrp/badges/gpa.svg)](https://codeclimate.com/github/express42-cookbooks/zabbix_lwrp)
 [![Build Status](https://travis-ci.org/express42-cookbooks/zabbix_lwrp.svg?branch=master)](https://travis-ci.org/express42-cookbooks/zabbix_lwrp)
 
@@ -12,22 +12,20 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 ## Platform:
 
-* Ubuntu
+* ubuntu
+* windows - only for agent
 
 ## Cookbooks:
 
 * apt
 * build-essential
 * lvm
-* [nginx](https://github.com/evilmartians/chef-nginx)
+* nginx
 * postgresql_lwrp
 * php-fpm
+* chocolatey
 
 # Attributes
-
-## Default
-* `node['zabbix']['version']` -  Defaults to `2.4`.
-* `node['zabbix']['api-version']` -  Defaults to `2.4.7`.
 
 ## Agent
 * `node['zabbix']['agent']['include']` -  Defaults to `/opt/zabbix/etc`.
@@ -40,6 +38,16 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['agent']['enable_remote_commands']` -  Defaults to `0`.
 * `node['zabbix']['agent']['serverhost']` -  Defaults to `node['ipaddress']`.
 * `node['zabbix']['agent']['user_params']` -  Defaults to `{ ... }`.
+
+## Windows Agent
+* `node['zabbix']['agent']['windows']['installer']` - 'chocolatey' or 'bin'(zabbix binaries). Defaults to `chocolatey`.
+* `node['zabbix']['agent']['windows']['version']` -  Defaults to `3.0.4`.
+* `node['zabbix']['agent']['windows']['chocolatey']['repo']` -  Defaults to `https://chocolatey.org/api/v2`.
+* `node['zabbix']['agent']['windows']['path']` -  Defaults to `C:\ProgramData\zabbix`.
+* `node['zabbix']['agent']['windows']['include']` -  Defaults to `C:\ProgramData\zabbix\etc`.
+* `node['zabbix']['agent']['windows']['scripts']` -  Defaults to `C:\ProgramData\zabbix\scripts`.
+* `node['zabbix']['agent']['windows']['templates']` -  Defaults to `C:\ProgramData\zabbix\templates`.
+* `node['zabbix']['agent']['windows']['log']` -  Defaults to `C:\ProgramData\zabbix\zabbix_agentd.log`.
 
 ## Database
 * `node['zabbix']['server']['database']['filesystem']` -  Defaults to `ext4`.
@@ -63,6 +71,10 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['database']['configuration']['archive_mode']` -  Defaults to `on`.
 * `node['zabbix']['server']['database']['configuration']['archive_command']` -  Defaults to `exit 0`.
 
+## Default
+* `node['zabbix']['version']` -  Defaults to `2.4`.
+* `node['zabbix']['api-version']` -  Defaults to `2.4.7`.
+
 ## Server
 * `node['zabbix']['server']['service']` -  Defaults to `zabbix-server`.
 * `node['zabbix']['server']['credentials']['databag']` -  Defaults to `zabbix`.
@@ -74,8 +86,6 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['config']['timeouts']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['config']['global']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['config']['alerts']` -  Defaults to `{ ... }`.
-
-## Web
 * `node['zabbix']['server']['web']['server_name']` -  Defaults to `localhost`.
 * `node['zabbix']['server']['web']['listen']` -  Defaults to `127.0.0.1`.
 * `node['zabbix']['server']['web']['port']` -  Defaults to `9200`.
@@ -98,6 +108,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 # Recipes
 
 * zabbix_lwrp::agent - Installs and configures Zabbix agent.
+* zabbix_lwrp::agent_win - Installs and configures Zabbix agent for Windows.
 * zabbix_lwrp::connect - Connects to Zabbix API to sync configuration.
 * zabbix_lwrp::default - Installs and configures Zabbix official repository and agent.
 * zabbix_lwrp::database - Installs and configures Zabbix database.
@@ -106,6 +117,169 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * zabbix_lwrp::repository - Installs Zabbix official repository.
 * zabbix_lwrp::server - Installs and configures Zabbix server.
 * zabbix_lwrp::web - Installs and configures Zabbix frontend.
+
+# Resources
+
+* [zabbix_action](#zabbix_action)
+* [zabbix_application](#zabbix_application)
+* [zabbix_connect](#zabbix_connect)
+* [zabbix_database](#zabbix_database)
+* [zabbix_graph](#zabbix_graph)
+* [zabbix_host](#zabbix_host)
+* [zabbix_media_type](#zabbix_media_type)
+* [zabbix_screen](#zabbix_screen)
+* [zabbix_template](#zabbix_template)
+* [zabbix_user_group](#zabbix_user_group)
+* [zabbix_user_macro](#zabbix_user_macro)
+
+## zabbix_action
+
+### Actions
+
+- sync:  Default action.
+
+### Attribute Parameters
+
+- name:
+- event_source:
+- escalation_time:  Defaults to <code>60</code>.
+- enabled:  Defaults to <code>true</code>.
+- message_subject:
+- message_body:
+- send_recovery_message:  Defaults to <code>false</code>.
+- recovery_message_subject:
+- recovery_message_body:
+
+## zabbix_application
+
+### Actions
+
+- sync:  Default action.
+
+### Attribute Parameters
+
+- name:
+
+## zabbix_connect
+
+### Actions
+
+- make:  Default action.
+
+### Attribute Parameters
+
+- name:
+- databag:
+- apiurl:
+- user:
+- password:
+
+## zabbix_database
+
+### Actions
+
+- create:  Default action.
+
+### Attribute Parameters
+
+- db_name:
+- db_user:
+- db_pass:
+- db_host:
+- db_port:
+
+## zabbix_graph
+
+### Actions
+
+- create:  Default action.
+
+### Attribute Parameters
+
+- name:
+- height:
+- width:
+- graph_items:
+
+## zabbix_host
+
+### Actions
+
+- create:
+
+### Attribute Parameters
+
+- type:  Defaults to <code>1</code>.
+- host_name:
+- host_group:
+- port:  Defaults to <code>10050</code>.
+- ip_address:
+- dns:
+- use_ip:  Defaults to <code>true</code>.
+
+## zabbix_media_type
+
+### Actions
+
+- create:  Default action.
+
+### Attribute Parameters
+
+- name:
+- type:
+- server:
+- helo:
+- email:
+- path:
+- modem:
+- username:
+- password:
+
+## zabbix_screen
+
+### Actions
+
+- sync:  Default action.
+
+### Attribute Parameters
+
+- name:
+- hsize:
+- vsize:
+
+## zabbix_template
+
+### Actions
+
+- add:
+- import:
+
+### Attribute Parameters
+
+- host_name:
+- path:
+
+## zabbix_user_group
+
+### Actions
+
+- create:  Default action.
+
+### Attribute Parameters
+
+- name:
+
+## zabbix_user_macro
+
+### Actions
+
+- create:  Default action.
+
+### Attribute Parameters
+
+- name:
+- value:
+- host_name:
 
 # Data bag
 
@@ -117,6 +291,7 @@ Data bag `zabbix` must contains the following items:
 `databases` and `users` items related to the postgresql database (see [postgresql_lwrp](https://github.com/express42-cookbooks/postgresql) cookbook)
 
 For examples see fixture data bag `test/fixtures/databags/zabbix/`
+
 
 # Resources
 
@@ -341,7 +516,7 @@ end
 ## zabbix_application
 
 Creates application, items and triggers. You should think about items and triggers like nested
-resources inside zabbix_application lwrp.
+resources inside zabbix_application resource.
 
 ### Actions
 <table>
@@ -531,7 +706,6 @@ end
 
 ## zabbix_screen
 
-
 ### Examples
 ```ruby
 zabbix_screen 'Test Screen' do
@@ -634,6 +808,7 @@ zabbix_user_macro 'Test_macro' do
   value 'foobar'
 end
 ```
+
 
 # Usage
 
