@@ -19,4 +19,9 @@ end
 
 group :kitchen_cloud do
   gem 'kitchen-digitalocean'
+  gem 'kitchen-ec2'
+end
+
+group :aws do
+  gem 'aws-sdk', '2.2.34'
 end
