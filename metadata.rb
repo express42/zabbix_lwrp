@@ -5,8 +5,8 @@ license          'MIT'
 description      'Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provides LWRP for creating and modifying Zabbix objects.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '1.1.20'
-source_url       'https://github.com/express42-cookbooks/zabbix_lwrp' if respond_to?(:source_url)
-issues_url       'https://github.com/express42-cookbooks/zabbix_lwrp/issues' if respond_to?(:issues_url)
+source_url       'https://github.com/express42/zabbix_lwrp' if respond_to?(:source_url)
+issues_url       'https://github.com/express42/zabbix_lwrp/issues' if respond_to?(:issues_url)
 
 depends          'apt'
 depends          'build-essential'
