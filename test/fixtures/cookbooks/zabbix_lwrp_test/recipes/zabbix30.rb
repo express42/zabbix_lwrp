@@ -1,6 +1,6 @@
 # include_recipe 'apt'
 # include_recipe 'postgresql_lwrp::yum_official_repository'
-include_recipe 'nginx::official-repo'
+include_recipe 'chef_nginx::default'
 
 node.default['postgresql']['version'] = '9.6'
 node.default['postgresql']['enable_pgdg_yum'] = true
