@@ -2,7 +2,7 @@
 # Cookbook Name:: zabbix_lwrp
 # Recipe:: repository
 #
-# Copyright (C) LLC 2015 Express 42
+# Copyright (C) LLC 2017 Express 42
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -22,9 +22,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-apt_repository 'zabbix-official' do
-  uri "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/ubuntu/"
-  distribution node['lsb']['codename']
-  components ['main']
-  key 'http://repo.zabbix.com/zabbix-official-repo.key'
+case node['platform_family']
+when 'rhel'
+
+  remote_file "#{Chef::Config[:file_cache_path]}/zabbix_repo.rpm" do
+    source 'http://repo.zabbix.com/zabbix/3.2/rhel/7/x86_64/zabbix-release-3.2-1.el7.noarch.rpm'
+    action :create
+  end
+
+  rpm_package 'zabbix-official' do
+    source "#{Chef::Config[:file_cache_path]}/zabbix_repo.rpm"
+    action :install
+  end
+
+when 'debian'
+
+  apt_repository 'zabbix-official' do
+    uri "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/ubuntu/"
+    distribution node['lsb']['codename']
+    components ['main']
+    key 'http://repo.zabbix.com/zabbix-official-repo.key'
+  end
 end
