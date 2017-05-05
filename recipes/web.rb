@@ -51,10 +51,11 @@ chef_nginx_site node['zabbix']['server']['web']['server_name'] do
     fastcgi_port: node['zabbix']['server']['web']['port']
   )
 end
+
 if node['platform_version'].to_f < 16.04
   package 'php5-pgsql'
 else
-  %w(php-pgsql php-mbstring apache2 php-bcmath php-gd).each  do |pkg|
+  %w(php-pgsql php-mbstring apache2 php-bcmath php-gd).each do |pkg|
     package pkg
   end
 end
@@ -65,10 +66,10 @@ package 'zabbix-frontend-php' do
 end
 
 if node['platform_version'].to_f >= 16.04
-   package 'apache2' do
-     action :remove
-   end
- end
+  package 'apache2' do
+    action :remove
+  end
+end
 
 php_fpm_pool 'zabbix' do
   listen "#{node['zabbix']['server']['web']['listen']}:#{node['zabbix']['server']['web']['port']}"
