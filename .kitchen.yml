@@ -14,8 +14,21 @@ platforms:
   - name: ubuntu-14.04
     driver:
       box: express42/ubuntu-14.04
+  - name: windows
+    driver:
+      provider: virtualbox
+      box:  opentable/win-2012r2-standard-amd64-nocm
+      network:
+        - ["private_network", {ip: "192.168.33.33"}]
 
 suites:
+  - name: zabbix-agent
+    run_list:
+      - recipe[chef-client::config]
+      - recipe[chef-client::windows_service]
+      - recipe[chef-client::delete_validation]
+      - recipe[zabbix_lwrp::repository]
+      - recipe[zabbix_lwrp::agent_win]
   - name: zabbix24
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24]
