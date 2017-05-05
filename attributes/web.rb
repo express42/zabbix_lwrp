@@ -18,3 +18,4 @@ default['zabbix']['server']['web']['configuration']['php_admin_value[max_input_t
 default['zabbix']['server']['web']['configuration']['php_admin_value[memory_limit]'] = '128M'
 default['zabbix']['server']['web']['configuration']['php_admin_value[post_max_size]'] = '32M'
 default['zabbix']['server']['web']['configuration']['php_admin_flag[register_globals]'] = true
+default['nginx']['default_site_enabled'] = false

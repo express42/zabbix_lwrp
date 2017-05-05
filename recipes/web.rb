@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 include_recipe 'php-fpm'
-include_recipe 'nginx::default'
+include_recipe 'chef_nginx::default'
 
 db_name = 'zabbix'
 
@@ -42,12 +42,33 @@ db_user_data = data_bag_item(node['zabbix']['server']['database']['databag'], 'u
 db_user = db_user_data.keys.first
 db_pass = db_user_data[db_user]['options']['password']
 
-package 'php5-pgsql'
+chef_nginx_site node['zabbix']['server']['web']['server_name'] do
+  action :enable
+  template 'zabbix-site.conf.erb'
+  variables(
+    server_name: node['zabbix']['server']['web']['server_name'],
+    fastcgi_listen: node['zabbix']['server']['web']['listen'],
+    fastcgi_port: node['zabbix']['server']['web']['port']
+  )
+end
+if node['platform_version'].to_f < 16.04
+  package 'php5-pgsql'
+else
+  %w(php-pgsql php-mbstring apache2 php-bcmath php-gd).each  do |pkg|
+    package pkg
+  end
+end
 
 package 'zabbix-frontend-php' do
   response_file 'zabbix-frontend-without-apache.seed'
   action [:install, :reconfig]
 end
+
+if node['platform_version'].to_f >= 16.04
+   package 'apache2' do
+     action :remove
+   end
+ end
 
 php_fpm_pool 'zabbix' do
   listen "#{node['zabbix']['server']['web']['listen']}:#{node['zabbix']['server']['web']['port']}"
@@ -73,15 +94,5 @@ template '/etc/zabbix/web/zabbix.conf.php' do
     user_password: db_pass,
     server_host: 'localhost',
     server_port: '10051'
-  )
-end
-
-nginx_site node['zabbix']['server']['web']['server_name'] do
-  action :enable
-  template 'zabbix-site.conf.erb'
-  variables(
-    server_name: node['zabbix']['server']['web']['server_name'],
-    fastcgi_listen: node['zabbix']['server']['web']['listen'],
-    fastcgi_port: node['zabbix']['server']['web']['port']
   )
 end
