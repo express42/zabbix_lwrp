@@ -44,7 +44,7 @@ end
 windows_zipfile "#{ENV['TEMP']}\\zabbix_agent\\#{zbx_ver}" do
   source "http://www.zabbix.com/downloads/#{zbx_ver}/zabbix_agents_#{zbx_ver}.win.zip"
   action :unzip
-  not_if {::File.exists?("#{ENV['TEMP']}\\zabbix_agent\\#{zbx_ver}\\bin")}
+  not_if { ::File.exist?("#{ENV['TEMP']}\\zabbix_agent\\#{zbx_ver}\\bin") }
 end
 
 arch = '32'
@@ -69,17 +69,17 @@ end
 #  If binary not exists or version differents by defined one in attributes it stops agent service (if exists)
 #  and copy(replace) binary files in Program Files Folder
 powershell_script 'copy zbx_files' do
-    code <<-EOF
-    $from = "#{ENV['TEMP']}\\zabbix_agent\\#{zbx_ver}\\bin\\win#{arch}\\zabbix_*.exe"
-    $to = "#{ENV['PROGRAMFILES']}\\Zabbix Agent"
-    if (!((Get-Item '#{ENV['PROGRAMFILES']}\\Zabbix Agent\\zabbix_agentd.exe' -ErrorAction SilentlyContinue ).VersionInfo.FileVersion -like '#{zbx_ver}*')) {
-      if (Get-Service -Name 'Zabbix Agent'  -ErrorAction SilentlyContinue)
-        {
-          Stop-Service 'Zabbix Agent'
-        }
-        Copy-Item $from $to
+  code <<-EOF
+  $from = "#{ENV['TEMP']}\\zabbix_agent\\#{zbx_ver}\\bin\\win#{arch}\\zabbix_*.exe"
+  $to = "#{ENV['PROGRAMFILES']}\\Zabbix Agent"
+  if (!((Get-Item '#{ENV['PROGRAMFILES']}\\Zabbix Agent\\zabbix_agentd.exe' -ErrorAction SilentlyContinue ).VersionInfo.FileVersion -like '#{zbx_ver}*')) {
+    if (Get-Service -Name 'Zabbix Agent'  -ErrorAction SilentlyContinue)
+      {
+        Stop-Service 'Zabbix Agent'
       }
-    EOF
+      Copy-Item $from $to
+    }
+  EOF
 end
 
 windows_package 'zabbix-agent' do
@@ -88,7 +88,7 @@ windows_package 'zabbix-agent' do
   options "--install --config #{zbx_path}\\zabbix_agentd.conf"
   action :install
   timeout 10
-  not_if {::Win32::Service.exists?('Zabbix Agent')}
+  not_if { ::Win32::Service.exists?('Zabbix Agent') }
 end
 
 service 'Zabbix Agent' do
