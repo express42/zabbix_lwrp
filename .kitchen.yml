@@ -20,6 +20,9 @@ platforms:
       box:  opentable/win-2012r2-standard-amd64-nocm
       network:
         - ["private_network", {ip: "192.168.33.33"}]
+  - name: centos-7.3
+    driver:
+      box: bento/centos-7.3  
 
 suites:
   - name: zabbix-agent
