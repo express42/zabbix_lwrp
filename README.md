@@ -1,10 +1,10 @@
-![Chef cookbook](https://img.shields.io/cookbook/v/zabbix_lwrp.svg)](https://github.com/express42-cookbooks/zabbix_lwrp)
+[![Chef cookbook](https://img.shields.io/cookbook/v/zabbix_lwrp.svg)](https://github.com/express42/zabbix_lwrp)
 [![Code Climate](https://codeclimate.com/github/express42-cookbooks/zabbix_lwrp/badges/gpa.svg)](https://codeclimate.com/github/express42-cookbooks/zabbix_lwrp)
-[![Build Status](https://travis-ci.org/express42-cookbooks/zabbix_lwrp.svg?branch=master)](https://travis-ci.org/express42-cookbooks/zabbix_lwrp)
+[![Build Status](https://travis-ci.org/express42/zabbix_lwrp.svg?branch=master)](https://travis-ci.org/express42/zabbix_lwrp)
 
 # Description
 
-[![Join the chat at https://gitter.im/express42-cookbooks/zabbix_lwrp](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/express42-cookbooks/zabbix_lwrp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/express42/zabbix_lwrp](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/express42/zabbix_lwrp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provides LWRP for creating and modifying Zabbix objects.
 
