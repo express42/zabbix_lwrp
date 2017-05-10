@@ -26,7 +26,7 @@ case node['platform_family']
 when 'rhel'
 
   remote_file "#{Chef::Config[:file_cache_path]}/zabbix_repo.rpm" do
-    source 'http://repo.zabbix.com/zabbix/3.2/rhel/7/x86_64/zabbix-release-3.2-1.el7.noarch.rpm'
+    source "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/#{node['platform_family']}/#{node['platform_version'].split('.').first}/x86_64/zabbix-release-#{node['zabbix']['version']}-1.el7.noarch.rpm"
     action :create
   end
 
@@ -43,4 +43,5 @@ when 'debian'
     components ['main']
     key 'http://repo.zabbix.com/zabbix-official-repo.key'
   end
+
 end
