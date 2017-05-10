@@ -11,9 +11,10 @@ node.default['postgresql']['contrib']['packages'] = ['postgresql96-contrib']
 node.default['postgresql']['setup_script'] = 'postgresql96-setup'
 node.default['postgresql']['server']['service_name'] = 'postgresql-9.6'
 include_recipe 'postgresql::server'
+include_recipe 'postgresql::ruby'
 
 node.default['zabbix']['version'] = '3.0'
-node.default['zabbix']['api-version'] = '2.4.7'
+node.default['zabbix']['api-version'] = '3.0.0'
 
 include_recipe 'zabbix_lwrp::default'
 # include_recipe 'zabbix_lwrp::partition'

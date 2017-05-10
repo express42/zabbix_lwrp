@@ -57,6 +57,6 @@ template "#{node['zabbix']['agent']['windows']['path']}\\zabbix_agentd.conf" do
 end
 
 service 'Zabbix Agent' do
-  supports :restart => true
+  supports restart: true
   action [:enable, :start]
 end

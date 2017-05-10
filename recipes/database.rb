@@ -2,7 +2,7 @@
 # Cookbook Name:: zabbix_lwrp
 # Recipe:: database
 #
-# Copyright (C) LLC 2015 Express 42
+# Copyright (C) LLC 2017 Express 42
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -21,3 +21,41 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+if node['zabbix']['server']['database']['databag'].nil? ||
+   node['zabbix']['server']['database']['databag'].empty? ||
+   !data_bag(node['zabbix']['server']['database']['databag']).include?('databases')
+
+  raise "You should specify databag name in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should contains key 'databases'"
+end
+
+node.default['postgresql']['config'] = node['zabbix']['server']['database']['configuration']
+node.default['postgresql']['pg_hba'] = [{
+  type: 'host',
+  db: 'all',
+  user: 'all',
+  addr: node['zabbix']['server']['database']['network'],
+  method: 'md5'
+}]
+
+postgresql_connection_info = {
+  host: '127.0.0.1',
+  username: 'postgres',
+  password: node['postgresql']['password']['postgres']
+}
+
+data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users'].each_pair do |name, options|
+  postgresql_database_user name do
+    connection postgresql_connection_info
+    password options['options']['password']
+    action :create
+  end
+end
+
+data_bag_item(node['zabbix']['server']['database']['databag'], 'databases')['databases'].each_pair do |name, options|
+  postgresql_database name do
+    connection postgresql_connection_info
+    owner options['options']['owner']
+    action :create
+  end
+end
