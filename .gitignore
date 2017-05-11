@@ -9,7 +9,11 @@ pkg/
 # Berkshelf
 .vagrant
 /cookbooks
+berks-cookbooks/*
 Berksfile.lock
+
+#Chef
+.chef/*
 
 # Bundler
 Gemfile.lock
