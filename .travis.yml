@@ -5,8 +5,8 @@ rvm:
 - 2.2.2
 bundler_args: "--without kitchen_vagrant"
 before_install:
-- openssl aes-256-cbc -K $encrypted_03b4052e60ba_key -iv $encrypted_03b4052e60ba_iv
-  -in .travis/secret_keys.tar.enc -out .travis/secret_keys.tar -d
+- openssl aes-256-cbc -K $encrypted_2be78cfba7d5_key -iv $encrypted_2be78cfba7d5_iv
+  -in secret_keys.tar.enc -out secret_keys.tar -d
 script:
 - bundle exec rubocop
 - bundle exec foodcritic --contex --epic-fail any .
@@ -26,3 +26,5 @@ notifications:
 env:
   global:
   - KITCHEN_YAML=.kitchen.cloud.yml
+  - secure: X4tV06t8fZNBcXuLvnkqy5RAFkU2TwFK4CrRn3JOLQOup5DnhGsE51OpfJ3cYGsflwi/ZUkWBxnWCLeKyeXp/56FOuAtmK7tL6pJWZ2qp2x7wpqVUdCYmCoPn8SehMs5yNWdPdrowVbZpTihJD21FqloNQ2wlRmqPyI5m7oMGhCDoh3F4KXPaoheZmTCkAKOHQiJKKa1feBSP0sYBb5Pp7cOKqlC5DMJ71i9rsj231Oht7NY8rXNEv7m04DKTnKS9UPAIejWbyngcMux3rmoT8eLsE3i0AOg6QutJaAV+zm5OJJzGbWFV5yjcfqp2JWTUnGTVJD8MWbs2XGS5lDSSCNS2J/+jCC+IYpGi1KN04cr1WjIgWmqC30l3viQuoC584xGWK/grkdtYMXebTEnb3fev4t3Mjf0nwTpFo7dNFFajZhSGPgQy7YsRyXhHQD+BXe4GfpvmX9z6D+LkQdwTF+04ufdHl4UFOnZ33/Jd08eZ9XolTUikjxkrySp2xscOQIP7S6OPAGWOadIxi5j46K7eQ/mWjt0W+NTWSJBfnelrZD3Pt7iSylfQTJAtuaQVSWcOWyy2I1ARXXfn3yGqpbSDIyrO0ioDLnXXMJcsn3PkpD2Qez+DU/tcCUIuhWM9iyKVDGsubtR2vLfpwNuhFhl2rGQDLUMJE3+ktrTvqc=
+  - secure: m6zWL2NZT0+Im7UdfhrfQIHxCsJ4qcZCIDElaUL8PeRgvJl8ZxdyK1aNkv/jSfyFOcsou7GHlIWP7CNDHL6OQZ7fGppV6x6AZQS8TNuMdIjJDjmdH1sTCP7NWWNuD5tjGNT7AM1CbJzpG8Z5iT+6GKeAMWbYV8SLnZg0ZdWqVf7PNaQfjJ2CdBapg3KZWw+N2N21P/bGRat3VD8LUK2EM4PzfLVr1sDXPH43gejp7rnSqqxBy9T0NBJOD+Nq1/K4S8khlXC1RZMkXXrM/1wCN87ytt7MtA1GPoZc4fXlhJVFGI1ghYyHjdUOKLzjkaRrFl232l35y/2Ue1rFkFjb3DGO/flF3HIANhRSJlX+smEbS7R3In4uecgDmGee8sHH0afSXz0gkuENPc3zm4rOHaSpSNACNg7KElRGewhICcPrb2CKZjt6Bn9aI9dHaSQzPK0vm3ZBAd/6+jNJ7vAROfnk5EmGEdmcYM036FRv5RL9SSw9GdSZNcONxb2uAEtw7YxQWP/xunS5JuVsi00OSyMfL5He+GV9LlwJJMnqpHswYelqldYol7+uS7v1of600SfbcYj3Lc5ipmsW5VgI0j9MEjX3CFsJYS8EKeCpPju3EKB0qzhJpGBXY2Rw6LG6OpSphf6pODZ/JzyK0GYYRNBZt9oUx+4BWNFAE+yjErM=
