@@ -8,9 +8,6 @@ provisioner:
   require_chef_omnibus: 12
 
 platforms:
-  - name: ubuntu-12.04
-    driver:
-      box: express42/ubuntu12.04-chef11
   - name: ubuntu-14.04
     driver:
       box: express42/ubuntu-14.04
@@ -35,20 +32,6 @@ suites:
   - name: zabbix24
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24]
-  - name: zabbix24-chef11
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix24]
-    provisioner:
-      require_chef_omnibus: 11.18
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]
-    excludes:
-      - ubuntu-12.04
-  - name: zabbix30-chef11
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix30]
-    provisioner:
-      require_chef_omnibus: 11.18
-    excludes:
-      - ubuntu-12.04
