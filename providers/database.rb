@@ -82,14 +82,23 @@ action :create do
 
   db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
 
-  db_command = case node['zabbix']['version'].to_f
-               when (3.0..4.0)
-                 "gunzip -c /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | #{db_connect_string}"
-               else
-                 "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
-                               #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
-                               #{db_connect_string} -f /usr/share/zabbix-server-pgsql/data.sql;"
-               end
+  db_command = ''
+  if node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'rhel'
+    db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | #{db_connect_string}"
+
+  elsif node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'debian'
+    db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql/create.sql.gz | #{db_connect_string}"
+
+  elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'rhel'
+    db_command = "#{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/schema.sql; \
+                           #{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/images.sql; \
+                           #{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/data.sql;"
+
+  elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'debian'
+    db_command = "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
+                           #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
+                           #{db_connect_string} -f /usr/share/zabbix-server-pgsql/data.sql;"
+  end
 
   execute 'Provisioning zabbix database' do
     command db_command
