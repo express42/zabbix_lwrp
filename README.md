@@ -23,7 +23,8 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * build-essential
 * lvm
 * nginx
-* postgresql_lwrp
+* postgresql
+* database
 * php-fpm
 * chocolatey
 
