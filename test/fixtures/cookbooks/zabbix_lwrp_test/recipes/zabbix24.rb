@@ -1,7 +1,7 @@
 include_recipe 'apt'
 include_recipe 'chef_nginx::default'
 
-node.default['postgresql']['version'] = '9.6'
+node.default['zabbix']['server']['database']['version'] = '9.6'
 node.default['zabbix']['version'] = '2.4'
 node.default['zabbix']['api-version'] = '3.0.0'
 
