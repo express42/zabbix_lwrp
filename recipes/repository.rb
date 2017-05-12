@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 apt_repository 'zabbix-official' do
-  uri "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/ubuntu/"
+  uri "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/#{node['platform']}/"
   distribution node['lsb']['codename']
   components ['main']
   key 'http://repo.zabbix.com/zabbix-official-repo.key'
