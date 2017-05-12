@@ -19,7 +19,7 @@ platforms:
         - ["private_network", {ip: "192.168.33.33"}]
   - name: centos-7.3
     driver:
-      box: bento/centos-7.3  
+      box: bento/centos-7.3
 
 suites:
   - name: zabbix-agent
@@ -32,6 +32,8 @@ suites:
   - name: zabbix24
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24]
+    excludes: ["windows"]
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]
+    excludes: ["windows"]
