@@ -1,4 +1,4 @@
-![Chef cookbook](https://img.shields.io/cookbook/v/zabbix_lwrp.svg)](https://github.com/express42-cookbooks/zabbix_lwrp)
+![Chef cookbook](https://img.shields.io/cookbook/v/zabbix_lwrp.svg)](https://github.com/express42/zabbix_lwrp)
 [![Code Climate](https://codeclimate.com/github/express42-cookbooks/zabbix_lwrp/badges/gpa.svg)](https://codeclimate.com/github/express42-cookbooks/zabbix_lwrp)
 [![Build Status](https://travis-ci.org/express42-cookbooks/zabbix_lwrp.svg?branch=master)](https://travis-ci.org/express42-cookbooks/zabbix_lwrp)
 
@@ -13,6 +13,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 ## Platform:
 
 * ubuntu
+* centos
 * windows - only for agent
 
 ## Cookbooks:
@@ -70,6 +71,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['database']['configuration']['log_min_duration_statement']` -  Defaults to `1000`.
 * `node['zabbix']['server']['database']['configuration']['archive_mode']` -  Defaults to `on`.
 * `node['zabbix']['server']['database']['configuration']['archive_command']` -  Defaults to `exit 0`.
+* `node['zabbix']['server']['database']['configuration']['wal_level']`- Defaults to 'hot_standby'
 
 ## Default
 * `node['zabbix']['version']` -  Defaults to `2.4`.
