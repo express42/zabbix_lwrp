@@ -6,7 +6,6 @@ node.default['zabbix']['version'] = '3.0'
 node.default['zabbix']['api-version'] = '3.0.0'
 
 include_recipe 'zabbix_lwrp::default'
-include_recipe 'zabbix_lwrp::partition'
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'
