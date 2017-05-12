@@ -1,6 +1,9 @@
 include_recipe 'apt'
-include_recipe 'postgresql_lwrp::apt_official_repository'
-include_recipe 'nginx::official-repo'
+include_recipe 'chef_nginx::default'
+
+node.default['postgresql']['version'] = '9.6'
+node.default['zabbix']['version'] = '2.4'
+node.default['zabbix']['api-version'] = '3.0.0'
 
 include_recipe 'zabbix_lwrp::default'
 include_recipe 'zabbix_lwrp::partition'

@@ -2,16 +2,6 @@ include_recipe 'apt'
 include_recipe 'chef_nginx::default'
 
 node.default['postgresql']['version'] = '9.6'
-node.default['postgresql']['enable_pgdg_yum'] = true
-node.default['postgresql']['use_pgdg_packages'] = true
-node.default['postgresql']['client']['packages'] = 'postgresql96-devel'
-node.default['postgresql']['server']['packages'] = ['postgresql96-server']
-node.default['postgresql']['contrib']['packages'] = ['postgresql96-contrib']
-node.default['postgresql']['setup_script'] = 'postgresql96-setup'
-node.default['postgresql']['server']['service_name'] = 'postgresql-9.6'
-include_recipe 'postgresql::server'
-include_recipe 'postgresql::ruby'
-
 node.default['zabbix']['version'] = '3.0'
 node.default['zabbix']['api-version'] = '3.0.0'
 
