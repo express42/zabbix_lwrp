@@ -84,7 +84,7 @@ action :create do
 
   db_command = case node['zabbix']['version'].to_f
                when (3.0..4.0)
-                 "gunzip -c /usr/share/doc/zabbix-server-pgsql/create.sql.gz | #{db_connect_string}"
+                 "gunzip -c /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | #{db_connect_string}"
                else
                  "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
                                #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
