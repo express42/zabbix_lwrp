@@ -21,16 +21,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+node.default['postgresql']['version'] = node['zabbix']['server']['database']['version']
 case node['platform_family']
 when 'rhel'
-  pg_rhel_version = node['postgresql']['version'].gsub(/./, '')
   node.default['postgresql']['enable_pgdg_yum'] = true
-  node.default['postgresql']['use_pgdg_packages'] = true
-  node.default['postgresql']['client']['packages'] = "postgresql#{pg_rhel_version}-devel"
-  node.default['postgresql']['server']['packages'] = ["postgresql#{pg_rhel_version}-server"]
-  node.default['postgresql']['contrib']['packages'] = ["postgresql#{pg_rhel_version}-contrib"]
-  node.default['postgresql']['setup_script'] = "postgresql#{pg_rhel_version}-setup"
-  node.default['postgresql']['server']['service_name'] = "postgresql-#{node['postgresql']['version']}"
 when 'debian'
   node.default['postgresql']['enable_pgdg_apt'] = true
   node.default['postgresql']['use_pgdg_packages'] = true
@@ -38,7 +33,6 @@ when 'debian'
   node.default['postgresql']['client']['packages'] = ["postgresql-client-#{node['postgresql']['version']}", 'libpq-dev']
   node.default['postgresql']['server']['packages'] = ["postgresql-#{node['postgresql']['version']}"]
   node.default['postgresql']['contrib']['packages'] = ["postgresql-contrib-#{node['postgresql']['version']}"]
-  node.default['postgresql']['server']['service_name'] = 'postgresql'
 end
 
 include_recipe 'postgresql::server'
