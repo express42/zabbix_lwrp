@@ -72,7 +72,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['database']['configuration']['log_min_duration_statement']` -  Defaults to `1000`.
 * `node['zabbix']['server']['database']['configuration']['archive_mode']` -  Defaults to `on`.
 * `node['zabbix']['server']['database']['configuration']['archive_command']` -  Defaults to `exit 0`.
-* `node['zabbix']['server']['database']['configuration']['wal_level']`- Defaults to 'hot_standby'
+* `node['zabbix']['server']['database']['configuration']['wal_level']`- Defaults to `hot_standby`
 
 ## Default
 * `node['zabbix']['version']` -  Defaults to `2.4`.
