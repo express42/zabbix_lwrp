@@ -29,4 +29,5 @@ recipe           'zabbix_lwrp::server', 'Installs and configures Zabbix server.'
 recipe           'zabbix_lwrp::web', 'Installs and configures Zabbix frontend.'
 
 supports         'ubuntu'
+supports         'centos'
 supports         'windows'
