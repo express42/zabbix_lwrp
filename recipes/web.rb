@@ -52,14 +52,17 @@ chef_nginx_site node['zabbix']['server']['web']['server_name'] do
   )
 end
 
-packages = ['php-mbstring', 'php-bcmath', 'php-gd']
-
+packages = []
 if node['platform_version'].to_f < 16.04 && node['platform_family'] == 'debian'
   packages << 'php5-pgsql'
   packages << 'apache2'
 elsif node['platform_family'] == 'rhel'
   packages << 'httpd'
   packages << 'php-pgsql'
+elsif (node['platform_version'].to_f >= 16.04 && node['platform_family'] == 'debian') || node['platform_family'] == 'rhel'
+  packages << 'php-mbstring'
+  packages << 'php-bcmath'
+  packages << 'php-gd'
 else
   packages << 'php-pgsql'
 end
