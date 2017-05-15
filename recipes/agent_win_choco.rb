@@ -24,16 +24,14 @@
 
 include_recipe 'chocolatey'
 
-directory node['zabbix']['agent']['windows']['include'] do
-  recursive true
-end
+windows_include = node['zabbix']['agent']['windows']['include']
+windows_scripts = node['zabbix']['agent']['windows']['scripts']
+windows_templates = node['zabbix']['agent']['windows']['templates']
 
-directory node['zabbix']['agent']['windows']['scripts'] do
-  recursive true
-end
-
-directory node['zabbix']['agent']['windows']['templates'] do
-  recursive true
+[windows_include, windows_scripts, windows_templates].each do |dir|
+  directory dir do
+    recursive true
+  end
 end
 
 chocolatey 'zabbix-agent' do

@@ -25,20 +25,15 @@
 zbx_ver = node['zabbix']['agent']['windows']['version']
 zbx_path = node['zabbix']['agent']['windows']['path']
 
-directory node['zabbix']['agent']['windows']['include'] do
-  recursive true
-end
+windows_include = node['zabbix']['agent']['windows']['include']
+windows_scripts = node['zabbix']['agent']['windows']['scripts']
+windows_templates = node['zabbix']['agent']['windows']['templates']
+windows_zabbix_agent = "#{ENV['PROGRAMFILES']}\\Zabbix Agent"
 
-directory node['zabbix']['agent']['windows']['scripts'] do
-  recursive true
-end
-
-directory node['zabbix']['agent']['windows']['templates'] do
-  recursive true
-end
-
-directory "#{ENV['PROGRAMFILES']}\\Zabbix Agent" do
-  recursive true
+[windows_include, windows_scripts, windows_templates, windows_zabbix_agent].each do |dir|
+  directory dir do
+    recursive true
+  end
 end
 
 windows_zipfile "#{ENV['TEMP']}\\zabbix_agent\\#{zbx_ver}" do
