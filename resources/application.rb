@@ -90,9 +90,7 @@ class ZabbixItem
     instance_eval(&block)
   end
 
-  def key
-    @key
-  end
+  attr_reader :key
 
   def type(value)
     @type = TYPES[value]

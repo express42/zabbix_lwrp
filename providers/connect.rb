@@ -317,7 +317,7 @@ def create_screens
         end
       end
 
-      screen['screenitems'] = screen_data['screenitems'].reduce([]) do |res, item|
+      screen['screenitems'] = screen_data['screenitems'].each_with_object([]) do |item, res|
         case item['resourcetype']
         when 0 # graph resource type
           g = @@zbx.query(
@@ -336,7 +336,6 @@ def create_screens
         end
 
         res << item.to_hash.merge(resourceid: resource_id)
-        res
       end
 
       screen.delete('templateid')
@@ -394,17 +393,16 @@ def create_user_macros
         }
       ).first
 
-      unless user_macro
-        converge_by("Create zabbix macro #{macro}.") do
-          @@zbx.query(
-            method: 'usermacro.create',
-            params: {
-              macro: "{$#{macro.upcase}}",
-              hostid: host_id,
-              value: value,
-            }
-          )
-        end
+      next if user_macro
+      converge_by("Create zabbix macro #{macro}.") do
+        @@zbx.query(
+          method: 'usermacro.create',
+          params: {
+            macro: "{$#{macro.upcase}}",
+            hostid: host_id,
+            value: value,
+          }
+        )
       end
     end
   end
@@ -434,12 +432,11 @@ def create_templates
       host_id = @@zbx.hosts.get_id(host: hostname)
       template = @@zbx.templates.get_id(host: template)
 
-      if template
-        @@zbx.templates.mass_add(
-          hosts_id: [host_id],
-          templates_id: [template]
-        )
-      end
+      next unless template
+      @@zbx.templates.mass_add(
+        hosts_id: [host_id],
+        templates_id: [template]
+      )
     end
   end
 end
@@ -451,39 +448,38 @@ def create_actions
     (values['actions'] || []).each do |name, data|
       action = @@zbx.query(method: 'action.get', params: { filter: { name: name } }).first
 
-      unless action
-        conditions = data['conditions'].map do |condition|
-          if condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:trigger]
-            value = @@zbx.triggers.get_id(description: condition['value'])
-            condition.merge('value' => value)
-          elsif condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:host_group]
-            value = @@zbx.hostgroups.get_id(name: condition['value'])
-            condition.merge('value' => value)
-          else
-            condition
-          end
+      next if action
+      conditions = data['conditions'].map do |condition|
+        if condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:trigger]
+          value = @@zbx.triggers.get_id(description: condition['value'])
+          condition.merge('value' => value)
+        elsif condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:host_group]
+          value = @@zbx.hostgroups.get_id(name: condition['value'])
+          condition.merge('value' => value)
+        else
+          condition
         end
+      end
 
-        operations = data['operations'].map do |operation|
-          msg = operation['opmessage']
-          media_type = @@zbx.mediatypes.get_id(description: msg['mediatypeid'])
+      operations = data['operations'].map do |operation|
+        msg = operation['opmessage']
+        media_type = @@zbx.mediatypes.get_id(description: msg['mediatypeid'])
 
-          raise "Media type with name #{msg['mediatypeid']} not found" unless media_type
+        raise "Media type with name #{msg['mediatypeid']} not found" unless media_type
 
-          if operation['opmessage_grp']
-            user_groups = @@zbx.usergroups.get(name: operation['opmessage_grp'])
-            operation.merge('opmessage_grp' => user_groups, 'opmessage' => msg.merge('mediatypeid' => media_type))
-          else
-            operation.merge('opmessage' => msg.merge('mediatypeid' => media_type))
-          end
+        if operation['opmessage_grp']
+          user_groups = @@zbx.usergroups.get(name: operation['opmessage_grp'])
+          operation.merge('opmessage_grp' => user_groups, 'opmessage' => msg.merge('mediatypeid' => media_type))
+        else
+          operation.merge('opmessage' => msg.merge('mediatypeid' => media_type))
         end
+      end
 
-        converge_by("Create zabbix action #{name}.") do
-          @@zbx.query(
-            method: 'action.create',
-            params: data.merge('conditions' => conditions, 'operations' => operations)
-          )
-        end
+      converge_by("Create zabbix action #{name}.") do
+        @@zbx.query(
+          method: 'action.create',
+          params: data.merge('conditions' => conditions, 'operations' => operations)
+        )
       end
     end
   end

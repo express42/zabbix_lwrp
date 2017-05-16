@@ -71,9 +71,7 @@ class ZabbixScreenItem
     instance_eval(&block)
   end
 
-  def name
-    @name
-  end
+  attr_reader :name
 
   def resource_type(value)
     @resource_type = RESOURCE_TYPE[value]
