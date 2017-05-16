@@ -51,24 +51,36 @@ chef_nginx_site node['zabbix']['server']['web']['server_name'] do
     fastcgi_port: node['zabbix']['server']['web']['port']
   )
 end
-if node['platform_version'].to_f < 16.04
-  package 'php5-pgsql'
+
+packages = []
+if node['platform_version'].to_f < 16.04 && node['platform_family'] == 'debian'
+  packages << 'php5-pgsql'
+  packages << 'apache2'
+elsif node['platform_family'] == 'rhel'
+  packages << 'httpd'
+  packages << 'php-pgsql'
+elsif (node['platform_version'].to_f >= 16.04 && node['platform_family'] == 'debian') || node['platform_family'] == 'rhel'
+  packages << 'php-mbstring'
+  packages << 'php-bcmath'
+  packages << 'php-gd'
 else
-  %w(php-pgsql php-mbstring apache2 php-bcmath php-gd).each  do |pkg|
-    package pkg
+  packages << 'php-pgsql'
+end
+
+packages.each do |pkg|
+  package pkg
+end
+
+case node['platform_family']
+when 'debian'
+  package 'zabbix-frontend-php' do
+    response_file 'zabbix-frontend-without-apache.seed'
+    action [:install, :reconfig]
   end
-end
 
-package 'zabbix-frontend-php' do
-  response_file 'zabbix-frontend-without-apache.seed'
-  action [:install, :reconfig]
+when 'rhel'
+  package 'zabbix-web-pgsql'
 end
-
-if node['platform_version'].to_f >= 16.04
-   package 'apache2' do
-     action :remove
-   end
- end
 
 php_fpm_pool 'zabbix' do
   listen "#{node['zabbix']['server']['web']['listen']}:#{node['zabbix']['server']['web']['port']}"
@@ -81,11 +93,17 @@ php_fpm_pool 'zabbix' do
   php_options node['zabbix']['server']['web']['configuration']
 end
 
+owner_name = if node['platform_family'] == 'rhel'
+               'apache'
+             elsif 'debian'
+               'www-data'
+             end
+
 template '/etc/zabbix/web/zabbix.conf.php' do
   source 'zabbix.conf.php.erb'
   mode '0600'
-  owner 'www-data'
-  group 'www-data'
+  owner owner_name
+  group owner_name
   variables(
     db_host: db_host,
     db_name: db_name,

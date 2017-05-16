@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: zabbix_lwrp
-# Recipe:: agent
+# Recipe:: agent_win_choco
 #
 # Copyright (C) LLC 2015 Express 42
 #
@@ -18,22 +18,20 @@
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, Wx§HETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
 include_recipe 'chocolatey'
 
-directory node['zabbix']['agent']['windows']['include'] do
-  recursive true
-end
+windows_include = node['zabbix']['agent']['windows']['include']
+windows_scripts = node['zabbix']['agent']['windows']['scripts']
+windows_templates = node['zabbix']['agent']['windows']['templates']
 
-directory node['zabbix']['agent']['windows']['scripts'] do
-  recursive true
-end
-
-directory node['zabbix']['agent']['windows']['templates'] do
-  recursive true
+[windows_include, windows_scripts, windows_templates].each do |dir|
+  directory dir do
+    recursive true
+  end
 end
 
 chocolatey 'zabbix-agent' do
@@ -57,6 +55,6 @@ template "#{node['zabbix']['agent']['windows']['path']}\\zabbix_agentd.conf" do
 end
 
 service 'Zabbix Agent' do
-  supports :restart => true
-  action [:enable,:start]
+  supports restart: true
+  action [:enable, :start]
 end

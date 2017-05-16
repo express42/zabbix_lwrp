@@ -20,3 +20,4 @@ default['zabbix']['server']['database']['configuration']['effective_cache_size']
 default['zabbix']['server']['database']['configuration']['log_min_duration_statement'] = 1000
 default['zabbix']['server']['database']['configuration']['archive_mode'] = 'on'
 default['zabbix']['server']['database']['configuration']['archive_command'] = 'exit 0'
+default['zabbix']['server']['database']['configuration']['wal_level'] = 'hot_standby'

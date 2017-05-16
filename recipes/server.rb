@@ -57,12 +57,20 @@ db_config = {
 
 # Install packages
 
-package 'zabbix-server-pgsql' do
-  response_file 'zabbix-server-withoutdb.seed'
-  action [:install, :reconfig]
-end
+case node['platform_family']
+when 'debian'
+  package 'zabbix-server-pgsql' do
+    response_file 'zabbix-server-withoutdb.seed'
+    action [:install, :reconfig]
+  end
 
-package 'snmp-mibs-downloader'
+  package 'snmp-mibs-downloader'
+
+when 'rhel'
+  package 'zabbix-server-pgsql' do
+    action [:install, :reconfig]
+  end
+end
 
 zabbix_database db_name do
   db_user db_user
