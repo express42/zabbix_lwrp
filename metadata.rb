@@ -4,19 +4,19 @@ maintainer_email 'cookbooks@express42.com'
 license          'MIT'
 description      'Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provides LWRP for creating and modifying Zabbix objects.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '1.1.20'
+version          '1.2.1'
 chef_version     '~> 12'
 source_url       'https://github.com/express42/zabbix_lwrp' if respond_to?(:source_url)
 issues_url       'https://github.com/express42/zabbix_lwrp/issues' if respond_to?(:issues_url)
 
 depends          'apt'
 depends          'build-essential'
-depends          'lvm'
 depends          'chef_nginx'
-depends          'database'
-depends          'postgresql'
-depends          'php-fpm'
 depends          'chocolatey'
+depends          'database'
+depends          'lvm'
+depends          'php-fpm'
+depends          'postgresql'
 depends          'windows_firewall'
 
 recipe           'zabbix_lwrp::agent', 'Installs and configures Zabbix agent.'
