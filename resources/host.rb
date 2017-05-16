@@ -42,3 +42,11 @@ attribute :port,       kind_of: Integer, default: 10_050
 attribute :ip_address, kind_of: String
 attribute :dns,        kind_of: String
 attribute :use_ip,     kind_of: [TrueClass, FalseClass], required: true, default: true
+
+attribute :ipmi_enabled, kind_of: [TrueClass, FalseClass], default: false
+attribute :snmp_enabled, kind_of: [TrueClass, FalseClass], default: false
+attribute :jmx_enabled, kind_of: [TrueClass, FalseClass], default: false
+
+attribute :ipmi_port,  kind_of: Integer, default: 623
+attribute :snmp_port,  kind_of: Integer, default: 161
+attribute :jmx_port,  kind_of: Integer, default: 12_345
