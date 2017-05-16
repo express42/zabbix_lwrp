@@ -22,5 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-include_recipe 'zabbix_lwrp::repository'
+if node['platform_family'] != 'windows'
+  include_recipe 'zabbix_lwrp::repository'
+end
 include_recipe 'zabbix_lwrp::agent'

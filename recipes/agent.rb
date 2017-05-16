@@ -22,44 +22,56 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-package 'zabbix-agent'
 
-package 'zabbix-sender'
+if node['platform_family'] == 'windows'
+  # Redefine default variables
+  case node['zabbix']['agent']['windows']['installer']
+  when 'chocolatey'
+    include_recipe 'zabbix_lwrp::agent_win_choco'
+  when 'bin'
+    include_recipe 'zabbix_lwrp::agent_win_bin'
+  end
+# Open firewall port for zabbix_agent
+  windows_firewall_rule 'Zabbix Agent' do
+    localport node['zabbix']['agent']['listen_port'].to_s
+    firewall_action :allow
+  end
+else
 
-service 'zabbix-agent' do
-  supports restart: true
-  action [:enable, :start]
-end
+  include_dir = node['zabbix']['agent']['include']
+  scripts_dir = node['zabbix']['agent']['scripts']
+  templates_dir = node['zabbix']['agent']['templates']
 
-directory node['zabbix']['agent']['include'] do
-  owner 'zabbix'
-  group 'zabbix'
-  recursive true
-end
+  package 'zabbix-agent'
 
-directory node['zabbix']['agent']['scripts'] do
-  owner 'zabbix'
-  group 'zabbix'
-  recursive true
-end
+  package 'zabbix-sender'
 
-directory node['zabbix']['agent']['templates'] do
-  owner 'zabbix'
-  group 'zabbix'
-  recursive true
-end
+  service 'zabbix-agent' do
+    supports restart: true
+    action [:enable, :start]
+  end
 
-template '/etc/zabbix/zabbix_agentd.conf' do
-  source 'zabbix_agentd.conf.erb'
-  variables(
-    server:                 node['zabbix']['agent']['serverhost'],
-    loglevel:               node['zabbix']['agent']['loglevel'],
-    include:                node['zabbix']['agent']['include'],
-    timeout:                node['zabbix']['agent']['timeout'],
-    enable_remote_commands: node['zabbix']['agent']['enable_remote_commands'],
-    listen_ip:              node['zabbix']['agent']['listen_ip'],
-    user_params:            node['zabbix']['agent']['user_params'],
-    logpath:                node['zabbix']['agent']['log']
-  )
-  notifies :restart, 'service[zabbix-agent]', :delayed
+  [include_dir, scripts_dir, templates_dir].each do |dir|
+    directory dir do
+      recursive true
+      owner 'zabbix'
+      group 'zabbix'
+    end
+  end
+
+  template '/etc/zabbix/zabbix_agentd.conf' do
+    source 'zabbix_agentd.conf.erb'
+    variables(
+      server:                 node['zabbix']['agent']['serverhost'],
+      loglevel:               node['zabbix']['agent']['loglevel'],
+      include:                node['zabbix']['agent']['include'],
+      timeout:                node['zabbix']['agent']['timeout'],
+      enable_remote_commands: node['zabbix']['agent']['enable_remote_commands'],
+      listen_ip:              node['zabbix']['agent']['listen_ip'],
+      listen_port:            node['zabbix']['agent']['listen_port'],
+      user_params:            node['zabbix']['agent']['user_params'],
+      logpath:                node['zabbix']['agent']['log']
+    )
+    notifies :restart, 'service[zabbix-agent]', :delayed
+  end
 end
