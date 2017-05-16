@@ -51,13 +51,13 @@ node.default['postgresql']['pg_hba'] = [{
   db: 'all',
   user: 'all',
   addr: node['zabbix']['server']['database']['network'],
-  method: 'md5'
+  method: 'md5',
 }]
 
 postgresql_connection_info = {
   host: '127.0.0.1',
   username: 'postgres',
-  password: node['postgresql']['password']['postgres']
+  password: node['postgresql']['password']['postgres'],
 }
 
 data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users'].each_pair do |name, options|

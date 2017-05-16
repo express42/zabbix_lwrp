@@ -89,44 +89,38 @@ def create_hosts
         ip: values['ip_address'],
         dns: values['dns'] || '',
         port: values['port'],
-        useip: values['use_ip'] ? 1 : 0
+        useip: values['use_ip'] ? 1 : 0,
       },
     ]
 
     if values['snmp_enabled']
       interfaces.push(
-        {
-          type: 2,
-          main: 1,
-          ip: values['ip_address'],
-          dns: values['dns'] || '',
-          port: values['snmp_port'],
-          useip: values['use_ip'] ? 1 : 0
-        })
+        type: 2,
+        main: 1,
+        ip: values['ip_address'],
+        dns: values['dns'] || '',
+        port: values['snmp_port'],
+        useip: values['use_ip'] ? 1 : 0)
     end
 
     if values['ipmi_enabled']
       interfaces.push(
-        {
-          type: 3,
-          main: 1,
-          ip: values['ip_address'],
-          dns: values['dns'] || '',
-          port: values['ipmi_port'],
-          useip: values['use_ip'] ? 1 : 0
-        })
+        type: 3,
+        main: 1,
+        ip: values['ip_address'],
+        dns: values['dns'] || '',
+        port: values['ipmi_port'],
+        useip: values['use_ip'] ? 1 : 0)
     end
 
     if values['jmx_enabled']
       interfaces.push(
-        {
-          type: 4,
-          main: 1,
-          ip: values['ip_address'],
-          dns: values['dns'] || '',
-          port: values['jmx_port'],
-          useip: values['use_ip'] ? 1 : 0
-        })
+        type: 4,
+        main: 1,
+        ip: values['ip_address'],
+        dns: values['dns'] || '',
+        port: values['jmx_port'],
+        useip: values['use_ip'] ? 1 : 0)
     end
 
     host_id = if h
@@ -143,7 +137,7 @@ def create_hosts
       method: 'host.get',
       params: {
         hostids: host_id,
-        selectInterfaces: 'extend'
+        selectInterfaces: 'extend',
       }
     ).first
 
@@ -158,9 +152,9 @@ def create_applications
       method: 'host.get',
       params: {
         filter: {
-          host: fqdn
+          host: fqdn,
         },
-        selectInterfaces: 'extend'
+        selectInterfaces: 'extend',
       }
     ).first
     host_id = tmp['hostid']
@@ -175,8 +169,8 @@ def create_applications
           params: {
             hostids: host_id,
             filter: {
-              name: app_name
-            }
+              name: app_name,
+            },
           }
         ).first
 
@@ -255,8 +249,8 @@ def create_graphs
         params: {
           hostids: host_id,
           filter: {
-            name: graph_name
-          }
+            name: graph_name,
+          },
         }
       ).first
 
@@ -267,7 +261,7 @@ def create_graphs
             {
               itemid:    get_item_id(gi[:key], host_id),
               color:     gi[:color],
-              yaxisside: gi[:yaxisside]
+              yaxisside: gi[:yaxisside],
             }
           end
 
@@ -285,8 +279,8 @@ def get_item_id(key, host_id)
     params: {
       hostids: host_id,
       filter: {
-        key_: key
-      }
+        key_: key,
+      },
     }
   ).first
 
@@ -304,7 +298,7 @@ def create_screens
         params: {
           filter: { name: screen_name },
           output: 'extend',
-          selectScreenItems: 'extend'
+          selectScreenItems: 'extend',
         }
       ).first
 
@@ -317,7 +311,7 @@ def create_screens
             params: {
               filter: { name: screen_name },
               output: 'extend',
-              selectScreenItems: 'extend'
+              selectScreenItems: 'extend',
             }
           ).first
         end
@@ -331,8 +325,8 @@ def create_screens
             params: {
               hostids: host_id,
               filter: {
-                name: item['name']
-              }
+                name: item['name'],
+              },
             }
           ).first
           raise "Graph '#{item.name}' not found" unless g
@@ -384,8 +378,8 @@ def create_user_macros
       params: {
         output: 'extend',
         filter: {
-          host: host['fqdn']
-        }
+          host: host['fqdn'],
+        },
       }
     ).first['hostid']
 
@@ -395,8 +389,8 @@ def create_user_macros
         params: {
           hostids: [host_id],
           filter: {
-            macro: "{$#{macro.upcase}}"
-          }
+            macro: "{$#{macro.upcase}}",
+          },
         }
       ).first
 
@@ -407,7 +401,7 @@ def create_user_macros
             params: {
               macro: "{$#{macro.upcase}}",
               hostid: host_id,
-              value: value
+              value: value,
             }
           )
         end
@@ -508,46 +502,46 @@ def create_import_templates
           rules: {
             applications: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             discoveryRules: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             graphs: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             groups: {
-              createMissing: true
+              createMissing: true,
             },
             hosts: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             items: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             templates: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             templateLinkage: {
-              createMissing: true
+              createMissing: true,
             },
             templateScreens: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             triggers: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             screens: {
               createMissing: true,
-              updateExisting: true
-            }
+              updateExisting: true,
+            },
           },
           source: ::File.read(name)
         )

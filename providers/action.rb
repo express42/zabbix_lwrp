@@ -32,7 +32,7 @@ provides :zabbix_action if defined? provides
 EVENT_SOURCE = {
   triggers:          0,
   discovery:         1,
-  auto_registration: 2
+  auto_registration: 2,
 }.freeze
 
 def whyrun_supported?
@@ -56,7 +56,7 @@ action :sync do
         r_shortdata:   new_resource.recovery_message_subject || '',
         r_longdata:    new_resource.recovery_message_body || '',
         operations:    operations,
-        conditions:    new_resource.conditions.map(&:to_hash)
+        conditions:    new_resource.conditions.map(&:to_hash),
       } })
   end
 end

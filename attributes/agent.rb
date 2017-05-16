@@ -20,7 +20,7 @@ default['zabbix']['ipmi']['port'] = 623
 default['zabbix']['snmp']['port'] = 161
 default['zabbix']['jmx']['port'] = 12345
 
-#<> 'chocolatey' or 'bin'(zabbix binaries)
+# <> 'chocolatey' or 'bin'(zabbix binaries)
 default['zabbix']['agent']['windows']['installer'] = 'chocolatey'
 default['zabbix']['agent']['windows']['version'] = '3.0.4'
 default['zabbix']['agent']['windows']['chocolatey']['repo'] = 'https://chocolatey.org/api/v2'

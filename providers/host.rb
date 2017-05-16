@@ -41,21 +41,21 @@ action :create do
              ip_address: new_resource.ip_address,
              dns:        new_resource.dns,
              port:       new_resource.port,
-             use_ip:     new_resource.use_ip,
-             )
+             use_ip:     new_resource.use_ip
+            )
     new_resource.jmx_enabled && add_data(node, new_resource.host_name,
               jmx_enabled: new_resource.jmx_enabled,
               jmx_port:  new_resource.jmx_port
-            )
+                                        )
 
     new_resource.snmp_enabled && add_data(node, new_resource.host_name,
               snmp_enabled: new_resource.jmx_enabled,
               snmp_port:  new_resource.snmp_port
-              )
+                                         )
 
     new_resource.ipmi_enabled && add_data(node, new_resource.host_name,
               ipmi_enabled: new_resource.ipmi_enabled,
               ipmi_port:  new_resource.ipmi_port
-              )
+                                         )
   end
 end
