@@ -2,6 +2,15 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.2.1
+* Add Zabbix 3.0 support
+* Add support for CentOS
+* Add zabbix agent for Windows
+* Add chef11 compability
+* Change repo key url
+* Use database and postgresql cookbooks
+* Use chef_nginx cookbook
+
 ## 1.1.19
 * Add start_servers attributes to php-fpm configuration
 * Change repo key url
