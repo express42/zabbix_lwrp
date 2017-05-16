@@ -8,7 +8,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_2be78cfba7d5_key -iv $encrypted_2be78cfba7d5_iv
   -in .travis/secret_keys.tar.enc -out .travis/secret_keys.tar -d
 script:
-- bundle exec rubocop
+- bundle exec cookstyle
 - bundle exec foodcritic --contex --epic-fail any .
 - bundle exec kitchen test --concurrency=10 --destroy=always
 deploy:
