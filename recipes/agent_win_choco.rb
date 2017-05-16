@@ -48,6 +48,7 @@ template "#{node['zabbix']['agent']['windows']['path']}\\zabbix_agentd.conf" do
     timeout:                node['zabbix']['agent']['timeout'],
     enable_remote_commands: node['zabbix']['agent']['enable_remote_commands'],
     listen_ip:              node['zabbix']['agent']['listen_ip'],
+    listen_port:            node['zabbix']['agent']['listen_port'],
     user_params:            node['zabbix']['agent']['user_params'],
     logpath:                node['zabbix']['agent']['windows']['log']
   )

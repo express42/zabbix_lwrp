@@ -82,22 +82,59 @@ def create_hosts
     group_id = @@zbx.hostgroups.get_or_create(name: values['host_group'])
 
     h = @@zbx.hosts.get(host: fqdn).first
+    interfaces = [
+      {
+        type: 1,
+        main: 1,
+        ip: values['ip_address'],
+        dns: values['dns'] || '',
+        port: values['port'],
+        useip: values['use_ip'] ? 1 : 0
+      },
+    ]
+
+    if values['snmp_enabled']
+      interfaces.push(
+        {
+          type: 2,
+          main: 1,
+          ip: values['ip_address'],
+          dns: values['dns'] || '',
+          port: values['snmp_port'],
+          useip: values['use_ip'] ? 1 : 0
+        })
+    end
+
+    if values['ipmi_enabled']
+      interfaces.push(
+        {
+          type: 3,
+          main: 1,
+          ip: values['ip_address'],
+          dns: values['dns'] || '',
+          port: values['ipmi_port'],
+          useip: values['use_ip'] ? 1 : 0
+        })
+    end
+
+    if values['jmx_enabled']
+      interfaces.push(
+        {
+          type: 4,
+          main: 1,
+          ip: values['ip_address'],
+          dns: values['dns'] || '',
+          port: values['jmx_port'],
+          useip: values['use_ip'] ? 1 : 0
+        })
+    end
 
     host_id = if h
                 h['hostid']
               else
                 @@zbx.hosts.create(
                   host: fqdn,
-                  interfaces: [
-                    {
-                      type: 1,
-                      main: 1,
-                      ip: values['ip_address'],
-                      dns: values['dns'] || '',
-                      port: 10_050,
-                      useip: values['use_ip'] ? 1 : 0
-                    }
-                  ],
+                  interfaces: interfaces,
                   groups: [groupid: group_id]
                 )
               end

@@ -16,6 +16,9 @@ Timeout=<%= @timeout %>
 <% if @listen_ip %>
 ListenIP=<%= @listen_ip %>
 <% end %>
+<% if @listen_port %>
+ListenPort=<%= @listen_port %>
+<% end %>
 # zabbix server connect configuration
 Server=<%= @server %>
 ServerActive=<%= @server %>
