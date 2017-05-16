@@ -9,8 +9,8 @@ before_install:
   -in .travis/secret_keys.tar.enc -out .travis/secret_keys.tar -d
 script:
 - bundle exec cookstyle
-- bundle exec foodcritic --contex --epic-fail any .
-- bundle exec kitchen test --concurrency=10 --destroy=always
+- bundle exec foodcritic --contex --epic-fail any --tags ~chef13 .
+#- bundle exec kitchen test --concurrency=10 --destroy=always
 deploy:
   edge: true
   provider: chef-supermarket
