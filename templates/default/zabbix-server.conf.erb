@@ -53,8 +53,17 @@ SenderFrequency=300
 <%= parameter %>=<%= value %>
 <% end %>
 
+<% if node['zabbix']['java_gateway']['enabled'] %>
+  <% @java_gateway.each_pair do |parameter, value| %>
+  <%= parameter %>=<%= value %>
+  <% end %>
+<% end %>
+
+
 AlertScriptsPath=<%= @alerts[:path] %>
 TmpDir=/tmp
+
+
 
 # Include=/etc/zabbix/zabbix_server.general.conf
 # Include=/etc/zabbix/zabbix_server/

@@ -49,4 +49,8 @@ attribute :jmx_enabled, kind_of: [TrueClass, FalseClass], default: false
 
 attribute :ipmi_port,  kind_of: Integer, default: 623
 attribute :snmp_port,  kind_of: Integer, default: 161
-attribute :jmx_port,  kind_of: Integer, default: 12_345
+attribute :jmx_port,   kind_of: Integer, default: 12_345
+
+attribute :ipmi_use_ip,     kind_of: [TrueClass, FalseClass], required: true, default: true
+attribute :snmp_use_ip,     kind_of: [TrueClass, FalseClass], required: true, default: true
+attribute :jmx_use_ip,      kind_of: [TrueClass, FalseClass], required: true, default: true

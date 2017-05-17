@@ -1,6 +1,8 @@
 
 package 'zabbix-java-gateway'
 
+node.default['zabbix']['java_gateway']['enabled'] = true
+
 template '/etc/zabbix/zabbix_java_gateway.conf' do
   source 'zabbix_java_gateway.conf.erb'
   owner 'root'

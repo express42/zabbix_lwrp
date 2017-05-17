@@ -101,7 +101,7 @@ def create_hosts
           ip: values['ip_address'],
           dns: values['dns'] || '',
           port: values['snmp_port'],
-          useip: values['use_ip'] ? 1 : 0
+          useip: values['snmp_use_ip'] ? 1 : 0
         })
     end
 
@@ -113,7 +113,7 @@ def create_hosts
           ip: values['ip_address'],
           dns: values['dns'] || '',
           port: values['ipmi_port'],
-          useip: values['use_ip'] ? 1 : 0
+          useip: values['ipmi_use_ip'] ? 1 : 0
         })
     end
 
@@ -125,7 +125,7 @@ def create_hosts
           ip: values['ip_address'],
           dns: values['dns'] || '',
           port: values['jmx_port'],
-          useip: values['use_ip'] ? 1 : 0
+          useip: values['jmx_use_ip'] ? 1 : 0
         })
     end
 
