@@ -24,14 +24,21 @@
 
 zabbix_host node['fqdn'] do
   action :create
-  host_group node['zabbix']['host_group']
-  use_ip true
+  host_group node['zabbix']['host']['group']
+  use_ip node['zabbix']['host']['agent']['use_ip']
+  dns node['fqdn']
   port node['zabbix']['agent']['listen_port']
   ip_address node['ipaddress']
-  ipmi_enabled node['zabbix']['ipmi']['enabled']
-  snmp_enabled node['zabbix']['snmp']['enabled']
-  jmx_enabled node['zabbix']['jmx']['enabled']
-  ipmi_port node['zabbix']['ipmi']['port']
-  snmp_port node['zabbix']['snmp']['port']
-  jmx_port node['zabbix']['jmx']['port']
+
+  ipmi_enabled node['zabbix']['host']['ipmi']['enabled']
+  ipmi_port node['zabbix']['host']['ipmi']['port']
+  ipmi_use_ip node['zabbix']['host']['ipmi']['use_ip']
+
+  snmp_enabled node['zabbix']['host']['snmp']['enabled']
+  snmp_port node['zabbix']['host']['snmp']['port']
+  snmp_use_ip node['zabbix']['host']['snmp']['use_ip']
+
+  jmx_enabled node['zabbix']['host']['jmx']['enabled']
+  jmx_port node['zabbix']['host']['jmx']['port']
+  jmx_use_ip node['zabbix']['host']['jmx']['use_ip']
 end

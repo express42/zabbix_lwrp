@@ -10,15 +10,7 @@ default['zabbix']['agent']['listen_port'] = 10050
 default['zabbix']['agent']['enable_remote_commands'] = 0
 default['zabbix']['agent']['serverhost'] = node['ipaddress']
 default['zabbix']['agent']['user_params'] = {}
-
-default['zabbix']['host_group'] = 'Hosts'
-
-default['zabbix']['ipmi']['enabled'] = false
-default['zabbix']['snmp']['enabled'] = false
-default['zabbix']['jmx']['enabled'] = false
-default['zabbix']['ipmi']['port'] = 623
-default['zabbix']['snmp']['port'] = 161
-default['zabbix']['jmx']['port'] = 12345
+default['zabbix']['agent']['use_ip'] = true
 
 # <> 'chocolatey' or 'bin'(zabbix binaries)
 default['zabbix']['agent']['windows']['installer'] = 'chocolatey'
