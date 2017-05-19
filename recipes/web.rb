@@ -53,18 +53,24 @@ chef_nginx_site node['zabbix']['server']['web']['server_name'] do
 end
 
 packages = []
-if node['platform_version'].to_f < 16.04 && node['platform_family'] == 'debian'
-  packages << 'php5-pgsql'
-  packages << 'apache2'
+if node['platform_family'] == 'debian'
+  if node['platform_version'].to_f < 16.04
+    packages << 'apache2'
+    packages << 'php5-pgsql'
+  else
+    # ubuntu 16.04 and higher
+    packages << 'apache2'
+    packages << 'php-pgsql'
+    packages << 'php-mbstring'
+    packages << 'php-bcmath'
+    packages << 'php-gd'
+  end
 elsif node['platform_family'] == 'rhel'
   packages << 'httpd'
   packages << 'php-pgsql'
-elsif (node['platform_version'].to_f >= 16.04 && node['platform_family'] == 'debian') || node['platform_family'] == 'rhel'
   packages << 'php-mbstring'
   packages << 'php-bcmath'
   packages << 'php-gd'
-else
-  packages << 'php-pgsql'
 end
 
 packages.each do |pkg|
@@ -76,6 +82,12 @@ when 'debian'
   package 'zabbix-frontend-php' do
     response_file 'zabbix-frontend-without-apache.seed'
     action [:install, :reconfig]
+  end
+
+  if node['platform_version'].to_f >= 16.04
+    package 'apache2' do
+      action :remove
+    end
   end
 
 when 'rhel'
