@@ -83,7 +83,7 @@ class ZabbixCondition
     dcheck:              19,
     proxy:               20,
     dobject:             21,
-    host_name:           22
+    host_name:           22,
   }.freeze
 
   OPERATOR = {
@@ -94,7 +94,7 @@ class ZabbixCondition
     in:          4,
     gte:         5,
     lte:         6,
-    not_in:      7
+    not_in:      7,
   }.freeze
 
   TRIGGER_VALUES = { ok: 0, problem: 1 }.freeze
@@ -103,7 +103,7 @@ class ZabbixCondition
     warn:      2,
     avg:       3,
     high:      4,
-    disaster:  5
+    disaster:  5,
   }.freeze
 
   def initialize(_context, *cond, &block)
@@ -146,7 +146,7 @@ class ZabbixCondition
     {
       conditiontype: TYPE[@type],
       operator: OPERATOR[@operator],
-      value: value
+      value: value,
     }
   end
 end
@@ -163,7 +163,7 @@ class ZabbixOperation
     template_add:       6,
     template_remove:    7,
     host_enable:        8,
-    host_disable:       9
+    host_disable:       9,
   }.freeze
 
   def initialize(_context, &block)
@@ -198,7 +198,7 @@ class ZabbixOperation
     {
       operationtype:  TYPE[@type || :message],
       opmessage_grp:  @user_groups,
-      opmessage: @message.to_hash
+      opmessage: @message.to_hash,
     }
   end
 end
@@ -230,7 +230,7 @@ class ZabbixMessage
       subject:      @subject,
       default_msg:  @use_default_message ? 1 : 0,
       message:      @message,
-      mediatypeid:  @media_type
+      mediatypeid:  @media_type,
     }
   end
 end

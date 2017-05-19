@@ -60,7 +60,7 @@ class ZabbixItem
     ipmi:        12,
     ssh:         13,
     telnet:      14,
-    calculated:  15
+    calculated:  15,
   }.freeze
 
   VALUE_TYPES = {
@@ -74,7 +74,7 @@ class ZabbixItem
   DELTA_TYPES = {
     as_is:      0,
     speed_per_second: 1,
-    delta: 2
+    delta: 2,
   }.freeze
 
   def initialize(key, &block)
@@ -90,9 +90,7 @@ class ZabbixItem
     instance_eval(&block)
   end
 
-  def key
-    @key
-  end
+  attr_reader :key
 
   def type(value)
     @type = TYPES[value]
@@ -149,7 +147,7 @@ class ZabbixItem
       trends:      @trends || 365,
       value_type:  @value_type || VALUE_TYPES[:unsigned_int],
       delta:       @delta,
-      params:      @formula
+      params:      @formula,
     }
   end
 end
@@ -162,7 +160,7 @@ class ZabbixTrigger
     warning:        2,
     average:        3,
     high:           4,
-    disaster:       5
+    disaster:       5,
   }.freeze
 
   def initialize(description, context, &block)
@@ -190,7 +188,7 @@ class ZabbixTrigger
     {
       description: @description,
       expression: @expression,
-      priority: @priority
+      priority: @priority,
     }
   end
 end

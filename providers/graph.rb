@@ -39,7 +39,7 @@ action :create do
       {
         key: gi[:key],
         color: gi[:color],
-        yaxisside: gi[:yaxisside]
+        yaxisside: gi[:yaxisside],
       }
     end
 
@@ -49,8 +49,8 @@ action :create do
         {
           height: new_resource.height,
           width:  new_resource.width,
-          gitems: graph_items
-        }
+          gitems: graph_items,
+        },
       })
   end
 end

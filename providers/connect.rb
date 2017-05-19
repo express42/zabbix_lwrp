@@ -89,7 +89,7 @@ def create_hosts
         ip: values['ip_address'],
         dns: values['dns'] || '',
         port: values['port'],
-        useip: values['use_ip'] ? 1 : 0
+        useip: values['use_ip'] ? 1 : 0,
       },
     ]
 
@@ -115,6 +115,7 @@ def create_hosts
           port: values['ipmi_port'],
           useip: values['ipmi_use_ip'] ? 1 : 0
         })
+
     end
 
     if values['jmx_enabled']
@@ -127,6 +128,7 @@ def create_hosts
           port: values['jmx_port'],
           useip: values['jmx_use_ip'] ? 1 : 0
         })
+
     end
 
     host_id = if h
@@ -143,7 +145,7 @@ def create_hosts
       method: 'host.get',
       params: {
         hostids: host_id,
-        selectInterfaces: 'extend'
+        selectInterfaces: 'extend',
       }
     ).first
 
@@ -158,9 +160,9 @@ def create_applications
       method: 'host.get',
       params: {
         filter: {
-          host: fqdn
+          host: fqdn,
         },
-        selectInterfaces: 'extend'
+        selectInterfaces: 'extend',
       }
     ).first
     host_id = tmp['hostid']
@@ -175,8 +177,8 @@ def create_applications
           params: {
             hostids: host_id,
             filter: {
-              name: app_name
-            }
+              name: app_name,
+            },
           }
         ).first
 
@@ -255,8 +257,8 @@ def create_graphs
         params: {
           hostids: host_id,
           filter: {
-            name: graph_name
-          }
+            name: graph_name,
+          },
         }
       ).first
 
@@ -267,7 +269,7 @@ def create_graphs
             {
               itemid:    get_item_id(gi[:key], host_id),
               color:     gi[:color],
-              yaxisside: gi[:yaxisside]
+              yaxisside: gi[:yaxisside],
             }
           end
 
@@ -285,8 +287,8 @@ def get_item_id(key, host_id)
     params: {
       hostids: host_id,
       filter: {
-        key_: key
-      }
+        key_: key,
+      },
     }
   ).first
 
@@ -304,7 +306,7 @@ def create_screens
         params: {
           filter: { name: screen_name },
           output: 'extend',
-          selectScreenItems: 'extend'
+          selectScreenItems: 'extend',
         }
       ).first
 
@@ -317,13 +319,13 @@ def create_screens
             params: {
               filter: { name: screen_name },
               output: 'extend',
-              selectScreenItems: 'extend'
+              selectScreenItems: 'extend',
             }
           ).first
         end
       end
 
-      screen['screenitems'] = screen_data['screenitems'].reduce([]) do |res, item|
+      screen['screenitems'] = screen_data['screenitems'].each_with_object([]) do |item, res|
         case item['resourcetype']
         when 0 # graph resource type
           g = @@zbx.query(
@@ -331,8 +333,8 @@ def create_screens
             params: {
               hostids: host_id,
               filter: {
-                name: item['name']
-              }
+                name: item['name'],
+              },
             }
           ).first
           raise "Graph '#{item.name}' not found" unless g
@@ -342,7 +344,6 @@ def create_screens
         end
 
         res << item.to_hash.merge(resourceid: resource_id)
-        res
       end
 
       screen.delete('templateid')
@@ -384,8 +385,8 @@ def create_user_macros
       params: {
         output: 'extend',
         filter: {
-          host: host['fqdn']
-        }
+          host: host['fqdn'],
+        },
       }
     ).first['hostid']
 
@@ -395,22 +396,21 @@ def create_user_macros
         params: {
           hostids: [host_id],
           filter: {
-            macro: "{$#{macro.upcase}}"
-          }
+            macro: "{$#{macro.upcase}}",
+          },
         }
       ).first
 
-      unless user_macro
-        converge_by("Create zabbix macro #{macro}.") do
-          @@zbx.query(
-            method: 'usermacro.create',
-            params: {
-              macro: "{$#{macro.upcase}}",
-              hostid: host_id,
-              value: value
-            }
-          )
-        end
+      next if user_macro
+      converge_by("Create zabbix macro #{macro}.") do
+        @@zbx.query(
+          method: 'usermacro.create',
+          params: {
+            macro: "{$#{macro.upcase}}",
+            hostid: host_id,
+            value: value,
+          }
+        )
       end
     end
   end
@@ -440,12 +440,11 @@ def create_templates
       host_id = @@zbx.hosts.get_id(host: hostname)
       template = @@zbx.templates.get_id(host: template)
 
-      if template
-        @@zbx.templates.mass_add(
-          hosts_id: [host_id],
-          templates_id: [template]
-        )
-      end
+      next unless template
+      @@zbx.templates.mass_add(
+        hosts_id: [host_id],
+        templates_id: [template]
+      )
     end
   end
 end
@@ -457,39 +456,38 @@ def create_actions
     (values['actions'] || []).each do |name, data|
       action = @@zbx.query(method: 'action.get', params: { filter: { name: name } }).first
 
-      unless action
-        conditions = data['conditions'].map do |condition|
-          if condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:trigger]
-            value = @@zbx.triggers.get_id(description: condition['value'])
-            condition.merge('value' => value)
-          elsif condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:host_group]
-            value = @@zbx.hostgroups.get_id(name: condition['value'])
-            condition.merge('value' => value)
-          else
-            condition
-          end
+      next if action
+      conditions = data['conditions'].map do |condition|
+        if condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:trigger]
+          value = @@zbx.triggers.get_id(description: condition['value'])
+          condition.merge('value' => value)
+        elsif condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:host_group]
+          value = @@zbx.hostgroups.get_id(name: condition['value'])
+          condition.merge('value' => value)
+        else
+          condition
         end
+      end
 
-        operations = data['operations'].map do |operation|
-          msg = operation['opmessage']
-          media_type = @@zbx.mediatypes.get_id(description: msg['mediatypeid'])
+      operations = data['operations'].map do |operation|
+        msg = operation['opmessage']
+        media_type = @@zbx.mediatypes.get_id(description: msg['mediatypeid'])
 
-          raise "Media type with name #{msg['mediatypeid']} not found" unless media_type
+        raise "Media type with name #{msg['mediatypeid']} not found" unless media_type
 
-          if operation['opmessage_grp']
-            user_groups = @@zbx.usergroups.get(name: operation['opmessage_grp'])
-            operation.merge('opmessage_grp' => user_groups, 'opmessage' => msg.merge('mediatypeid' => media_type))
-          else
-            operation.merge('opmessage' => msg.merge('mediatypeid' => media_type))
-          end
+        if operation['opmessage_grp']
+          user_groups = @@zbx.usergroups.get(name: operation['opmessage_grp'])
+          operation.merge('opmessage_grp' => user_groups, 'opmessage' => msg.merge('mediatypeid' => media_type))
+        else
+          operation.merge('opmessage' => msg.merge('mediatypeid' => media_type))
         end
+      end
 
-        converge_by("Create zabbix action #{name}.") do
-          @@zbx.query(
-            method: 'action.create',
-            params: data.merge('conditions' => conditions, 'operations' => operations)
-          )
-        end
+      converge_by("Create zabbix action #{name}.") do
+        @@zbx.query(
+          method: 'action.create',
+          params: data.merge('conditions' => conditions, 'operations' => operations)
+        )
       end
     end
   end
@@ -508,46 +506,46 @@ def create_import_templates
           rules: {
             applications: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             discoveryRules: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             graphs: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             groups: {
-              createMissing: true
+              createMissing: true,
             },
             hosts: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             items: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             templates: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             templateLinkage: {
-              createMissing: true
+              createMissing: true,
             },
             templateScreens: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             triggers: {
               createMissing: true,
-              updateExisting: true
+              updateExisting: true,
             },
             screens: {
               createMissing: true,
-              updateExisting: true
-            }
+              updateExisting: true,
+            },
           },
           source: ::File.read(name)
         )

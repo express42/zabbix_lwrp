@@ -40,8 +40,8 @@ action :sync do
         new_resource.name => {
           hsize:       new_resource.hsize,
           vsize:       new_resource.vsize,
-          screenitems: new_resource.screen_items.map(&:to_hash)
-        }
+          screenitems: new_resource.screen_items.map(&:to_hash),
+        },
       })
   end
 end

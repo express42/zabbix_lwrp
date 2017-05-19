@@ -28,12 +28,8 @@
 provides :zabbix_template
 resource_name :zabbix_template
 
-def initialize(*args)
-  super
-  @action = :add
-end
-
 actions :import, :add
+default_action :add
 
 attribute :host_name, kind_of: String
 attribute :path,      kind_of: String, name_attribute: true

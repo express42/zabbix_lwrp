@@ -28,12 +28,8 @@
 provides :zabbix_host
 resource_name :zabbix_host
 
-def initialize(*args)
-  super
-  @action = :create
-end
-
 actions :create
+default_action :create
 
 attribute :type,       kind_of: Integer, default: 1
 attribute :host_name,  kind_of: String,  name_attribute: true
