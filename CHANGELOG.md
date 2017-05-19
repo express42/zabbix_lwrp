@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.2.2
+* Add Zabbix java gateway
+* Add new host attributes
+
 ## 1.2.1
 * Add Zabbix 3.0 support
 * Add support for CentOS

@@ -15,18 +15,19 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 * ubuntu
 * centos
-* windows - only for agent
+* windows
 
 ## Cookbooks:
 
 * apt
 * build-essential
-* lvm
-* nginx
-* postgresql
-* database
-* php-fpm
+* chef_nginx
 * chocolatey
+* database
+* lvm
+* php-fpm
+* postgresql
+* windows_firewall
 
 # Attributes
 
@@ -34,23 +35,26 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['agent']['include']` -  Defaults to `/opt/zabbix/etc`.
 * `node['zabbix']['agent']['scripts']` -  Defaults to `/opt/zabbix/scripts`.
 * `node['zabbix']['agent']['templates']` -  Defaults to `/opt/zabbix/templates`.
+* `node['zabbix']['agent']['log']` -  Defaults to `/var/log/zabbix/zabbix_agentd.log`.
 * `node['zabbix']['agent']['loglevel']` -  Defaults to `3`.
 * `node['zabbix']['agent']['remotecmds']` -  Defaults to `0`.
 * `node['zabbix']['agent']['timeout']` -  Defaults to `3`.
 * `node['zabbix']['agent']['listen_ip']` -  Defaults to `0.0.0.0`.
+* `node['zabbix']['agent']['listen_port']` -  Defaults to `10050`.
 * `node['zabbix']['agent']['enable_remote_commands']` -  Defaults to `0`.
 * `node['zabbix']['agent']['serverhost']` -  Defaults to `node['ipaddress']`.
 * `node['zabbix']['agent']['user_params']` -  Defaults to `{ ... }`.
+* `node['zabbix']['agent']['use_ip']` -  Defaults to `true`.
 
 ## Windows Agent
 * `node['zabbix']['agent']['windows']['installer']` - 'chocolatey' or 'bin'(zabbix binaries). Defaults to `chocolatey`.
 * `node['zabbix']['agent']['windows']['version']` -  Defaults to `3.0.4`.
 * `node['zabbix']['agent']['windows']['chocolatey']['repo']` -  Defaults to `https://chocolatey.org/api/v2`.
 * `node['zabbix']['agent']['windows']['path']` -  Defaults to `C:\ProgramData\zabbix`.
-* `node['zabbix']['agent']['windows']['include']` -  Defaults to `C:\ProgramData\zabbix\etc`.
-* `node['zabbix']['agent']['windows']['scripts']` -  Defaults to `C:\ProgramData\zabbix\scripts`.
-* `node['zabbix']['agent']['windows']['templates']` -  Defaults to `C:\ProgramData\zabbix\templates`.
-* `node['zabbix']['agent']['windows']['log']` -  Defaults to `C:\ProgramData\zabbix\zabbix_agentd.log`.
+* `node['zabbix']['agent']['windows']['include']` -  Defaults to `#{node['zabbix']['agent']['windows']['path']}\\etc`.
+* `node['zabbix']['agent']['windows']['scripts']` -  Defaults to `#{node['zabbix']['agent']['windows']['path']}\\scripts`.
+* `node['zabbix']['agent']['windows']['templates']` -  Defaults to `#{node['zabbix']['agent']['windows']['path']}\\templates`.
+* `node['zabbix']['agent']['windows']['log']` -  Defaults to `#{node['zabbix']['agent']['windows']['path']}\\zabbix_agentd.log`.
 
 ## Database
 * `node['zabbix']['server']['database']['filesystem']` -  Defaults to `ext4`.
@@ -73,11 +77,31 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['database']['configuration']['log_min_duration_statement']` -  Defaults to `1000`.
 * `node['zabbix']['server']['database']['configuration']['archive_mode']` -  Defaults to `on`.
 * `node['zabbix']['server']['database']['configuration']['archive_command']` -  Defaults to `exit 0`.
-* `node['zabbix']['server']['database']['configuration']['wal_level']`- Defaults to `hot_standby`
+* `node['zabbix']['server']['database']['configuration']['wal_level']` -  Defaults to `hot_standby`.
 
 ## Default
-* `node['zabbix']['version']` -  Defaults to `2.4`.
-* `node['zabbix']['api-version']` -  Defaults to `2.4.7`.
+* `node['zabbix']['version']` -  Defaults to `3.2`.
+* `node['zabbix']['api-version']` -  Defaults to `3.1.0`.
+
+## Host
+* `node['zabbix']['host']['group']` -  Defaults to `Hosts`.
+* `node['zabbix']['host']['ipmi']['enabled']` -  Defaults to `false`.
+* `node['zabbix']['host']['ipmi']['port']` -  Defaults to `623`.
+* `node['zabbix']['host']['ipmi']['use_ip']` -  Defaults to `true`.
+* `node['zabbix']['host']['jmx']['enabled']` -  Defaults to `false`.
+* `node['zabbix']['host']['jmx']['port']` -  Defaults to `12345`.
+* `node['zabbix']['host']['jmx']['use_ip']` -  Defaults to `true`.
+* `node['zabbix']['host']['snmp']['enabled']` -  Defaults to `false`.
+* `node['zabbix']['host']['snmp']['port']` -  Defaults to `161`.
+* `node['zabbix']['host']['snmp']['use_ip']` -  Defaults to `true`.
+* `node['zabbix']['host']['agent']['use_ip']` -  Defaults to `true`.
+
+## Java Gateway
+* `node['zabbix']['java_gateway']['enabled']` -  Defaults to `false`.
+* `node['zabbix']['java_gateway']['timeout']` -  Defaults to `3`.
+* `node['zabbix']['java_gateway']['listen_ip']` -  Defaults to `127.0.0.1`.
+* `node['zabbix']['java_gateway']['listen_port']` -  Defaults to `10052`.
+* `node['zabbix']['java_gateway']['pollers']` -  Defaults to `5`.
 
 ## Server
 * `node['zabbix']['server']['service']` -  Defaults to `zabbix-server`.
@@ -89,6 +113,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['config']['cache']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['config']['timeouts']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['config']['global']` -  Defaults to `{ ... }`.
+* `node['zabbix']['server']['config']['java_gateway']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['config']['alerts']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['web']['server_name']` -  Defaults to `localhost`.
 * `node['zabbix']['server']['web']['listen']` -  Defaults to `127.0.0.1`.
@@ -108,11 +133,11 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['web']['configuration']['php_admin_value[memory_limit]']` -  Defaults to `128M`.
 * `node['zabbix']['server']['web']['configuration']['php_admin_value[post_max_size]']` -  Defaults to `32M`.
 * `node['zabbix']['server']['web']['configuration']['php_admin_flag[register_globals]']` -  Defaults to `true`.
+* `node['nginx']['default_site_enabled']` -  Defaults to `false`.
 
 # Recipes
 
 * zabbix_lwrp::agent - Installs and configures Zabbix agent.
-* zabbix_lwrp::agent_win - Installs and configures Zabbix agent for Windows.
 * zabbix_lwrp::connect - Connects to Zabbix API to sync configuration.
 * zabbix_lwrp::default - Installs and configures Zabbix official repository and agent.
 * zabbix_lwrp::database - Installs and configures Zabbix database.
@@ -209,7 +234,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 ### Actions
 
-- create:
+- create:  Default action.
 
 ### Attribute Parameters
 
@@ -220,6 +245,15 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 - ip_address:
 - dns:
 - use_ip:  Defaults to <code>true</code>.
+- ipmi_enabled:  Defaults to <code>false</code>.
+- snmp_enabled:  Defaults to <code>false</code>.
+- jmx_enabled:  Defaults to <code>false</code>.
+- ipmi_port:  Defaults to <code>623</code>.
+- snmp_port:  Defaults to <code>161</code>.
+- jmx_port:  Defaults to <code>12345</code>.
+- ipmi_use_ip:  Defaults to <code>true</code>.
+- snmp_use_ip:  Defaults to <code>true</code>.
+- jmx_use_ip:  Defaults to <code>true</code>.
 
 ## zabbix_media_type
 
@@ -255,7 +289,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 ### Actions
 
-- add:
+- add:  Default action.
 - import:
 
 ### Attribute Parameters
@@ -849,7 +883,7 @@ For examples of LWRP see fixture cookbook in `tests/fixtures/cookbooks`.
 # License and Maintainer
 
 Maintainer:: LLC Express 42 (<cookbooks@express42.com>)
-Source:: https://github.com/express42-cookbooks/zabbix_lwrp
-Issues:: https://github.com/express42-cookbooks/zabbix_lwrp/issues
+Source:: https://github.com/express42/zabbix_lwrp
+Issues:: https://github.com/express42/zabbix_lwrp/issues
 
 License:: MIT
