@@ -95,39 +95,33 @@ def create_hosts
 
     if values['snmp_enabled']
       interfaces.push(
-        {
-          type: 2,
-          main: 1,
-          ip: values['ip_address'],
-          dns: values['dns'] || '',
-          port: values['snmp_port'],
-          useip: values['snmp_use_ip'] ? 1 : 0
-        })
+        type: 2,
+        main: 1,
+        ip: values['ip_address'],
+        dns: values['dns'] || '',
+        port: values['snmp_port'],
+        useip: values['snmp_use_ip'] ? 1 : 0)
     end
 
     if values['ipmi_enabled']
       interfaces.push(
-        {
-          type: 3,
-          main: 1,
-          ip: values['ip_address'],
-          dns: values['dns'] || '',
-          port: values['ipmi_port'],
-          useip: values['ipmi_use_ip'] ? 1 : 0
-        })
+        type: 3,
+        main: 1,
+        ip: values['ip_address'],
+        dns: values['dns'] || '',
+        port: values['ipmi_port'],
+        useip: values['ipmi_use_ip'] ? 1 : 0)
 
     end
 
     if values['jmx_enabled']
       interfaces.push(
-        {
-          type: 4,
-          main: 1,
-          ip: values['ip_address'],
-          dns: values['dns'] || '',
-          port: values['jmx_port'],
-          useip: values['jmx_use_ip'] ? 1 : 0
-        })
+        type: 4,
+        main: 1,
+        ip: values['ip_address'],
+        dns: values['dns'] || '',
+        port: values['jmx_port'],
+        useip: values['jmx_use_ip'] ? 1 : 0)
 
     end
 

@@ -39,7 +39,7 @@ default['zabbix']['server']['config']['global'] = {
 default['zabbix']['server']['config']['java_gateway'] = {
   JavaGateway: node['zabbix']['java_gateway']['listen_ip'],
   JavaGatewayPort: node['zabbix']['java_gateway']['listen_port'],
-  StartJavaPollers: node['zabbix']['java_gateway']['pollers']
+  StartJavaPollers: node['zabbix']['java_gateway']['pollers'],
 }
 
 default['zabbix']['server']['config']['alerts'] = {
