@@ -28,4 +28,5 @@ zabbix_connect 'default' do
   action :make
   apiurl 'http://localhost/api_jsonrpc.php'
   databag 'zabbix'
+  sync node['zabbix']['server']['sync_hosts']
 end

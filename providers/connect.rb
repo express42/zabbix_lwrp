@@ -50,7 +50,7 @@ action :make do
   require 'zabbixapi'
 
   begin
-    @@zbx = ZabbixApi.connect( # rubocop: disable ClassVars
+    @@zbx = ZabbixApi.connect(
       url:      apiurl,
       user:     user,
       password: pass
@@ -70,6 +70,9 @@ action :make do
     create_media_types
     create_user_groups
     create_actions
+    if new_resource.sync
+      sync_hosts
+    end
   end
 end
 
@@ -111,7 +114,6 @@ def create_hosts
         dns: values['dns'] || '',
         port: values['ipmi_port'],
         useip: values['ipmi_use_ip'] ? 1 : 0)
-
     end
 
     if values['jmx_enabled']
@@ -122,7 +124,6 @@ def create_hosts
         dns: values['dns'] || '',
         port: values['jmx_port'],
         useip: values['jmx_use_ip'] ? 1 : 0)
-
     end
 
     host_id = if h
@@ -425,6 +426,28 @@ def get_hosts
   end
 end
 # rubocop:enable Style/AccessorMethodName
+
+def sync_hosts
+  chef_hosts = []
+  get_hosts do |host|
+    chef_hosts << host['zabbix']['hosts'].to_a.first.first
+  end
+
+  @@zbx.query(
+    method: 'host.get',
+    params: {
+    }
+  ).each do |host|
+    unless chef_hosts.include? host['host']
+      @@zbx.query(
+        method: 'host.delete',
+        params: [
+          host['hostid']
+        ]
+      )
+    end
+  end
+end
 
 def create_templates
   get_hosts do |host|

@@ -37,3 +37,4 @@ attribute :databag,   kind_of: String
 attribute :apiurl,    kind_of: String, required: true
 attribute :user,      kind_of: String
 attribute :password,  kind_of: String
+attribute :sync,      kind_of: [TrueClass, FalseClass], default: false
