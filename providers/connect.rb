@@ -70,9 +70,7 @@ action :make do
     create_media_types
     create_user_groups
     create_actions
-    if new_resource.sync
-      sync_hosts
-    end
+    sync_hosts if new_resource.sync
   end
 end
 
@@ -438,14 +436,13 @@ def sync_hosts
     params: {
     }
   ).each do |host|
-    unless chef_hosts.include? host['host']
-      @@zbx.query(
-        method: 'host.delete',
-        params: [
-          host['hostid']
-        ]
-      )
-    end
+    next if chef_hosts.include? host['host']
+    @@zbx.query(
+      method: 'host.delete',
+      params: [
+        host['hostid'],
+      ]
+    )
   end
 end
 
