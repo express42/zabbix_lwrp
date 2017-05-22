@@ -108,6 +108,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['server']['credentials']['databag']` -  Defaults to `zabbix`.
 * `node['zabbix']['server']['config']['listenip']` -  Defaults to `0.0.0.0`.
 * `node['zabbix']['server']['config']['debuglevel']` -  Defaults to `3`.
+* `node['zabbix']['server']['sync_hosts']` -  Defaults to `false`.
 * `node['zabbix']['server']['config']['workers']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['config']['hk']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['config']['cache']` -  Defaults to `{ ... }`.
@@ -202,6 +203,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 - apiurl:
 - user:
 - password:
+- sync:  Defaults to <code>false</code>.
 
 ## zabbix_database
 
