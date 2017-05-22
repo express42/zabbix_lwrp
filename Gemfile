@@ -6,7 +6,7 @@ end
 
 group :lint do
   gem 'foodcritic'
-  gem 'rubocop'
+  gem 'cookstyle'
 end
 
 group :kitchen_common do

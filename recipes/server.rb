@@ -51,8 +51,8 @@ db_config = {
     DBPassword: db_pass,
     DBUser: db_user,
     DBHost: db_host,
-    DBPort: db_port
-  }
+    DBPort: db_port,
+  },
 }
 
 # Install packages

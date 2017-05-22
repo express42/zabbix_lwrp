@@ -3,10 +3,14 @@ source 'https://supermarket.chef.io'
 metadata
 
 cookbook 'apt'
-cookbook 'nginx', git: 'git@github.com:evilmartians/chef-nginx.git', tag: 'v2.2.4'
+cookbook 'build-essential'
+cookbook 'chef_nginx'
+cookbook 'chocolatey'
+cookbook 'database'
+cookbook 'lvm'
 cookbook 'php-fpm'
-cookbook 'postgresql_lwrp'
-cookbook 'build-essential', '<4.0.0'
+cookbook 'postgresql'
+cookbook 'windows_firewall'
 
 group :integration do
   cookbook 'locale'

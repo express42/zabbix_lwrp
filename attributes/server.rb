@@ -10,12 +10,12 @@ default['zabbix']['server']['config']['workers'] = {
   StartTrappers: 8,
   StartPingers: 1,
   StartProxyPollers: 1,
-  StartDBSyncers: 4
+  StartDBSyncers: 4,
 }
 
 default['zabbix']['server']['config']['hk'] = {
   HousekeepingFrequency: 1,
-  MaxHousekeeperDelete: 2000
+  MaxHousekeeperDelete: 2000,
 }
 
 default['zabbix']['server']['config']['cache'] = {
@@ -23,7 +23,7 @@ default['zabbix']['server']['config']['cache'] = {
   CacheUpdateFrequency: 60,
   TrendCacheSize: '24M',
   HistoryCacheSize: '8M',
-  HistoryTextCacheSize: '8M'
+  HistoryTextCacheSize: '8M',
 }
 
 default['zabbix']['server']['config']['timeouts'] = {
@@ -31,7 +31,7 @@ default['zabbix']['server']['config']['timeouts'] = {
   TrapperTimeout: 100,
   UnreachablePeriod: 300,
   UnavailableDelay: 60,
-  UnreachableDelay: 10
+  UnreachableDelay: 10,
 }
 
 default['zabbix']['server']['config']['global'] = {
@@ -40,9 +40,9 @@ default['zabbix']['server']['config']['global'] = {
 default['zabbix']['server']['config']['java_gateway'] = {
   JavaGateway: node['zabbix']['java_gateway']['listen_ip'],
   JavaGatewayPort: node['zabbix']['java_gateway']['listen_port'],
-  StartJavaPollers: node['zabbix']['java_gateway']['pollers']
+  StartJavaPollers: node['zabbix']['java_gateway']['pollers'],
 }
 
 default['zabbix']['server']['config']['alerts'] = {
-  path: '/etc/zabbix/alert.d/'
+  path: '/etc/zabbix/alert.d/',
 }

@@ -11,7 +11,7 @@ default['zabbix']['agent']['enable_remote_commands'] = 0
 default['zabbix']['agent']['serverhost'] = node['ipaddress']
 default['zabbix']['agent']['user_params'] = {}
 
-#<> 'chocolatey' or 'bin'(zabbix binaries)
+# <> 'chocolatey' or 'bin'(zabbix binaries)
 default['zabbix']['agent']['windows']['installer'] = 'chocolatey'
 default['zabbix']['agent']['windows']['version'] = '3.0.4'
 default['zabbix']['agent']['windows']['chocolatey']['repo'] = 'https://chocolatey.org/api/v2'

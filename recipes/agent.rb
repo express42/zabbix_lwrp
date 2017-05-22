@@ -22,7 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
 if node['platform_family'] == 'windows'
   # Redefine default variables
   case node['zabbix']['agent']['windows']['installer']
@@ -31,7 +30,7 @@ if node['platform_family'] == 'windows'
   when 'bin'
     include_recipe 'zabbix_lwrp::agent_win_bin'
   end
-# Open firewall port for zabbix_agent
+  # Open firewall port for zabbix_agent
   windows_firewall_rule 'Zabbix Agent' do
     localport node['zabbix']['agent']['listen_port'].to_s
     firewall_action :allow

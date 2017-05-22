@@ -62,7 +62,7 @@ class ZabbixScreenItem
     event_history:            13,
     hostgroup_trigger_status: 14,
     system_status:            15,
-    host_trigger_status:      16
+    host_trigger_status:      16,
   }.freeze
 
   def initialize(name, context, &block)
@@ -71,9 +71,7 @@ class ZabbixScreenItem
     instance_eval(&block)
   end
 
-  def name
-    @name
-  end
+  attr_reader :name
 
   def resource_type(value)
     @resource_type = RESOURCE_TYPE[value]
@@ -142,7 +140,7 @@ class ZabbixScreenItem
       sort_triggers: @sort_triggers,
       style:         @style,
       url:           @url,
-      name:          @name
+      name:          @name,
     }
   end
 end
