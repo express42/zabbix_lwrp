@@ -14,15 +14,18 @@ platforms:
   - name: ubuntu-16.04
     driver:
       box: express42/ubuntu-16.04
-  - name: windows
+  - name: centos-7.3
+    driver:
+      box: bento/centos-7.3
+  - name: centos-6.7
+    driver: 
+      box: bento/centos-6.7
+  - name: windows-2012r2
     driver:
       provider: virtualbox
       box:  opentable/win-2012r2-standard-amd64-nocm
       network:
         - ["private_network", {ip: "192.168.33.33"}]
-  - name: centos-7.3
-    driver:
-      box: bento/centos-7.3
 
 suites:
   - name: zabbix-agent
@@ -32,11 +35,11 @@ suites:
       - recipe[chef-client::delete_validation]
       - recipe[zabbix_lwrp::repository]
       - recipe[zabbix_lwrp::agent_win]
-  - name: zabbix24
+  - name: zabbix24_postgres
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix24]
+      - recipe[zabbix_lwrp_test::zabbix24_postgres]
     excludes: ["windows"]
-  - name: zabbix30
+  - name: zabbix30_postgres
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix30]
+      - recipe[zabbix_lwrp_test::zabbix30_postgres]
     excludes: ["windows"]
