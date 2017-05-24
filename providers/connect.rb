@@ -204,7 +204,8 @@ def create_applications
                                  itemid: current_item['itemid'],
                                  hostid: host_id,
                                  interfaceid: interface_id,
-                                 applications: [app_id]
+                                 applications: [app_id],
+                                 trapper_hosts: host['fqdn']
             ))
           end
         else
@@ -212,7 +213,8 @@ def create_applications
             @@zbx.items.create(item.to_hash.merge(
                                  hostid: host_id,
                                  interfaceid: interface_id,
-                                 applications: [app_id]
+                                 applications: [app_id],
+                                 trapper_hosts: host['fqdn']
             ))
           end
         end
