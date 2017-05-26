@@ -2,7 +2,11 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
-## 1.2.4
+## 1.2.6
+* Fix creating hosts
+* Rename :modem attribute to :gsm_modem
+
+## 1.2.5
 * Allow to set multiple host groups
 
 ## 1.2.4
