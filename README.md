@@ -44,7 +44,6 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['agent']['enable_remote_commands']` -  Defaults to `0`.
 * `node['zabbix']['agent']['serverhost']` -  Defaults to `node['ipaddress']`.
 * `node['zabbix']['agent']['user_params']` -  Defaults to `{ ... }`.
-* `node['zabbix']['agent']['use_ip']` -  Defaults to `true`.
 
 ## Windows Agent
 * `node['zabbix']['agent']['windows']['installer']` - 'chocolatey' or 'bin'(zabbix binaries). Defaults to `chocolatey`.
