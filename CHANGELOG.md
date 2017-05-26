@@ -3,6 +3,9 @@
 This file is used to list changes made in each version of zabbix_lwrp.
 
 ## 1.2.4
+* Allow to set multiple host groups
+
+## 1.2.4
 * Add trapper_hosts attribute
 
 ## 1.2.3

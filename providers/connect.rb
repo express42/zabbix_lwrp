@@ -129,7 +129,6 @@ def create_hosts
         port: values['jmx_port'],
         useip: values['jmx_use_ip'] ? 1 : 0)
     end
-
     h = @@zbx.hosts.get(host: fqdn).first
     host_id = if h
                 h['hostid']
