@@ -32,11 +32,18 @@ suites:
       - recipe[chef-client::delete_validation]
       - recipe[zabbix_lwrp::repository]
       - recipe[zabbix_lwrp::agent_win]
+    excludes:
+      - ubuntu-14.04
+      - ubuntu-16.04
+      - centos-7.3
   - name: zabbix24
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24]
-    excludes: ["windows"]
+    excludes:
+      - windows
+      - ubuntu-16.04
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]
-    excludes: ["windows"]
+    excludes:
+      - windows
