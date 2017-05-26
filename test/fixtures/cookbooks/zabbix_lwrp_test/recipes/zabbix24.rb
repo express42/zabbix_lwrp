@@ -58,7 +58,7 @@ end
 zabbix_media_type 'sms' do
   action :create
   type :sms
-  modem '/dev/modem'
+  gsm_modem '/dev/modem'
 end
 
 zabbix_user_group 'Test group' do

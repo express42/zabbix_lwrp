@@ -270,7 +270,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 - helo:
 - email:
 - path:
-- modem:
+- gsm_modem:
 - username:
 - password:
 
@@ -739,7 +739,7 @@ end
 zabbix_media_type 'sms' do
   action :create
   type :sms
-  modem '/dev/modem'
+  gsm_modem '/dev/modem'
 end
 ```
 
