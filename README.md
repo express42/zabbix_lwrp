@@ -1,6 +1,6 @@
 [![Chef cookbook](https://img.shields.io/cookbook/v/zabbix_lwrp.svg)](https://github.com/express42/zabbix_lwrp)
 
-[![Code Climate](https://codeclimate.com/github/express42-cookbooks/zabbix_lwrp/badges/gpa.svg)](https://codeclimate.com/github/express42-cookbooks/zabbix_lwrp)
+[![Code Climate](https://codeclimate.com/github/express42/zabbix_lwrp/badges/gpa.svg)](https://codeclimate.com/github/express42/zabbix_lwrp)
 [![Build Status](https://travis-ci.org/express42/zabbix_lwrp.svg?branch=master)](https://travis-ci.org/express42/zabbix_lwrp)
 
 # Description
