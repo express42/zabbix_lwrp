@@ -10,10 +10,10 @@ provisioner:
 platforms:
   - name: ubuntu-14.04
     driver:
-      box: express42/ubuntu-14.04
+      box: bento/ubuntu-14.04
   - name: ubuntu-16.04
     driver:
-      box: express42/ubuntu-16.04
+      box: bento/ubuntu-16.04
   - name: centos-7.3
     driver:
       box: bento/centos-7.3
@@ -38,8 +38,16 @@ suites:
   - name: zabbix24_postgres
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24_postgres]
-    excludes: ["windows"]
+    excludes: ["windows-2012r2", "ubuntu-16.04"]
   - name: zabbix30_postgres
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30_postgres]
-    excludes: ["windows"]
+    excludes: ["windows-2012r2"]
+  - name: zabbix30_mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_mysql]
+    excludes: ["windows-2012r2"]
+  - name: zabbix24_mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix24_mysql]
+    excludes: ["windows-2012r2", "ubuntu-16.04"]

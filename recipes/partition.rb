@@ -2,7 +2,7 @@
 # Cookbook Name:: zabbix_lwrp
 # Recipe:: partition
 #
-# Copyright (C) LLC 2015 Express 42
+# Copyright (C) LLC 2015-2017 Express 42
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -24,15 +24,17 @@
 
 include_recipe 'lvm'
 
-lvm_physical_volume node['zabbix']['server']['database']['lvm_volume']
+db_vendor = node['zabbix']['db_vendor']
 
-lvm_volume_group node['zabbix']['server']['database']['lvm_group'] do
-  physical_volumes node['zabbix']['server']['database']['lvm_volume']
+lvm_physical_volume node['zabbix']['server']['database'][db_vendor]['lvm_volume']
+
+lvm_volume_group node['zabbix']['server']['database'][db_vendor]['lvm_group'] do
+  physical_volumes node['zabbix']['server']['database'][db_vendor]['lvm_volume']
 end
 
 lvm_logical_volume 'zabbix-database' do
-  group node['zabbix']['server']['database']['lvm_group']
-  size node['zabbix']['server']['database']['partition_size']
-  filesystem node['zabbix']['server']['database']['filesystem']
-  mount_point node['zabbix']['server']['database']['mount_point']
+  group node['zabbix']['server']['database'][db_vendor]['lvm_group']
+  size node['zabbix']['server']['database'][db_vendor]['partition_size']
+  filesystem node['zabbix']['server']['database'][db_vendor]['filesystem']
+  mount_point node['zabbix']['server']['database'][db_vendor]['mount_point']
 end

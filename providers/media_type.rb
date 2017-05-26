@@ -38,7 +38,7 @@ TYPE = {
   script:     1,
   sms:        2,
   jabber:     3,
-  ez_texting: 100,
+  ez_texting: 100
 }.freeze
 
 action :create do
@@ -52,10 +52,10 @@ action :create do
           helo:        new_resource.helo,
           email:       new_resource.email,
           path:        new_resource.path,
-          modem:       new_resource.modem,
+          gsm_modem:   new_resource.modem,
           username:    new_resource.username,
-          password:    new_resource.password,
-        },
+          password:    new_resource.password
+        }
       })
   end
 end

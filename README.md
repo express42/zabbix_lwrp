@@ -7,7 +7,7 @@
 
 [![Join the chat at https://gitter.im/express42/zabbix_lwrp](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/express42/zabbix_lwrp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provides LWRP for creating and modifying Zabbix objects.
+Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx. Provides LWRP for creating and modifying Zabbix objects.
 
 # Requirements
 
@@ -27,6 +27,7 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * lvm
 * php-fpm
 * postgresql
+* mysql
 * windows_firewall
 
 # Attributes
@@ -56,32 +57,48 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['agent']['windows']['templates']` -  Defaults to `#{node['zabbix']['agent']['windows']['path']}\\templates`.
 * `node['zabbix']['agent']['windows']['log']` -  Defaults to `#{node['zabbix']['agent']['windows']['path']}\\zabbix_agentd.log`.
 
-## Database
-* `node['zabbix']['server']['database']['filesystem']` -  Defaults to `ext4`.
-* `node['zabbix']['server']['database']['lvm_group']` -  Defaults to `shared`.
-* `node['zabbix']['server']['database']['lvm_volume']` -  Defaults to `/dev/sda3`.
-* `node['zabbix']['server']['database']['partition_size']` -  Defaults to `10G`.
-* `node['zabbix']['server']['database']['cluster']` -  Defaults to `main`.
-* `node['zabbix']['server']['database']['databag']` -  Defaults to `zabbix`.
-* `node['zabbix']['server']['database']['locale']` -  Defaults to `en_US.utf8`.
-* `node['zabbix']['server']['database']['mount_point']` -  Defaults to `/var/lib/postgresql`.
-* `node['zabbix']['server']['database']['network']` -  Defaults to `127.0.0.0/8`.
-* `node['zabbix']['server']['database']['version']` -  Defaults to `9.4`.
-* `node['zabbix']['server']['database']['configuration']['listen_addresses']` -  Defaults to `127.0.0.1`.
-* `node['zabbix']['server']['database']['configuration']['port']` -  Defaults to `5432`.
-* `node['zabbix']['server']['database']['configuration']['max_connections']` -  Defaults to `300`.
-* `node['zabbix']['server']['database']['configuration']['shared_buffers']` -  Defaults to `128MB`.
-* `node['zabbix']['server']['database']['configuration']['maintenance_work_mem']` -  Defaults to `128MB`.
-* `node['zabbix']['server']['database']['configuration']['work_mem']` -  Defaults to `8MB`.
-* `node['zabbix']['server']['database']['configuration']['effective_cache_size']` -  Defaults to `2GB`.
-* `node['zabbix']['server']['database']['configuration']['log_min_duration_statement']` -  Defaults to `1000`.
-* `node['zabbix']['server']['database']['configuration']['archive_mode']` -  Defaults to `on`.
-* `node['zabbix']['server']['database']['configuration']['archive_command']` -  Defaults to `exit 0`.
-* `node['zabbix']['server']['database']['configuration']['wal_level']` -  Defaults to `hot_standby`.
+## Postgresql
+* `node['zabbix']['server']['database']['postgresql']['filesystem']` -  Defaults to `ext4`.
+* `node['zabbix']['server']['database']['postgresql']['lvm_group']` -  Defaults to `shared`.
+* `node['zabbix']['server']['database']['postgresql']['lvm_volume']` -  Defaults to `/dev/sda3`.
+* `node['zabbix']['server']['database']['postgresql']['partition_size']` -  Defaults to `10G`.
+* `node['zabbix']['server']['database']['postgresql']['cluster']` -  Defaults to `main`.
+* `node['zabbix']['server']['database']['postgresql']['databag']` -  Defaults to `zabbix`.
+* `node['zabbix']['server']['database']['postgresql']['locale']` -  Defaults to `en_US.utf8`.
+* `node['zabbix']['server']['database']['postgresql']['mount_point']` -  Defaults to `/var/lib/postgresql`.
+* `node['zabbix']['server']['database']['postgresql']['network']` -  Defaults to `127.0.0.0/8`.
+* `node['zabbix']['server']['database']['postgresql']['version']` -  Defaults to `9.4`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['listen_addresses']` -  Defaults to `127.0.0.1`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['port']` -  Defaults to `5432`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['max_connections']` -  Defaults to `300`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['shared_buffers']` -  Defaults to `128MB`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['maintenance_work_mem']` -  Defaults to `128MB`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['work_mem']` -  Defaults to `8MB`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['effective_cache_size']` -  Defaults to `2GB`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['log_min_duration_statement']` -  Defaults to `1000`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['archive_mode']` -  Defaults to `on`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['archive_command']` -  Defaults to `exit 0`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['wal_level']` -  Defaults to `hot_standby`.
+
+## MySQL
+* `node['zabbix']['server']['database']['mysql']['filesystem']` - Defaults to `ext4`
+* `node['zabbix']['server']['database']['mysql']['lvm_group']` - Defaults to `shared`
+* `node['zabbix']['server']['database']['mysql']['lvm_volume']` - Defaults to `/dev/sda3`
+* `node['zabbix']['server']['database']['mysql']['partition_size']` - Defaults to `10G`
+* `node['zabbix']['server']['database']['mysql']['mount_point']` - Defaults to `/var/lib/mysql_zabbix`. Do not set to `/var/lib/mysql` because it will conflict.
+* `node['zabbix']['server']['database']['mysql']['databag']` - Defaults to `zabbix`
+* `node['zabbix']['server']['database']['mysql']['version']` - Defaults to `5.5`
+* `node['zabbix']['server']['database']['mysql']['service_name']` - Defaults to `zabbix`
+* `node['zabbix']['server']['database']['mysql']['database_name']` - Defaults to `zabbix`
+* `node['zabbix']['server']['database']['mysql']['configuration']['listen_addresses']` - Defaults to `127.0.0.1`
+* `node['zabbix']['server']['database']['mysql']['configuration']['port']` - Defaults to `3306`
+* `node['zabbix']['server']['database']['mysql']['configuration']['character_set']` - Defaults to `utf8`
+* `node['zabbix']['server']['database']['mysql']['configuration']['collate']` - Defaults to `utf8_bin`
 
 ## Default
 * `node['zabbix']['version']` -  Defaults to `3.2`.
 * `node['zabbix']['api-version']` -  Defaults to `3.1.0`.
+* `node['zabbix']['db_vendor']` -  Defaults to `postgresql`. Make sure that is setup for MySQL.
 
 ## Host
 * `node['zabbix']['host']['group']` -  Defaults to `Hosts`.
@@ -141,6 +158,8 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * zabbix_lwrp::agent - Installs and configures Zabbix agent.
 * zabbix_lwrp::connect - Connects to Zabbix API to sync configuration.
 * zabbix_lwrp::default - Installs and configures Zabbix official repository and agent.
+* zabbix_lwrp::postgresql - Installs and configures PostgreSQL database for Zabbix.
+* zabbix_lwrp::mysql - Installs and configures MySQL database for Zabbix.
 * zabbix_lwrp::database - Installs and configures Zabbix database.
 * zabbix_lwrp::host - Creates host via Zabbix API.
 * zabbix_lwrp::partition - Configures LVM for Zabbix database.
@@ -325,10 +344,12 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 Data bag `zabbix` must contains the following items:
 * admin (with Zabbix admin password)
-* databases
+* postgresql
 * users
 
-`databases` and `users` items related to the postgresql database (see [postgresql_lwrp](https://github.com/express42-cookbooks/postgresql) cookbook)
+`postgresql` and `users` items related to the postgresql database
+
+`users` item related to MySQL database, necessarily contains `root` and `zabbix` entries
 
 For examples see fixture data bag `test/fixtures/databags/zabbix/`
 

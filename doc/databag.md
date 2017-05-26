@@ -2,9 +2,11 @@
 
 Data bag `zabbix` must contains the following items:
 * admin (with Zabbix admin password)
-* databases
+* postgresql
 * users
 
-`databases` and `users` items related to the postgresql database (see [postgresql_lwrp](https://github.com/express42-cookbooks/postgresql) cookbook)
+`postgresql` and `users` items related to the postgresql database
+
+`users` item related to MySQL database, necessarily contains `root` and `zabbix` entries
 
 For examples see fixture data bag `test/fixtures/databags/zabbix/`
