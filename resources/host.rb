@@ -31,13 +31,13 @@ resource_name :zabbix_host
 actions :create
 default_action :create
 
-attribute :type,       kind_of: Integer, default: 1
-attribute :host_name,  kind_of: String,  name_attribute: true
-attribute :host_group, kind_of: String,  required: true
-attribute :port,       kind_of: Integer, default: 10_050
-attribute :ip_address, kind_of: String
-attribute :dns,        kind_of: String
-attribute :use_ip,     kind_of: [TrueClass, FalseClass], required: true, default: true
+attribute :type,        kind_of: Integer, default: 1
+attribute :host_name,   kind_of: String,  name_attribute: true
+attribute :host_group,  kind_of: [Array, String], required: true
+attribute :port,        kind_of: Integer, default: 10_050
+attribute :ip_address,  kind_of: String
+attribute :dns,         kind_of: String
+attribute :use_ip,      kind_of: [TrueClass, FalseClass], required: true, default: true
 
 attribute :ipmi_enabled, kind_of: [TrueClass, FalseClass], default: false
 attribute :snmp_enabled, kind_of: [TrueClass, FalseClass], default: false
