@@ -28,6 +28,8 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * php-fpm
 * postgresql
 * mysql
+* yum-mysql-community
+* mysql2_chef_gem
 * windows_firewall
 
 # Attributes
