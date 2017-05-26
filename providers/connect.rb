@@ -81,15 +81,14 @@ def create_hosts
 
     group_ids = []
     if values['host_group'].respond_to?('each')
-      values['host_group'].each { |group|
+      values['host_group'].each do |group|
         group_ids.push(groupid: @@zbx.hostgroups.get_or_create(name: group.to_s))
-      }
+      end
     else
       group = values['host_group']
       group_ids.push(groupid: @@zbx.hostgroups.get_or_create(name: group))
     end
 
-    h = @@zbx.hosts.get(host: fqdn).first
     interfaces = [
       {
         type: 1,
@@ -131,11 +130,11 @@ def create_hosts
         useip: values['jmx_use_ip'] ? 1 : 0)
     end
 
-    host_id =   @@zbx.hosts.create_or_update(
-              host: fqdn,
-              interfaces: interfaces,
-              groups: group_ids,
-            )
+    host_id = @@zbx.hosts.create_or_update(
+      host: fqdn,
+      interfaces: interfaces,
+      groups: group_ids
+    )
 
     tmp = @@zbx.query(
       method: 'host.get',
