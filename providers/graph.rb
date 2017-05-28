@@ -43,14 +43,19 @@ action :create do
       }
     end
 
+    graph = {
+      height: new_resource.height,
+      width:  new_resource.width,
+      gitems: graph_items,
+    }
+
+    if new_resource.graph_type
+      graph[:graphtype] = new_resource.set_graph_type_id
+    end
+
     add_data(node, node['fqdn'], graphs:
       {
-        new_resource.name =>
-        {
-          height: new_resource.height,
-          width:  new_resource.width,
-          gitems: graph_items,
-        },
+        new_resource.name => graph,
       })
   end
 end
