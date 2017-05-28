@@ -36,5 +36,19 @@ attribute :name,        kind_of: String,  name_attribute: true
 attribute :height,      kind_of: Integer, required: true
 attribute :width,       kind_of: Integer, required: true
 attribute :graph_items, kind_of: Array,   required: true
+attribute :graph_type,  kind_of: String,  required: false
 
 attr_accessor :exists
+attr_reader :graph_type_id
+
+TYPES = {
+  'normal'   => 0,
+  'stacked'  => 1,
+  'pie'      => 2,
+  'exploded' => 3,
+}.freeze
+
+def set_graph_type_id
+  raise "Graph type should be one of: #{TYPES.keys.join(', ')}" unless TYPES.keys.include? @graph_type
+  @graph_type_id = TYPES[@graph_type]
+end
