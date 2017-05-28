@@ -275,7 +275,8 @@ def create_graphs
           end
 
           graph = @@zbx.graphs.create(name: graph_name, height: graph_value['height'],
-                                      width: graph_value['width'], gitems: graph_items)
+                                      width: graph_value['width'], gitems: graph_items,
+                                      graphtype: graph_value['graphtype'])
         end
       end
     end
