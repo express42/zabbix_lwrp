@@ -64,6 +64,7 @@ if node['platform_family'] == 'debian'
     packages << 'php-mbstring'
     packages << 'php-bcmath'
     packages << 'php-gd'
+    packages << 'php-xml'
   end
 elsif node['platform_family'] == 'rhel'
   packages << 'httpd'
