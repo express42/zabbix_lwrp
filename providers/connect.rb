@@ -129,12 +129,16 @@ def create_hosts
         port: values['jmx_port'],
         useip: values['jmx_use_ip'] ? 1 : 0)
     end
-
-    host_id = @@zbx.hosts.create_or_update(
-      host: fqdn,
-      interfaces: interfaces,
-      groups: group_ids
-    )
+    h = @@zbx.hosts.get(host: fqdn).first
+    host_id = if h
+                h['hostid']
+              else
+                @@zbx.hosts.create(
+                  host: fqdn,
+                  interfaces: interfaces,
+                  groups: group_ids
+                )
+              end
 
     tmp = @@zbx.query(
       method: 'host.get',
