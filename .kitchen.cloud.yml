@@ -46,3 +46,8 @@ suites:
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]
+  - name: zabbix32
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32]
+    excludes:
+      - ubuntu-14.04

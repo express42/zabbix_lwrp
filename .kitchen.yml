@@ -47,3 +47,8 @@ suites:
       - recipe[zabbix_lwrp_test::zabbix30]
     excludes:
       - windows
+  - name: zabbix32
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32]
+    excludes:
+      - windows
