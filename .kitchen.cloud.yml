@@ -30,9 +30,15 @@ platforms:
       username: ubuntu
 
 suites:
-  - name: zabbix24_without_lvm
+  - name: zabbix24_postgres_without_lvm
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix24_without_lvm]
-  - name: zabbix30_without_lvm
+      - recipe[zabbix_lwrp_test::zabbix24_postgres_without_lvm]
+  - name: zabbix30_postgres_without_lvm
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix30_without_lvm]
+      - recipe[zabbix_lwrp_test::zabbix30_postgres_without_lvm]
+  - name: zabbix24_mysql_without_lvm
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix24_mysql_without_lvm]
+  - name: zabbix30_mysql_without_lvm
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_mysql_without_lvm]
