@@ -47,7 +47,6 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['agent']['enable_remote_commands']` -  Defaults to `0`.
 * `node['zabbix']['agent']['serverhost']` -  Defaults to `node['ipaddress']`.
 * `node['zabbix']['agent']['user_params']` -  Defaults to `{ ... }`.
-* `node['zabbix']['agent']['use_ip']` -  Defaults to `true`.
 
 ## Windows Agent
 * `node['zabbix']['agent']['windows']['installer']` - 'chocolatey' or 'bin'(zabbix binaries). Defaults to `chocolatey`.
@@ -292,7 +291,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 - helo:
 - email:
 - path:
-- modem:
+- gsm_modem:
 - username:
 - password:
 
@@ -763,7 +762,7 @@ end
 zabbix_media_type 'sms' do
   action :create
   type :sms
-  modem '/dev/modem'
+  gsm_modem '/dev/modem'
 end
 ```
 

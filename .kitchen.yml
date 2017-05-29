@@ -18,7 +18,7 @@ platforms:
     driver:
       box: bento/centos-7.3
   - name: centos-6.7
-    driver: 
+    driver:
       box: bento/centos-6.7
   - name: windows-2012r2
     driver:
@@ -38,16 +38,27 @@ suites:
   - name: zabbix24_postgres
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24_postgres]
-    excludes: ["windows-2012r2", "ubuntu-16.04"]
+    excludes:
+      - windows-2012r2
+      - ubuntu-16.04
   - name: zabbix30_postgres
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30_postgres]
-    excludes: ["windows-2012r2"]
+    excludes:
+      - windows-2012r2
   - name: zabbix30_mysql
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30_mysql]
-    excludes: ["windows-2012r2"]
+    excludes:
+      - windows-2012r2
   - name: zabbix24_mysql
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24_mysql]
-    excludes: ["windows-2012r2", "ubuntu-16.04"]
+    excludes:
+      - windows-2012r2
+      - ubuntu-16.04
+  - name: zabbix32
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32]
+    excludes:
+      - windows

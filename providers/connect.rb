@@ -77,12 +77,18 @@ end
 def create_hosts
   get_hosts do |host|
     fqdn, values = host['zabbix']['hosts'].to_a.first
-
     next unless values
 
-    group_id = @@zbx.hostgroups.get_or_create(name: values['host_group'])
+    group_ids = []
+    if values['host_group'].respond_to?('each')
+      values['host_group'].each do |group|
+        group_ids.push(groupid: @@zbx.hostgroups.get_or_create(name: group.to_s))
+      end
+    else
+      group = values['host_group']
+      group_ids.push(groupid: @@zbx.hostgroups.get_or_create(name: group))
+    end
 
-    h = @@zbx.hosts.get(host: fqdn).first
     interfaces = [
       {
         type: 1,
@@ -123,14 +129,14 @@ def create_hosts
         port: values['jmx_port'],
         useip: values['jmx_use_ip'] ? 1 : 0)
     end
-
+    h = @@zbx.hosts.get(host: fqdn).first
     host_id = if h
                 h['hostid']
               else
                 @@zbx.hosts.create(
                   host: fqdn,
                   interfaces: interfaces,
-                  groups: [groupid: group_id]
+                  groups: group_ids
                 )
               end
 
@@ -204,7 +210,8 @@ def create_applications
                                  itemid: current_item['itemid'],
                                  hostid: host_id,
                                  interfaceid: interface_id,
-                                 applications: [app_id]
+                                 applications: [app_id],
+                                 trapper_hosts: host['fqdn']
             ))
           end
         else
@@ -212,7 +219,8 @@ def create_applications
             @@zbx.items.create(item.to_hash.merge(
                                  hostid: host_id,
                                  interfaceid: interface_id,
-                                 applications: [app_id]
+                                 applications: [app_id],
+                                 trapper_hosts: host['fqdn']
             ))
           end
         end
@@ -267,7 +275,8 @@ def create_graphs
           end
 
           graph = @@zbx.graphs.create(name: graph_name, height: graph_value['height'],
-                                      width: graph_value['width'], gitems: graph_items)
+                                      width: graph_value['width'], gitems: graph_items,
+                                      graphtype: graph_value['graphtype'])
         end
       end
     end
@@ -411,7 +420,7 @@ end
 
 # rubocop:disable Style/AccessorMethodName
 def get_hosts
-  if Chef::Config[:solo]
+  if Chef::Config[:solo] || ENV['TEST_KITCHEN']
     yield node
   else
     search(:node, 'hosts:*').each do |host|

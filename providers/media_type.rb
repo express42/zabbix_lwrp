@@ -53,6 +53,7 @@ action :create do
           email:       new_resource.email,
           path:        new_resource.path,
           gsm_modem:   new_resource.modem,
+          gsm_modem:   new_resource.gsm_modem,
           username:    new_resource.username,
           password:    new_resource.password,
         },

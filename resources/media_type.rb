@@ -44,7 +44,7 @@ attribute :email,  kind_of: String
 attribute :path, kind_of: String
 
 # sms
-attribute :modem, kind_of: String
+attribute :gsm_modem, kind_of: String
 
 # jabber
 attribute :username, kind_of: String

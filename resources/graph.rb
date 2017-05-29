@@ -36,5 +36,6 @@ attribute :name,        kind_of: String,  name_attribute: true
 attribute :height,      kind_of: Integer, required: true
 attribute :width,       kind_of: Integer, required: true
 attribute :graph_items, kind_of: Array,   required: true
+attribute :graph_type,  kind_of: Symbol,  required: false
 
 attr_accessor :exists
