@@ -12,7 +12,7 @@ script:
 - bundle exec cookstyle -v
 - bundle exec cookstyle
 - bundle exec foodcritic --contex --epic-fail any --tags ~chef13 .
-#- bundle exec kitchen test --concurrency=10 --destroy=always
+- bundle exec kitchen test --concurrency=10 --destroy=always
 deploy:
   edge: true
   provider: chef-supermarket
