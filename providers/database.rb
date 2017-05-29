@@ -116,9 +116,9 @@ action :create do
       db_command = "zcat /usr/share/doc/zabbix-server-mysql/create.sql.gz | #{db_connect_string}"
 
     elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'rhel'
-      db_command = "#{db_connect_string} < /usr/share/doc/zabbix-server-mysql*/create/schema.sql; \
-                    #{db_connect_string} < /usr/share/doc/zabbix-server-mysql*/create/images.sql; \
-                    #{db_connect_string} < /usr/share/doc/zabbix-server-mysql*/create/data.sql;"
+      db_command = "cat /usr/share/doc/zabbix-server-mysql*/create/schema.sql | #{db_connect_string}; \
+                    cat /usr/share/doc/zabbix-server-mysql*/create/images.sql | #{db_connect_string}; \
+                    cat /usr/share/doc/zabbix-server-mysql*/create/data.sql | #{db_connect_string};"
 
     elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'debian'
       db_command = "#{db_connect_string} < /usr/share/zabbix-server-mysql/schema.sql; \
