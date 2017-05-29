@@ -33,6 +33,13 @@ def whyrun_supported?
   true
 end
 
+TYPE = {
+  normal:   0,
+  stacked:  1,
+  pie:      2,
+  exploded: 3,
+}.freeze
+
 action :create do
   converge_by("Creating data for #{new_resource}") do
     graph_items = new_resource.graph_items.map do |gi|
@@ -43,14 +50,20 @@ action :create do
       }
     end
 
+    graph = {
+      height: new_resource.height,
+      width:  new_resource.width,
+      gitems: graph_items,
+    }
+
+    if new_resource.graph_type
+      raise "Graph type should be one of: #{TYPE.keys.join(', ')}" unless TYPE.keys.include? new_resource.graph_type
+      graph[:graphtype] = TYPE[new_resource.graph_type]
+    end
+
     add_data(node, node['fqdn'], graphs:
       {
-        new_resource.name =>
-        {
-          height: new_resource.height,
-          width:  new_resource.width,
-          gitems: graph_items,
-        },
+        new_resource.name => graph,
       })
   end
 end
