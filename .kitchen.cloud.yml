@@ -28,11 +28,18 @@ platforms:
       image_id: ami-6bee0004
     transport:
       username: ubuntu
+  - name: ubuntu-16.04
+    driver:
+      image_id: ami-f9e30f96
+    transport:
+      username: ubuntu
 
 suites:
   - name: zabbix24
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24]
+    excludes:
+      - ubuntu-16.04
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]

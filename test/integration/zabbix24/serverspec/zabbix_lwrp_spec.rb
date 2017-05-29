@@ -1,6 +1,19 @@
 require 'spec_helper'
 
-describe file('/etc/apt/sources.list.d/zabbix-official.list') do
+if os[:family] == 'ubuntu'
+ repo_file = '/etc/apt/sources.list.d/zabbix-official.list'
+ postgresql_dir = '/var/lib/postgresql'
+ zabbix_web_package = 'zabbix-frontend-php'
+ if os[:release] == '14.04'
+   php_pgsql_package = 'php5-pgsql'
+   php_zabbix_pool_file = '/etc/php5/fpm/pool.d/zabbix.conf'
+ elsif os[:release] == '16.04'
+   php_pgsql_package = 'php-pgsql'
+   php_zabbix_pool_file = '/etc/php/7.0/fpm/pool.d/zabbix.conf'
+ end
+end
+
+describe file(repo_file) do
   it { should be_file }
 end
 
@@ -39,7 +52,7 @@ describe package('zabbixapi') do
   it { should be_installed.by('gem') }
 end
 
-describe file('/var/lib/postgresql') do
+describe file(postgresql_dir) do
   it { should be_directory }
   it { should be_writable.by_user('postgres') }
   # Check LVM creation on ubuntu only and not Amazon
@@ -76,15 +89,15 @@ describe port(10_051) do
   it { should be_listening }
 end
 
-describe package('php5-pgsql') do
+describe package(php_pgsql_package) do
   it { should be_installed }
 end
 
-describe package('zabbix-frontend-php') do
+describe package(zabbix_web_package) do
   it { should be_installed }
 end
 
-describe file('/etc/php5/fpm/pool.d/zabbix.conf') do
+describe file(php_zabbix_pool_file) do
   it { should be_file }
   it { should contain 'listen = 127.0.0.1:9200' }
 end
