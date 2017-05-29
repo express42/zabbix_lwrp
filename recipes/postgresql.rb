@@ -28,14 +28,25 @@ node.default['postgresql']['version'] = psql_attr['version']
 
 case node['platform_family']
 when 'rhel'
+  shortver = psql_attr['version'].split('.').join
   node.default['postgresql']['enable_pgdg_yum'] = true
+  node.default['postgresql']['use_pgdg_packages'] = true
+  node.default['postgresql']['server']['service_name'] = "postgresql-#{psql_attr['version']}"
+  node.default['postgresql']['client']['packages'] = "postgresql#{shortver}-devel"
+  node.default['postgresql']['server']['packages'] = ["postgresql#{shortver}-server"]
+  node.default['postgresql']['contrib']['packages'] = ["postgresql#{shortver}-contrib"]
+
+  if node['platform_version'].to_f >= 7.0
+    node.default['postgresql']['setup_script'] = "postgresql#{shortver}-setup"
+  end
+  
 when 'debian'
   node.default['postgresql']['enable_pgdg_apt'] = true
   node.default['postgresql']['use_pgdg_packages'] = true
-  node.default['postgresql']['dir'] = "/etc/postgresql/#{node['postgresql']['version']}/main"
-  node.default['postgresql']['client']['packages'] = ["postgresql-client-#{node['postgresql']['version']}", 'libpq-dev']
-  node.default['postgresql']['server']['packages'] = ["postgresql-#{node['postgresql']['version']}"]
-  node.default['postgresql']['contrib']['packages'] = ["postgresql-contrib-#{node['postgresql']['version']}"]
+  node.default['postgresql']['dir'] = "/etc/postgresql/#{psql_attr['version']}/main"
+  node.default['postgresql']['client']['packages'] = ["postgresql-client-#{psql_attr['version']}", 'libpq-dev']
+  node.default['postgresql']['server']['packages'] = ["postgresql-#{psql_attr['version']}"]
+  node.default['postgresql']['contrib']['packages'] = ["postgresql-contrib-#{psql_attr['version']}"]
 end
 
 include_recipe 'postgresql::server'
