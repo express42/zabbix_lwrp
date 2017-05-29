@@ -88,7 +88,6 @@ action :create do
   if db_vendor == 'postgresql'
     db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
 
-    db_command = ''
     if node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'rhel'
       db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | #{db_connect_string}"
 
@@ -108,7 +107,6 @@ action :create do
   elsif db_vendor == 'mysql'
     db_connect_string = "mysql -h #{db_host} -P #{db_port} -u #{db_user} -p#{db_pass} -D #{db_name}"
 
-    db_command = ''
     if node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'rhel'
       db_command = "zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | #{db_connect_string}"
 
