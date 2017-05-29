@@ -103,7 +103,7 @@ describe file('/etc/zabbix/web/zabbix.conf.php') do
   it { should contain '10051' }
 end
 
-describe file('/etc/nginx/sites-available/localhost.conf') do
+describe file('/etc/nginx/sites-available/localhost') do
   it { should be_file }
   it { should contain 'listen   80' }
   it { should contain 'server_name  localhost' }
