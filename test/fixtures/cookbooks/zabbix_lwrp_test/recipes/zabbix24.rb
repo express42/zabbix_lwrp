@@ -1,4 +1,46 @@
-include_recipe 'apt'
+case node['platform_family']
+when 'debian'
+  include_recipe 'apt'
+when 'rhel'
+  include_recipe 'selinux_policy::install'
+
+  # Allow phpfpm to bind to port, by giving it the http_port_t context
+  selinux_policy_port node['zabbix']['server']['web']['port'] do
+    protocol 'tcp'
+    secontext 'http_port_t'
+  end
+  selinux_policy_boolean 'httpd_can_network_connect' do
+    value true
+  end
+  selinux_policy_module 'zabbix_agent_setrlimit' do
+    content <<-eos
+      module zabbix_agent_setrlimit 1.0;
+
+      require {
+        type zabbix_agent_t;
+        class process setrlimit;
+      }
+
+      #============= zabbix_agent_t ==============
+      allow zabbix_agent_t self:process setrlimit;
+    eos
+    action :deploy
+  end
+  selinux_policy_module 'zabbix_server_setrlimit' do
+    content <<-eos
+      module zabbix_server_setrlimit 1.0;
+
+      require {
+        type zabbix_t;
+        class process setrlimit;
+      }
+
+      #============= zabbix_agent_t ==============
+      allow zabbix_t self:process setrlimit;
+    eos
+    action :deploy
+  end
+end
 include_recipe 'chef_nginx::default'
 
 node.default['zabbix']['server']['database']['version'] = '9.6'
@@ -10,7 +52,8 @@ node.default['zabbix']['api-version'] = '3.0.0'
 node.default['zabbix']['api-version'] = '3.0.0'
 
 include_recipe 'zabbix_lwrp::default'
-include_recipe 'zabbix_lwrp::partition'
+# Create LVM partition only if exists on node (for example on Amazon is not)
+include_recipe 'zabbix_lwrp::partition' if node['filesystem'].attribute?(node['zabbix']['server']['database']['lvm_volume'])
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'
@@ -104,4 +147,23 @@ zabbix_template 'Linux_Template' do
   host_name 'Test_snmp_host'
 end
 
-include_recipe 'zabbix_lwrp::connect'
+#
+# !!! This temporary hack, which starts zabbix_connect[default] as delayed action
+#
+
+#include_recipe 'zabbix_lwrp::connect'
+
+### included recipe file recipes/connect.rb
+include_recipe 'build-essential'
+
+zabbix_connect 'default' do
+  action :nothing
+  apiurl 'http://localhost/api_jsonrpc.php'
+  databag 'zabbix'
+  sync node['zabbix']['server']['sync_hosts']
+end
+
+log "Run zabbix_connect 'default' as delayed" do
+  notifies :make, 'zabbix_connect[default]', :delayed
+end
+### end included recipe

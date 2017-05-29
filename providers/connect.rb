@@ -419,7 +419,7 @@ end
 
 # rubocop:disable Style/AccessorMethodName
 def get_hosts
-  if Chef::Config[:solo]
+  if Chef::Config[:solo] or ENV['TEST_KITCHEN']
     yield node
   else
     search(:node, 'hosts:*').each do |host|
