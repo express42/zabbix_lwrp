@@ -57,8 +57,9 @@ suites:
     excludes:
       - windows-2012r2
       - ubuntu-16.04
-  - name: zabbix32
+  - name: zabbix32_postgres
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix32]
+      - recipe[zabbix_lwrp_test::zabbix32_postgres]
     excludes:
       - windows
+      - ubuntu-14.04
