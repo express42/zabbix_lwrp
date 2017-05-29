@@ -1,9 +1,9 @@
 include_recipe 'apt'
 include_recipe 'chef_nginx::default'
 
+node.default['zabbix']['server']['database']['postgresql']['version'] = '9.6'
 # Temporary use higher version of zabbixapi, for correct tests works
 # In gem zabbixapi==2.4.X uses old json gem (==1.6.1) but in chefdk uses newest version
-node.default['zabbix']['server']['database']['version'] = '9.6'
 node.default['zabbix']['version'] = '2.4'
 node.default['zabbix']['api-version'] = '3.0.0'
 
