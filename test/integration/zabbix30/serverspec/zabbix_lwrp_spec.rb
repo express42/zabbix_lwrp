@@ -42,7 +42,10 @@ end
 describe file('/var/lib/postgresql') do
   it { should be_directory }
   it { should be_writable.by_user('postgres') }
-  it { should be_mounted.with(options: { device: '/dev/mapper/shared-zabbix--database' }) }
+  # Check LVM creation on ubuntu only and not Amazon
+  if os[:family] == 'ubuntu' and not host_inventory['ec2']['ami-id']
+    it { should be_mounted.with(options: { device: '/dev/mapper/shared-zabbix--database' }) }
+  end
 end
 
 describe command('pg_lsclusters ') do

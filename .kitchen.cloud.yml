@@ -25,14 +25,14 @@ provisioner:
 platforms:
   - name: ubuntu-14.04
     driver:
-     image_id: ami-6bee0004
+      image_id: ami-6bee0004
     transport:
       username: ubuntu
 
 suites:
-  - name: zabbix24_without_lvm
+  - name: zabbix24
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix24_without_lvm]
-  - name: zabbix30_without_lvm
+      - recipe[zabbix_lwrp_test::zabbix24]
+  - name: zabbix30
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix30_without_lvm]
+      - recipe[zabbix_lwrp_test::zabbix30]
