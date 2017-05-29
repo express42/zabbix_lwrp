@@ -1,22 +1,22 @@
 require 'spec_helper'
 
 if os[:family] == 'ubuntu'
- repo_file = '/etc/apt/sources.list.d/zabbix-official.list'
- postgresql_dir = '/var/lib/postgresql'
- zabbix_web_package = 'zabbix-frontend-php'
- if os[:release] == '14.04'
-   php_pgsql_package = 'php5-pgsql'
-   php_zabbix_pool_file = '/etc/php5/fpm/pool.d/zabbix.conf'
- elsif os[:release] == '16.04'
-   php_pgsql_package = 'php-pgsql'
-   php_zabbix_pool_file = '/etc/php/7.0/fpm/pool.d/zabbix.conf'
- end
+  repo_file = '/etc/apt/sources.list.d/zabbix-official.list'
+  postgresql_dir = '/var/lib/postgresql'
+  zabbix_web_package = 'zabbix-frontend-php'
+  if os[:release] == '14.04'
+    php_pgsql_package = 'php5-pgsql'
+    php_zabbix_pool_file = '/etc/php5/fpm/pool.d/zabbix.conf'
+  elsif os[:release] == '16.04'
+    php_pgsql_package = 'php-pgsql'
+    php_zabbix_pool_file = '/etc/php/7.0/fpm/pool.d/zabbix.conf'
+  end
 elsif os[:family] == 'redhat'
- repo_file = '/etc/yum.repos.d/zabbix.repo'
- postgresql_dir = '/var/lib/pgsql'
- zabbix_web_package = 'zabbix-web'
- php_pgsql_package = 'php-pgsql'
- php_zabbix_pool_file = '/etc/php-fpm.d/zabbix.conf'
+  repo_file = '/etc/yum.repos.d/zabbix.repo'
+  postgresql_dir = '/var/lib/pgsql'
+  zabbix_web_package = 'zabbix-web'
+  php_pgsql_package = 'php-pgsql'
+  php_zabbix_pool_file = '/etc/php-fpm.d/zabbix.conf'
 end
 
 describe file(repo_file) do
@@ -62,13 +62,13 @@ describe file(postgresql_dir) do
   it { should be_directory }
   it { should be_writable.by_user('postgres') }
   # Check LVM creation on ubuntu only and not Amazon
-  if os[:family] == 'ubuntu' and not host_inventory['ec2']['ami-id']
+  if (os[:family] == 'ubuntu') && !(host_inventory['ec2']['ami-id'])
     it { should be_mounted.with(options: { device: '/dev/mapper/shared-zabbix--database' }) }
   end
 end
 
 # On CentOS uses old version of postgresql and this command is not exists
-describe command('pg_lsclusters'), :if => os[:family] == 'ubuntu' do
+describe command('pg_lsclusters'), if: os[:family] == 'ubuntu' do
   its(:stdout) { should contain 'main    5432 online postgres' }
 end
 

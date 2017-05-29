@@ -147,7 +147,7 @@ end
 # !!! This temporary hack, which starts zabbix_connect[default] as delayed action
 #
 
-#include_recipe 'zabbix_lwrp::connect'
+# include_recipe 'zabbix_lwrp::connect'
 
 ### included recipe file recipes/connect.rb
 include_recipe 'build-essential'
