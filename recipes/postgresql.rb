@@ -39,7 +39,7 @@ when 'rhel'
   if node['platform_version'].to_f >= 7.0
     node.default['postgresql']['setup_script'] = "postgresql#{shortver}-setup"
   end
-  
+
 when 'debian'
   node.default['postgresql']['enable_pgdg_apt'] = true
   node.default['postgresql']['use_pgdg_packages'] = true
