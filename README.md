@@ -79,7 +79,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['server']['database']['postgresql']['configuration']['log_min_duration_statement']` -  Defaults to `1000`.
 * `node['zabbix']['server']['database']['postgresql']['configuration']['archive_mode']` -  Defaults to `on`.
 * `node['zabbix']['server']['database']['postgresql']['configuration']['archive_command']` -  Defaults to `exit 0`.
-* `node['zabbix']['server']['database']['postgresql']['configuration']['wal_level']` -  Defaults to `hot_standby`.
+* `node['zabbix']['server']['database']['postgresql']['configuration']['wal_level']` -  Defaults to `archive`.
 
 ## MySQL
 * `node['zabbix']['server']['database']['mysql']['filesystem']` - Defaults to `ext4`
