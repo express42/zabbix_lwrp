@@ -33,6 +33,9 @@ platforms:
       image_id: ami-f9e30f96
     transport:
       username: ubuntu
+  - name: centos-73
+    driver:
+      image_id: ami-7cbc6e13
 
 suites:
   - name: zabbix24

@@ -11,6 +11,12 @@ if os[:family] == 'ubuntu'
    php_pgsql_package = 'php-pgsql'
    php_zabbix_pool_file = '/etc/php/7.0/fpm/pool.d/zabbix.conf'
  end
+elsif os[:family] == 'redhat'
+ repo_file = '/etc/yum.repos.d/zabbix.repo'
+ postgresql_dir = '/var/lib/pgsql'
+ zabbix_web_package = 'zabbix-web'
+ php_pgsql_package = 'php-pgsql'
+ php_zabbix_pool_file = '/etc/php-fpm.d/zabbix.conf'
 end
 
 describe file(repo_file) do
@@ -61,8 +67,9 @@ describe file(postgresql_dir) do
   end
 end
 
-describe command('pg_lsclusters ') do
-  its(:stdout) { should match '9.4 main    5432 online postgres /var/lib/postgresql/9.4/main' }
+# On CentOS uses old version of postgresql and this command is not exists
+describe command('pg_lsclusters'), :if => os[:family] == 'ubuntu' do
+  its(:stdout) { should contain 'main    5432 online postgres' }
 end
 
 describe package('zabbix-server-pgsql') do
