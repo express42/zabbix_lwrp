@@ -100,4 +100,23 @@ zabbix_template 'Linux_Template' do
   host_name 'Test_snmp_host'
 end
 
-include_recipe 'zabbix_lwrp::connect'
+#
+# !!! This temporary hack, which starts zabbix_connect[default] as delayed action
+#
+
+#include_recipe 'zabbix_lwrp::connect'
+
+### included recipe file recipes/connect.rb
+include_recipe 'build-essential'
+
+zabbix_connect 'default' do
+  action :nothing
+  apiurl 'http://localhost/api_jsonrpc.php'
+  databag 'zabbix'
+  sync node['zabbix']['server']['sync_hosts']
+end
+
+log "Run zabbix_connect 'default' as delayed" do
+  notifies :make, 'zabbix_connect[default]', :delayed
+end
+### end included recipe

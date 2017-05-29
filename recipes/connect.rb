@@ -22,6 +22,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+#
+# !!! ATTENTION
+#
+# Don't forget to update the following files if you do changes here:
+#  - test/fixtures/cookbooks/zabbix_lwrp_test/recipes/zabbix*.rb
+#
+
 include_recipe 'build-essential'
 
 zabbix_connect 'default' do
