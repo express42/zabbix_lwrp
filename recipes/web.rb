@@ -2,7 +2,7 @@
 # Cookbook Name:: zabbix_lwrp
 # Recipe:: web
 #
-# Copyright (C) LLC 2015 Express 42
+# Copyright (C) LLC 2015-2017 Express 42
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -25,20 +25,25 @@
 include_recipe 'php-fpm'
 include_recipe 'chef_nginx::default'
 
+db_vendor = node['zabbix']['db_vendor']
+unless db_vendor == 'postgresql' || db_vendor == 'mysql'
+  raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
+end
 db_name = 'zabbix'
 
-db_host = node['zabbix']['server']['database']['configuration']['listen_addresses']
-db_port = node['zabbix']['server']['database']['configuration']['port']
+sql_attr = node['zabbix']['server']['database'][db_vendor]
+db_host = sql_attr['configuration']['listen_addresses']
+db_port = sql_attr['configuration']['port']
 
 # Get user and database information from data bag
 
-if node['zabbix']['server']['database']['databag'].nil? ||
-   node['zabbix']['server']['database']['databag'].empty? ||
-   data_bag(node['zabbix']['server']['database']['databag']).empty?
-  raise "You should specify databag name for zabbix db user in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should exist"
+if sql_attr['databag'].nil? ||
+   sql_attr['databag'].empty? ||
+   data_bag(sql_attr['databag']).empty?
+  raise "You should specify databag name for zabbix db user in sql_attr['databag'] attibute (now: #{sql_attr['databag']}) and databag should exist"
 end
 
-db_user_data = data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users']
+db_user_data = data_bag_item(sql_attr['databag'], 'users')['users']
 db_user = db_user_data.keys.first
 db_pass = db_user_data[db_user]['options']['password']
 
@@ -53,14 +58,27 @@ chef_nginx_site node['zabbix']['server']['web']['server_name'] do
 end
 
 packages = []
+
+if node['platform_family'] == 'debian' && node['platform_version'].to_f < 16.04
+  if db_vendor == 'postgresql'
+    packages << 'php5-pgsql'
+  elsif db_vendor == 'mysql'
+    packages << 'php5-mysql'
+  end
+elsif node['platform_family'] == 'rhel' || node['platform_version'].to_f >= 16.04
+  if db_vendor == 'postgresql'
+    packages << 'php-pgsql'
+  elsif db_vendor == 'mysql'
+    packages << 'php-mysql'
+  end
+end
+
 if node['platform_family'] == 'debian'
   if node['platform_version'].to_f < 16.04
     packages << 'apache2'
-    packages << 'php5-pgsql'
   else
     # ubuntu 16.04 and higher
     packages << 'apache2'
-    packages << 'php-pgsql'
     packages << 'php-mbstring'
     packages << 'php-bcmath'
     packages << 'php-gd'
@@ -68,7 +86,6 @@ if node['platform_family'] == 'debian'
   end
 elsif node['platform_family'] == 'rhel'
   packages << 'httpd'
-  packages << 'php-pgsql'
   packages << 'php-mbstring'
   packages << 'php-bcmath'
   packages << 'php-gd'
@@ -118,6 +135,7 @@ template '/etc/zabbix/web/zabbix.conf.php' do
   owner owner_name
   group owner_name
   variables(
+    db_vendor: db_vendor.upcase,
     db_host: db_host,
     db_name: db_name,
     db_port: db_port,

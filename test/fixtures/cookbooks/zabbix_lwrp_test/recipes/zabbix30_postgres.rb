@@ -43,17 +43,15 @@ when 'rhel'
 end
 include_recipe 'chef_nginx::default'
 
-node.default['zabbix']['server']['database']['version'] = '9.6'
-node.default['zabbix']['version'] = '2.4'
-node.default['zabbix']['api-version'] = '3.0.0'
-
-# Temporary use higher version of zabbixapi, for correct tests works
-# In gem zabbixapi==2.4.X uses old json gem (==1.6.1) but in chefdk uses newest version
+node.default['zabbix']['server']['database']['postgresql']['version'] = '9.6'
+node.default['zabbix']['version'] = '3.0'
 node.default['zabbix']['api-version'] = '3.0.0'
 
 include_recipe 'zabbix_lwrp::default'
 # Create LVM partition only if exists on node (for example on Amazon is not)
-include_recipe 'zabbix_lwrp::partition' if node['filesystem'].attribute?(node['zabbix']['server']['database']['lvm_volume'])
+if node['filesystem'].attribute?(node['zabbix']['server']['database']['postgresql']['lvm_volume'])
+  include_recipe 'zabbix_lwrp::partition'
+end
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'

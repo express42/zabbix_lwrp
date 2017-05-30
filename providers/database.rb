@@ -4,7 +4,7 @@
 #
 # Author:: LLC Express 42 (cookbooks@express42.com)
 #
-# Copyright (C) 2015 LLC Express 42
+# Copyright (C) 2015-2017 LLC Express 42
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -40,12 +40,14 @@ def change_admin_password(db_connect_string)
   rescue
     log('Using default password for user Admin ... (pass: zabbix)')
   end
+  db_vendor = new_resource.db_vendor
+  cmd_key = db_vendor == 'mysql' ? '-N -B -e' : '-c'
   admin_user_pass_md5 = Digest::MD5.hexdigest(admin_user_pass)
-  getdb_admin_user_pass_query = IO.popen("#{db_connect_string} -c \"select passwd from users where alias='Admin'\"")
+  getdb_admin_user_pass_query = IO.popen("#{db_connect_string} #{cmd_key} \"select passwd from users where alias='Admin'\"")
   getdb_admin_user_pass = getdb_admin_user_pass_query.readlines[0].to_s.gsub(/\s+/, '')
   getdb_admin_user_pass_query.close
   if getdb_admin_user_pass != admin_user_pass_md5
-    set_admin_pass_query = IO.popen("#{db_connect_string} -c \"update users set passwd='#{admin_user_pass_md5}' where alias = 'Admin';\"")
+    set_admin_pass_query = IO.popen("#{db_connect_string} #{cmd_key} \"update users set passwd='#{admin_user_pass_md5}' where alias = 'Admin';\"")
     set_admin_pass_query_res = set_admin_pass_query.readlines
     set_admin_pass_query.close
   end
@@ -53,19 +55,21 @@ def change_admin_password(db_connect_string)
 end
 
 def check_zabbix_db(db_connect_string)
+  db_vendor = new_resource.db_vendor
+  cmd_key = db_vendor == 'mysql' ? '-N -B -e' : '-c'
   check_db_flag = false
   # Check connect to database
-  log("Connect to postgres with connection string #{db_connect_string}")
-  psql_output = IO.popen("#{db_connect_string} -c 'SELECT 1'")
-  psql_output_res = psql_output.readlines
-  psql_output.close
+  log("Connect to database with connection string #{db_connect_string}")
+  sql_output = IO.popen("#{db_connect_string} #{cmd_key} 'SELECT 1'")
+  sql_output_res = sql_output.readlines
+  sql_output.close
 
-  if $CHILD_STATUS.exitstatus.nonzero? || psql_output_res[0].to_i != 1
+  if $CHILD_STATUS.exitstatus.nonzero? || sql_output_res[0].to_i != 1
     log("Couldn't connect to database, please check database server configuration")
     check_db_flag = false
   else
     # Check if database exist
-    check_db_exist = IO.popen("#{db_connect_string} -c \"select count(*) from users where alias='Admin'\"")
+    check_db_exist = IO.popen("#{db_connect_string} #{cmd_key} \"select count(*) from users where alias='Admin'\"")
     check_db_exist_res = check_db_exist.readlines
     check_db_exist.close
     check_db_flag = !($CHILD_STATUS.exitstatus == 0 && check_db_exist_res[0].to_i == 1)
@@ -74,30 +78,53 @@ def check_zabbix_db(db_connect_string)
 end
 
 action :create do
-  db_name = new_resource.db_name
-  db_user = new_resource.db_user
-  db_pass = new_resource.db_pass
-  db_host = new_resource.db_host
-  db_port = new_resource.db_port
+  db_vendor = new_resource.db_vendor
+  db_name   = new_resource.db_name
+  db_user   = new_resource.db_user
+  db_pass   = new_resource.db_pass
+  db_host   = new_resource.db_host
+  db_port   = new_resource.db_port
 
-  db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
+  if db_vendor == 'postgresql'
+    db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
 
-  db_command = ''
-  if node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'rhel'
-    db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | #{db_connect_string}"
+    if node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'rhel'
+      db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | #{db_connect_string}"
 
-  elsif node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'debian'
-    db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql/create.sql.gz | #{db_connect_string}"
+    elsif node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'debian'
+      db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql/create.sql.gz | #{db_connect_string}"
 
-  elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'rhel'
-    db_command = "#{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/schema.sql; \
-                           #{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/images.sql; \
-                           #{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/data.sql;"
+    elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'rhel'
+      db_command = "#{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/schema.sql; \
+                    #{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/images.sql; \
+                    #{db_connect_string} -f /usr/share/doc/zabbix-server-pgsql*/create/data.sql;"
 
-  elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'debian'
-    db_command = "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
-                           #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
-                           #{db_connect_string} -f /usr/share/zabbix-server-pgsql/data.sql;"
+    elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'debian'
+      db_command = "#{db_connect_string} -f /usr/share/zabbix-server-pgsql/schema.sql; \
+                    #{db_connect_string} -f /usr/share/zabbix-server-pgsql/images.sql; \
+                    #{db_connect_string} -f /usr/share/zabbix-server-pgsql/data.sql;"
+    end
+  elsif db_vendor == 'mysql'
+    db_connect_string = "mysql -h #{db_host} -P #{db_port} -u #{db_user} -p#{db_pass} -D #{db_name}"
+
+    if node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'rhel'
+      db_command = "zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | #{db_connect_string}"
+
+    elsif node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'debian'
+      db_command = "zcat /usr/share/doc/zabbix-server-mysql/create.sql.gz | #{db_connect_string}"
+
+    elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'rhel'
+      db_command = "cat /usr/share/doc/zabbix-server-mysql*/create/schema.sql | #{db_connect_string}; \
+                    cat /usr/share/doc/zabbix-server-mysql*/create/images.sql | #{db_connect_string}; \
+                    cat /usr/share/doc/zabbix-server-mysql*/create/data.sql | #{db_connect_string};"
+
+    elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'debian'
+      db_command = "#{db_connect_string} < /usr/share/zabbix-server-mysql/schema.sql; \
+                    #{db_connect_string} < /usr/share/zabbix-server-mysql/images.sql; \
+                    #{db_connect_string} < /usr/share/zabbix-server-mysql/data.sql;"
+    end
+  else
+    raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
   end
 
   execute 'Provisioning zabbix database' do

@@ -16,7 +16,6 @@ transport:
   connection_timeout: 10
   connection_retries: 5
 
-
 provisioner:
   name: chef_zero
   data_bags_path: test/fixtures/data_bags
@@ -38,16 +37,16 @@ platforms:
       image_id: ami-7cbc6e13
 
 suites:
-  - name: zabbix24
+  - name: zabbix24_postgres
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix24]
+      - recipe[zabbix_lwrp_test::zabbix24_postgres]
     excludes:
       - ubuntu-16.04
-  - name: zabbix30
+  - name: zabbix30_postgres
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix30]
-  - name: zabbix32
+      - recipe[zabbix_lwrp_test::zabbix30_postgres]
+  - name: zabbix32_postgres
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix32]
+      - recipe[zabbix_lwrp_test::zabbix32_postgres]
     excludes:
       - ubuntu-14.04

@@ -10,19 +10,22 @@ provisioner:
 platforms:
   - name: ubuntu-14.04
     driver:
-      box: express42/ubuntu-14.04
+      box: bento/ubuntu-14.04
   - name: ubuntu-16.04
     driver:
-      box: express42/ubuntu-16.04
-  - name: windows
+      box: bento/ubuntu-16.04
+  - name: centos-7.3
+    driver:
+      box: bento/centos-7.3
+  - name: centos-6.7
+    driver:
+      box: bento/centos-6.7
+  - name: windows-2012r2
     driver:
       provider: virtualbox
       box:  opentable/win-2012r2-standard-amd64-nocm
       network:
         - ["private_network", {ip: "192.168.33.33"}]
-  - name: centos-7.3
-    driver:
-      box: bento/centos-7.3
 
 suites:
   - name: zabbix-agent
@@ -32,23 +35,31 @@ suites:
       - recipe[chef-client::delete_validation]
       - recipe[zabbix_lwrp::repository]
       - recipe[zabbix_lwrp::agent_win]
+  - name: zabbix24_postgres
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix24_postgres]
     excludes:
+      - windows-2012r2
+      - ubuntu-16.04
+  - name: zabbix30_postgres
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_postgres]
+    excludes:
+      - windows-2012r2
+  - name: zabbix30_mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_mysql]
+    excludes:
+      - windows-2012r2
+  - name: zabbix24_mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix24_mysql]
+    excludes:
+      - windows-2012r2
+      - ubuntu-16.04
+  - name: zabbix32_postgres
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32_postgres]
+    excludes:
+      - windows
       - ubuntu-14.04
-      - ubuntu-16.04
-      - centos-7.3
-  - name: zabbix24
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix24]
-    excludes:
-      - windows
-      - ubuntu-16.04
-  - name: zabbix30
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix30]
-    excludes:
-      - windows
-  - name: zabbix32
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix32]
-    excludes:
-      - windows
