@@ -54,9 +54,9 @@ include_recipe 'postgresql::ruby'
 
 if psql_attr['databag'].nil? ||
    psql_attr['databag'].empty? ||
-   !data_bag(psql_attr['databag']).include?('postgresql')
+   !data_bag(psql_attr['databag']).include?('databases')
 
-  raise "You should specify databag name in node['zabbix']['server']['database']['postgresql']['databag'] attibute (now: #{psql_attr['databag']}) and databag should contains key 'postgresql'"
+  raise "You should specify databag name in node['zabbix']['server']['database']['databases']['databag'] attibute (now: #{psql_attr['databag']}) and databag should contains key 'databases'"
 end
 
 node.default['postgresql']['config'] = psql_attr['configuration']
@@ -82,7 +82,7 @@ data_bag_item(psql_attr['databag'], 'users')['users'].each_pair do |name, option
   end
 end
 
-data_bag_item(psql_attr['databag'], 'postgresql')['databases'].each_pair do |name, options|
+data_bag_item(psql_attr['databag'], 'databases')['databases'].each_pair do |name, options|
   postgresql_database name do
     connection postgresql_connection_info
     owner options['options']['owner']

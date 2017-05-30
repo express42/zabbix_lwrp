@@ -1,5 +1,5 @@
 {
-  "id": "postgresql",
+  "id": "databases",
   "databases": {
     "zabbix": {
       "options": {
