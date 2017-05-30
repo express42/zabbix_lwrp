@@ -22,40 +22,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+include_dir = node['zabbix']['agent']['include']
+scripts_dir = node['zabbix']['agent']['scripts']
+
 include_recipe 'chocolatey'
-
-windows_include = node['zabbix']['agent']['windows']['include']
-windows_scripts = node['zabbix']['agent']['windows']['scripts']
-windows_templates = node['zabbix']['agent']['windows']['templates']
-
-[windows_include, windows_scripts, windows_templates].each do |dir|
-  directory dir do
-    recursive true
-  end
-end
 
 chocolatey 'zabbix-agent' do
   version node['zabbix']['agent']['windows']['version']
   source node['zabbix']['agent']['windows']['chocolatey']['repo']
 end
 
-template "#{node['zabbix']['agent']['windows']['path']}\\zabbix_agentd.conf" do
-  source 'zabbix_agentd.conf.erb'
-  variables(
-    server:                 node['zabbix']['agent']['serverhost'],
-    loglevel:               node['zabbix']['agent']['loglevel'],
-    include:                node['zabbix']['agent']['windows']['include'],
-    timeout:                node['zabbix']['agent']['timeout'],
-    enable_remote_commands: node['zabbix']['agent']['enable_remote_commands'],
-    listen_ip:              node['zabbix']['agent']['listen_ip'],
-    listen_port:            node['zabbix']['agent']['listen_port'],
-    user_params:            node['zabbix']['agent']['user_params'],
-    logpath:                node['zabbix']['agent']['windows']['log']
-  )
-  notifies :restart, 'service[Zabbix Agent]', :delayed
+[include_dir, scripts_dir].each do |dir|
+  directory dir do
+    recursive true
+  end
 end
+
+configuration = node['zabbix']['agent']['config'].to_hash
 
 service 'Zabbix Agent' do
   supports restart: true
   action [:enable, :start]
+end
+
+template "#{node['zabbix']['agent']['windows']['path']}\\zabbix_agentd.conf" do
+  source 'zabbix_agentd.conf.erb'
+  variables(configuration)
+  notifies :restart, 'service[Zabbix Agent]', :delayed
 end
