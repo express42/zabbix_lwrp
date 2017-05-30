@@ -17,7 +17,6 @@ depends          'database'
 depends          'lvm'
 depends          'php-fpm'
 depends          'postgresql'
-depends          'windows_firewall'
 
 recipe           'zabbix_lwrp::agent', 'Installs and configures Zabbix agent.'
 recipe           'zabbix_lwrp::connect', 'Connects to Zabbix API to sync configuration.'
