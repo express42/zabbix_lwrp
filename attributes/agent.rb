@@ -12,9 +12,9 @@ default['zabbix']['agent']['scripts'] = case node['platform']
                                         end
 default['zabbix']['agent']['include'] = case node['platform']
                                         when 'windows'
-                                          "#{node['zabbix']['agent']['windows']['path']}\\include"
+                                          "#{node['zabbix']['agent']['windows']['path']}\\etc"
                                         else
-                                          '/opt/zabbix/include'
+                                          '/opt/zabbix/etc'
                                         end
 
 default['zabbix']['agent']['config']['listen_ip'] = '0.0.0.0'
