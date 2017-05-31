@@ -24,6 +24,9 @@ platforms:
     driver:
       box: bento/centos-7.3
 
+verifier:
+  name: inspec
+
 suites:
   - name: zabbix-agent
     run_list:
@@ -36,19 +39,38 @@ suites:
       - ubuntu-14.04
       - ubuntu-16.04
       - centos-7.3
+
   - name: zabbix24
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24]
     excludes:
       - windows
       - ubuntu-16.04
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_lwrp_test
+      attributes:
+        with_lvm: true
+
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]
     excludes:
       - windows
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_lwrp_test
+      attributes:
+        with_lvm: true
+
   - name: zabbix32
     run_list:
       - recipe[zabbix_lwrp_test::zabbix32]
     excludes:
       - windows
+      - ubuntu-14.04
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_lwrp_test
+      attributes:
+        with_lvm: true
