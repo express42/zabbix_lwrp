@@ -27,7 +27,7 @@ zabbix_host node['fqdn'] do
   host_group    node['zabbix']['host']['group']
   use_ip        node['zabbix']['host']['agent']['use_ip']
   dns           node['fqdn']
-  port          node['zabbix']['agent']['listen_port']
+  port          node['zabbix']['agent']['config']['listen_port']
   ip_address    node['ipaddress']
 
   ipmi_enabled  node['zabbix']['host']['ipmi']['enabled']
