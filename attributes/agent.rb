@@ -19,7 +19,8 @@ default['zabbix']['agent']['include'] = case node['platform']
 
 default['zabbix']['agent']['config']['listen_ip'] = '0.0.0.0'
 default['zabbix']['agent']['config']['listen_port'] = 10050
-default['zabbix']['agent']['config']['serverhost'] = node['ipaddress']
+default['zabbix']['agent']['config']['serverhost'] = 'localhost'
+default['zabbix']['agent']['config']['hostname'] = node['fqdn']
 default['zabbix']['agent']['config']['pidfile'] = '/var/run/zabbix/zabbix_agentd.pid'
 
 default['zabbix']['agent']['config']['logs'] = {
