@@ -1,4 +1,7 @@
 default['zabbix']['host']['group'] = 'Hosts'
+default['zabbix']['host']['name'] = node['fqdn']
+default['zabbix']['host']['dns'] = node['fqdn']
+default['zabbix']['host']['ipaddress'] = node['ipaddress']
 default['zabbix']['host']['ipmi']['enabled'] = false
 default['zabbix']['host']['ipmi']['port'] = 623
 default['zabbix']['host']['ipmi']['use_ip'] = true
