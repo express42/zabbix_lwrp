@@ -39,7 +39,8 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 * `node['zabbix']['agent']['include']` -  Defaults to `case node['platform']`.
 * `node['zabbix']['agent']['config']['listen_ip']` -  Defaults to `0.0.0.0`.
 * `node['zabbix']['agent']['config']['listen_port']` -  Defaults to `10050`.
-* `node['zabbix']['agent']['config']['serverhost']` -  Defaults to `node['ipaddress']`.
+* `node['zabbix']['agent']['config']['serverhost']` -  Defaults to `localhost`.
+* `node['zabbix']['agent']['config']['hostname']` -  Defaults to `node['fqdn']`.
 * `node['zabbix']['agent']['config']['pidfile']` -  Defaults to `/var/run/zabbix/zabbix_agentd.pid`.
 * `node['zabbix']['agent']['config']['logs']` -  Defaults to `{ ... }`.
 * `node['zabbix']['agent']['config']['global']` -  Defaults to `{ ... }`.
@@ -74,6 +75,9 @@ Installs and configures Zabbix agent and server with PostgreSQL and Nginx. Provi
 
 ## Host
 * `node['zabbix']['host']['group']` -  Defaults to `Hosts`.
+* `node['zabbix']['host']['name']` -  Defaults to `node['fqdn']`.
+* `node['zabbix']['host']['dns']` -  Defaults to `node['fqdn']`.
+* `node['zabbix']['host']['ipaddress']` -  Defaults to `node['ipaddress']`.
 * `node['zabbix']['host']['ipmi']['enabled']` -  Defaults to `false`.
 * `node['zabbix']['host']['ipmi']['port']` -  Defaults to `623`.
 * `node['zabbix']['host']['ipmi']['use_ip']` -  Defaults to `true`.
