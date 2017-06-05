@@ -10,6 +10,8 @@ group :lint do
 end
 
 group :kitchen_common do
+  gem 'inspec'
+  gem 'kitchen-inspec'
   gem 'test-kitchen'
 end
 
