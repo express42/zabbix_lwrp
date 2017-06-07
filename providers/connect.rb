@@ -303,10 +303,10 @@ def create_screens
     host_id = @@zbx.query(
       method: 'host.get',
       params: {
-        output: 'extend',
         filter: {
-          host: host['fqdn'],
+          host: fqdn,
         },
+        selectInterfaces: 'extend',
       }
     ).first['hostid']
 
