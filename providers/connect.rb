@@ -299,8 +299,16 @@ end
 
 def create_screens
   get_hosts do |host|
-    _, values = host['zabbix']['hosts'].to_a.first
-    host_id = values['host_id']
+    fqdn, values = host['zabbix']['hosts'].to_a.first
+    host_id = @@zbx.query(
+      method: 'host.get',
+      params: {
+        output: 'extend',
+        filter: {
+          host: host['fqdn'],
+        },
+      }
+    ).first['hostid']
 
     (values['screens'] || []).each do |screen_name, screen_data|
       screen = @@zbx.query(
