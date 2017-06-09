@@ -87,6 +87,12 @@ zabbix_database db_name do
   action :create
 end
 
+directory node['zabbix']['server']['templates'] do
+  recursive true
+  owner 'root'
+  group 'root'
+end
+
 service node['zabbix']['server']['service'] do
   supports restart: true, status: true, reload: true
   action [:enable]

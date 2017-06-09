@@ -54,9 +54,9 @@ SenderFrequency=300
 <% end %>
 
 <% if node['zabbix']['java_gateway']['enabled'] %>
-  <% @java_gateway.each_pair do |parameter, value| %>
-  <%= parameter %>=<%= value %>
-  <% end %>
+<% @java_gateway.each_pair do |parameter, value| %>
+<%= parameter %>=<%= value %>
+<% end %>
 <% end %>
 
 

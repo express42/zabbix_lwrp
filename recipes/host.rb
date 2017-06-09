@@ -22,13 +22,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-zabbix_host node['fqdn'] do
+zabbix_host node['zabbix']['host']['name'] do
   action :create
   host_group    node['zabbix']['host']['group']
   use_ip        node['zabbix']['host']['agent']['use_ip']
-  dns           node['fqdn']
-  port          node['zabbix']['agent']['listen_port']
-  ip_address    node['ipaddress']
+  dns           node['zabbix']['host']['dns']
+  port          node['zabbix']['agent']['config']['listen_port']
+  ip_address    node['zabbix']['host']['ipaddress']
 
   ipmi_enabled  node['zabbix']['host']['ipmi']['enabled']
   ipmi_port     node['zabbix']['host']['ipmi']['port']

@@ -27,6 +27,9 @@ platforms:
       network:
         - ["private_network", {ip: "192.168.33.33"}]
 
+verifier:
+  name: inspec
+
 suites:
   - name: zabbix-agent
     run_list:
@@ -35,31 +38,51 @@ suites:
       - recipe[chef-client::delete_validation]
       - recipe[zabbix_lwrp::repository]
       - recipe[zabbix_lwrp::agent_win]
+
   - name: zabbix24_postgres
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24_postgres]
     excludes:
       - windows-2012r2
       - ubuntu-16.04
-  - name: zabbix30_postgres
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix30_postgres]
-    excludes:
-      - windows-2012r2
-  - name: zabbix30_mysql
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix30_mysql]
-    excludes:
-      - windows-2012r2
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_postgres
+
   - name: zabbix24_mysql
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24_mysql]
     excludes:
       - windows-2012r2
       - ubuntu-16.04
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_mysql
+
+  - name: zabbix30_postgres
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_postgres]
+    excludes:
+      - windows-2012r2
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_postgres
+
+  - name: zabbix30_mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_mysql]
+    excludes:
+      - windows-2012r2
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_mysql
+
   - name: zabbix32_postgres
     run_list:
       - recipe[zabbix_lwrp_test::zabbix32_postgres]
     excludes:
-      - windows
+      - windows-2012r2
       - ubuntu-14.04
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_postgres

@@ -2,6 +2,16 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.3.0
+* Refactor agent configuration
+* Switch to InSpec tests
+
+## 1.3.0
+* Refactor agent configuration
+* Add graph_type to graph resource
+* Remove windows firewall rules
+* Fix tests
+
 ## 1.2.6
 * Fix creating hosts
 * Rename :modem attribute to :gsm_modem

@@ -8,12 +8,7 @@ template '/etc/zabbix/zabbix_java_gateway.conf' do
   owner 'root'
   group 'root'
   mode '0644'
-  variables(
-    timeout:                node['zabbix']['java_gateway']['timeout'],
-    listen_ip:              node['zabbix']['java_gateway']['listen_ip'],
-    listen_port:            node['zabbix']['java_gateway']['listen_port'],
-    pollers:                node['zabbix']['java_gateway']['pollers']
-  )
+  variables(node['zabbix']['java_gateway'].to_hash)
   notifies :restart, 'service[zabbix-java-gateway]', :delayed
 end
 
