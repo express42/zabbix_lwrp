@@ -5,8 +5,12 @@
 
 # agent configuration options
 
+<% unless @listen_ip.to_s.empty? %>
 ListenIP=<%= @listen_ip %>
+<% end %>
+<% unless @listen_port.to_s.empty? %>
 ListenPort=<%= @listen_port %>
+<% end %>
 <% if node['platform'] != 'windows' %>
 PidFile=<%= @pidfile %>
 <% end %>
