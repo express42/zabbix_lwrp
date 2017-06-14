@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of zabbix_lwrp.
 
+## 1.3.2
+* Allow to use empty values of listen_port and listen_ip attributes of zabbix_agent  
+
 ## 1.3.0
 * Refactor agent configuration
 * Switch to InSpec tests
