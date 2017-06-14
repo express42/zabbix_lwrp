@@ -27,7 +27,7 @@ zabbix_host node['zabbix']['host']['name'] do
   host_group    node['zabbix']['host']['group']
   use_ip        node['zabbix']['host']['agent']['use_ip']
   dns           node['zabbix']['host']['dns']
-  port          node['zabbix']['agent']['config']['listen_port']
+  port          node['zabbix']['agent']['config']['listen_port'] unless node['zabbix']['agent']['config']['listen_port'].to_s.empty?
   ip_address    node['zabbix']['host']['ipaddress']
 
   ipmi_enabled  node['zabbix']['host']['ipmi']['enabled']
