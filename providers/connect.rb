@@ -93,7 +93,7 @@ def create_hosts
       {
         type: 1,
         main: 1,
-        ip: values['ip_address'],
+        ip: values['ip_address'] || '',
         dns: values['dns'] || '',
         port: values['port'],
         useip: values['use_ip'] ? 1 : 0,
@@ -104,7 +104,7 @@ def create_hosts
       interfaces.push(
         type: 2,
         main: 1,
-        ip: values['ip_address'],
+        ip: values['ip_address'] || '',
         dns: values['dns'] || '',
         port: values['snmp_port'],
         useip: values['snmp_use_ip'] ? 1 : 0)
@@ -114,7 +114,7 @@ def create_hosts
       interfaces.push(
         type: 3,
         main: 1,
-        ip: values['ip_address'],
+        ip: values['ip_address'] || '',
         dns: values['dns'] || '',
         port: values['ipmi_port'],
         useip: values['ipmi_use_ip'] ? 1 : 0)
@@ -124,7 +124,7 @@ def create_hosts
       interfaces.push(
         type: 4,
         main: 1,
-        ip: values['ip_address'],
+        ip: values['ip_address'] || '',
         dns: values['dns'] || '',
         port: values['jmx_port'],
         useip: values['jmx_use_ip'] ? 1 : 0)
