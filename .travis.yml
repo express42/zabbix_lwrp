@@ -1,18 +1,22 @@
+services:
+  - docker
+
 language: ruby
 sudo: false
 cache: bundler
 rvm:
 - 2.3.1
 bundler_args: "--without kitchen_vagrant"
-before_install:
-- openssl aes-256-cbc -K $encrypted_2be78cfba7d5_key -iv $encrypted_2be78cfba7d5_iv
-  -in .travis/secret_keys.tar.enc -out .travis/secret_keys.tar -d
-- tar xf .travis/secret_keys.tar -C .travis
+
 script:
 - bundle exec cookstyle -v
 - bundle exec cookstyle
 - bundle exec foodcritic --contex --epic-fail any --tags ~chef13 .
-- bundle exec kitchen test --concurrency=10 --destroy=always
+- bundle exec kitchen test --concurrency=2 --destroy=always
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_2be78cfba7d5_key -iv $encrypted_2be78cfba7d5_iv
+  -in .travis/secret_keys.tar.enc -out .travis/secret_keys.tar -d
+- tar xf .travis/secret_keys.tar -C .travis
 deploy:
   edge: true
   provider: chef-supermarket
@@ -27,6 +31,6 @@ notifications:
     secure: UBDIgFYWZeXJWZtDQZ6sqvRZgXLp9jrDP1wjYetmdO37OpZy+OZZzE1YoD+K6w/jrtkrVGc4qI7Me2mhAxqVcHq8qRr5Lnu4qIit90/n/yr1nmC9y+WyVpHxJPiBbFUJkNtBSnSFVYalbaUi+keq9kKM6BuQEvR55Qsav0Kre+nkOfde7sdCFCq8MhMjYghsOvq1RdpwPIw45U6pOc96bBHnAwEIjlLk4ezXzP+Qf2kSMnw7TtT03oimOdlmFIy50XzJvy07m3HvfyKe4tp5k5YKvoo4IQ4cYVA0tXHTt4loPOviof6/20wz3P8SVoHl4A9bN6vPu1cz3lO727CJOdJ30MGSCXfCIIQXu/bCCVDarBGWUu6z5gWavM/fN2hInfXUAT6lS1Lq2ILTr3dB9oCnu/t9HvHAz7IUfqTDlTQP/GxNkDnxXuDWn8nmpNUUlw1Fmq2VHdrRxgrCSHr6/yS2Zdkwa0H5cA9+/DYBih7T/Cm8d0luR6gR9ywMFSWkJJVEw2LLKqHhXME8rYnwNkc4rFde8yVT7WG2GqKeYZGEK1uxnm5HDFf+jBgCorbExyJTpxIhJc+N1rlnGr1wpS8qvauU4tMP//jp/cZagaMAxCTDezlw3vEeb7Dcz7Mf7/+mmtK9GXyDyf6CtO5uL7kaUbq0ZZ0zkZS6Tik0ePQ=
 env:
   global:
-  - KITCHEN_YAML=.kitchen.cloud.yml
+  - KITCHEN_YAML=.kitchen.docker.yml
   - secure: X4tV06t8fZNBcXuLvnkqy5RAFkU2TwFK4CrRn3JOLQOup5DnhGsE51OpfJ3cYGsflwi/ZUkWBxnWCLeKyeXp/56FOuAtmK7tL6pJWZ2qp2x7wpqVUdCYmCoPn8SehMs5yNWdPdrowVbZpTihJD21FqloNQ2wlRmqPyI5m7oMGhCDoh3F4KXPaoheZmTCkAKOHQiJKKa1feBSP0sYBb5Pp7cOKqlC5DMJ71i9rsj231Oht7NY8rXNEv7m04DKTnKS9UPAIejWbyngcMux3rmoT8eLsE3i0AOg6QutJaAV+zm5OJJzGbWFV5yjcfqp2JWTUnGTVJD8MWbs2XGS5lDSSCNS2J/+jCC+IYpGi1KN04cr1WjIgWmqC30l3viQuoC584xGWK/grkdtYMXebTEnb3fev4t3Mjf0nwTpFo7dNFFajZhSGPgQy7YsRyXhHQD+BXe4GfpvmX9z6D+LkQdwTF+04ufdHl4UFOnZ33/Jd08eZ9XolTUikjxkrySp2xscOQIP7S6OPAGWOadIxi5j46K7eQ/mWjt0W+NTWSJBfnelrZD3Pt7iSylfQTJAtuaQVSWcOWyy2I1ARXXfn3yGqpbSDIyrO0ioDLnXXMJcsn3PkpD2Qez+DU/tcCUIuhWM9iyKVDGsubtR2vLfpwNuhFhl2rGQDLUMJE3+ktrTvqc=
-  - secure: m6zWL2NZT0+Im7UdfhrfQIHxCsJ4qcZCIDElaUL8PeRgvJl8ZxdyK1aNkv/jSfyFOcsou7GHlIWP7CNDHL6OQZ7fGppV6x6AZQS8TNuMdIjJDjmdH1sTCP7NWWNuD5tjGNT7AM1CbJzpG8Z5iT+6GKeAMWbYV8SLnZg0ZdWqVf7PNaQfjJ2CdBapg3KZWw+N2N21P/bGRat3VD8LUK2EM4PzfLVr1sDXPH43gejp7rnSqqxBy9T0NBJOD+Nq1/K4S8khlXC1RZMkXXrM/1wCN87ytt7MtA1GPoZc4fXlhJVFGI1ghYyHjdUOKLzjkaRrFl232l35y/2Ue1rFkFjb3DGO/flF3HIANhRSJlX+smEbS7R3In4uecgDmGee8sHH0afSXz0gkuENPc3zm4rOHaSpSNACNg7KElRGewhICcPrb2CKZjt6Bn9aI9dHaSQzPK0vm3ZBAd/6+jNJ7vAROfnk5EmGEdmcYM036FRv5RL9SSw9GdSZNcONxb2uAEtw7YxQWP/xunS5JuVsi00OSyMfL5He+GV9LlwJJMnqpHswYelqldYol7+uS7v1of600SfbcYj3Lc5ipmsW5VgI0j9MEjX3CFsJYS8EKeCpPju3EKB0qzhJpGBXY2Rw6LG6OpSphf6pODZ/JzyK0GYYRNBZt9oUx+4BWNFAE+yjErM=
+  - secure:       m6zWL2NZT0+Im7UdfhrfQIHxCsJ4qcZCIDElaUL8PeRgvJl8ZxdyK1aNkv/jSfyFOcsou7GHlIWP7CNDHL6OQZ7fGppV6x6AZQS8TNuMdIjJDjmdH1sTCP7NWWNuD5tjGNT7AM1CbJzpG8Z5iT+6GKeAMWbYV8SLnZg0ZdWqVf7PNaQfjJ2CdBapg3KZWw+N2N21P/bGRat3VD8LUK2EM4PzfLVr1sDXPH43gejp7rnSqqxBy9T0NBJOD+Nq1/K4S8khlXC1RZMkXXrM/1wCN87ytt7MtA1GPoZc4fXlhJVFGI1ghYyHjdUOKLzjkaRrFl232l35y/2Ue1rFkFjb3DGO/flF3HIANhRSJlX+smEbS7R3In4uecgDmGee8sHH0afSXz0gkuENPc3zm4rOHaSpSNACNg7KElRGewhICcPrb2CKZjt6Bn9aI9dHaSQzPK0vm3ZBAd/6+jNJ7vAROfnk5EmGEdmcYM036FRv5RL9SSw9GdSZNcONxb2uAEtw7YxQWP/xunS5JuVsi00OSyMfL5He+GV9LlwJJMnqpHswYelqldYol7+uS7v1of600SfbcYj3Lc5ipmsW5VgI0j9MEjX3CFsJYS8EKeCpPju3EKB0qzhJpGBXY2Rw6LG6OpSphf6pODZ/JzyK0GYYRNBZt9oUx+4BWNFAE+yjErM=

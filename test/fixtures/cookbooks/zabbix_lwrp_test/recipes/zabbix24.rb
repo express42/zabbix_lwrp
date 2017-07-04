@@ -46,6 +46,8 @@ include_recipe 'chef_nginx::default'
 node.default['zabbix']['server']['database']['version'] = '9.6'
 node.default['zabbix']['version'] = '2.4'
 node.default['zabbix']['api-version'] = '3.0.0'
+node.default['zabbix']['host']['agent']['use_ip'] = false if node['zabbix']['host']['ipaddress'].to_s.empty?
+node.default['zabbix']['host']['agent']['ipaddress'] = '' if node['zabbix']['host']['ipaddress'].to_s.empty?
 
 # Temporary use higher version of zabbixapi, for correct tests works
 # In gem zabbixapi==2.4.X uses old json gem (==1.6.1) but in chefdk uses newest version
@@ -57,6 +59,18 @@ include_recipe 'zabbix_lwrp::partition' if node['filesystem'].attribute?(node['z
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'
+
+# Restart php-fpm service by sysV init system because upstart not working in docker
+if node['platform_family'] == 'debian'
+  if node['platform_version'].to_f.between?(13.04, 14.05)
+    service 'php-fpm' do
+      service_name 'php5-fpm'
+      provider Chef::Provider::Service::Init::Debian
+      action :restart
+    end
+  end
+end
+
 include_recipe 'zabbix_lwrp::host'
 
 zabbix_application 'Test application' do

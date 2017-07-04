@@ -1,0 +1,55 @@
+---
+driver:
+  name: docker
+  use_sudo: false
+
+driver_config:
+  run_options: '--cap-add=SYS_ADMIN -e container=docker --security-opt  seccomp=unconfined --stop-signal=SIGRTMIN+3 --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+
+provisioner:
+  name: chef_zero
+  data_bags_path: test/fixtures/data_bags
+  require_chef_omnibus: 12
+  # log_level: debug
+
+platforms:
+  - name: ubuntu-14.04
+    driver_config:
+      image: chromko/ubuntu:14.04-travis
+
+  - name: ubuntu-16.04
+    driver_config:
+      image: chromko/ubuntu:16.04-travis
+      run_command: '/sbin/init'
+
+  - name: centos-7.3
+    driver_config:
+      image: chromko/centos:7-travis
+      run_command: '/usr/sbin/init'
+
+verifier:
+  name: inspec
+
+suites:
+  - name: zabbix24
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix24]
+    excludes:
+      - ubuntu-16.04
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_lwrp_test
+
+  - name: zabbix30
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30]
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_lwrp_test
+
+  - name: zabbix32
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32]
+    verifier:
+      inspec_tests:
+        - path: test/integration/zabbix_lwrp_test
