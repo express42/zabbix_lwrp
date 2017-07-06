@@ -46,6 +46,8 @@ include_recipe 'chef_nginx::default'
 node.default['zabbix']['server']['database']['version'] = '9.6'
 node.default['zabbix']['version'] = '3.2'
 node.default['zabbix']['api-version'] = '3.1.0'
+node.default['zabbix']['host']['agent']['use_ip'] = false if node['zabbix']['host']['ipaddress'].to_s.empty?
+node.default['zabbix']['host']['agent']['ipaddress'] = '' if node['zabbix']['host']['ipaddress'].to_s.empty?
 
 include_recipe 'zabbix_lwrp::default'
 # Create LVM partition only if exists on node (for example on Amazon is not)
@@ -53,6 +55,7 @@ include_recipe 'zabbix_lwrp::partition' if node['filesystem'].attribute?(node['z
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'
+
 include_recipe 'zabbix_lwrp::host'
 
 zabbix_application 'Test application' do
