@@ -17,15 +17,15 @@ env:
   - secure:       m6zWL2NZT0+Im7UdfhrfQIHxCsJ4qcZCIDElaUL8PeRgvJl8ZxdyK1aNkv/jSfyFOcsou7GHlIWP7CNDHL6OQZ7fGppV6x6AZQS8TNuMdIjJDjmdH1sTCP7NWWNuD5tjGNT7AM1CbJzpG8Z5iT+6GKeAMWbYV8SLnZg0ZdWqVf7PNaQfjJ2CdBapg3KZWw+N2N21P/bGRat3VD8LUK2EM4PzfLVr1sDXPH43gejp7rnSqqxBy9T0NBJOD+Nq1/K4S8khlXC1RZMkXXrM/1wCN87ytt7MtA1GPoZc4fXlhJVFGI1ghYyHjdUOKLzjkaRrFl232l35y/2Ue1rFkFjb3DGO/flF3HIANhRSJlX+smEbS7R3In4uecgDmGee8sHH0afSXz0gkuENPc3zm4rOHaSpSNACNg7KElRGewhICcPrb2CKZjt6Bn9aI9dHaSQzPK0vm3ZBAd/6+jNJ7vAROfnk5EmGEdmcYM036FRv5RL9SSw9GdSZNcONxb2uAEtw7YxQWP/xunS5JuVsi00OSyMfL5He+GV9LlwJJMnqpHswYelqldYol7+uS7v1of600SfbcYj3Lc5ipmsW5VgI0j9MEjX3CFsJYS8EKeCpPju3EKB0qzhJpGBXY2Rw6LG6OpSphf6pODZ/JzyK0GYYRNBZt9oUx+4BWNFAE+yjErM=
 
   matrix:
-  - OPERATION_SYSTEM=ubuntu-1404
-  - OPERATION_SYSTEM=ubuntu-1604
-  - OPERATION_SYSTEM=centos-7
+  - OPERATING_SYSTEM=ubuntu-1404
+  - OPERATING_SYSTEM=ubuntu-1604
+  - OPERATING_SYSTEM=centos-7
 
 script:
 - bundle exec cookstyle -v
 - bundle exec cookstyle
 - bundle exec foodcritic --contex  --epic-fail any --tags ~chef13 .
-- bundle exec kitchen test ${OPERATION_SYSTEM} --destroy=always
+- bundle exec kitchen test ${OPERATING_SYSTEM} --destroy=always
 
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_2be78cfba7d5_key -iv $encrypted_2be78cfba7d5_iv
