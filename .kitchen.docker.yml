@@ -47,6 +47,8 @@ platforms:
 
 verifier:
   name: inspec
+  inspec_tests:
+    - path: test/integration/zabbix_lwrp_test
 
 suites:
   - name: zabbix24
@@ -54,20 +56,11 @@ suites:
       - recipe[zabbix_lwrp_test::zabbix24]
     excludes:
       - ubuntu-16.04
-    verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_lwrp_test
 
   - name: zabbix30
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30]
-    verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_lwrp_test
 
   - name: zabbix32
     run_list:
       - recipe[zabbix_lwrp_test::zabbix32]
-    verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_lwrp_test
