@@ -2,7 +2,7 @@
 # Cookbook Name:: zabbix_lwrp
 # Recipe:: server
 #
-# Copyright (C) LLC 2015 Express 42
+# Copyright (C) LLC 2015-2017 Express 42
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -22,25 +22,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+db_vendor = node['zabbix']['db_vendor']
+unless db_vendor == 'postgresql' || db_vendor == 'mysql'
+  raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
+end
+
 def configuration_hacks(configuration, server_version)
   configuration['cache'].delete('HistoryTextCacheSize') if server_version.to_f >= 3.0
 end
 
+sql_attr = node['zabbix']['server']['database'][db_vendor]
 db_name = 'zabbix'
 
-db_host = node['zabbix']['server']['database']['configuration']['listen_addresses']
-db_port = node['zabbix']['server']['database']['configuration']['port']
+db_host = sql_attr['configuration']['listen_addresses']
+db_port = sql_attr['configuration']['port']
 
 # Get user and database information from data bag
 
-if node['zabbix']['server']['database']['databag'].nil? ||
-   node['zabbix']['server']['database']['databag'].empty? ||
-   data_bag(node['zabbix']['server']['database']['databag']).empty?
-  raise "You should specify databag name for zabbix db user in node['zabbix']['server']['database']['databag'] attibute (now: #{node['zabbix']['server']['database']['databag']}) and databag should exist"
+if sql_attr['databag'].nil? ||
+   sql_attr['databag'].empty? ||
+   data_bag(sql_attr['databag']).empty?
+  raise "You should specify databag name for zabbix db user in node['zabbix']['server']['database'][db_vendor]['databag'] attibute (now: #{sql_attr['databag']}) and databag should exist"
 end
 
-db_user_data = data_bag_item(node['zabbix']['server']['database']['databag'], 'users')['users']
-db_user = db_user_data.keys.first
+db_user_data = data_bag_item(sql_attr['databag'], 'users')['users']
+db_user = db_vendor == 'postgresql' ? db_user_data.keys.first : 'zabbix'
 db_pass = db_user_data[db_user]['options']['password']
 
 # Generate DB config
@@ -59,7 +65,7 @@ db_config = {
 
 case node['platform_family']
 when 'debian'
-  package 'zabbix-server-pgsql' do
+  package db_vendor == 'postgresql' ? 'zabbix-server-pgsql' : 'zabbix-server-mysql' do
     response_file 'zabbix-server-withoutdb.seed'
     action [:install, :reconfig]
   end
@@ -67,16 +73,17 @@ when 'debian'
   package 'snmp-mibs-downloader'
 
 when 'rhel'
-  package 'zabbix-server-pgsql' do
+  package db_vendor == 'postgresql' ? 'zabbix-server-pgsql' : 'zabbix-server-mysql' do
     action [:install, :reconfig]
   end
 end
 
 zabbix_database db_name do
-  db_user db_user
-  db_pass db_pass
-  db_host db_host
-  db_port db_port
+  db_vendor db_vendor
+  db_user   db_user
+  db_pass   db_pass
+  db_host   db_host
+  db_port   db_port
   action :create
 end
 

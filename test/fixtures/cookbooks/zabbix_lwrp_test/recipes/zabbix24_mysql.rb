@@ -1,5 +1,3 @@
-<<<<<<< HEAD:test/fixtures/cookbooks/zabbix_lwrp_test/recipes/zabbix24.rb
-=======
 case node['platform_family']
 when 'debian'
   include_recipe 'apt'
@@ -45,11 +43,15 @@ when 'rhel'
 end
 include_recipe 'chef_nginx::default'
 
-node.default['zabbix']['server']['database']['postgresql']['version'] = '9.6'
 node.default['zabbix']['version'] = '2.4'
 # Temporary use higher version of zabbixapi, for correct tests works
 # In gem zabbixapi==2.4.X uses old json gem (==1.6.1) but in chefdk uses newest version
 node.default['zabbix']['api-version'] = '3.0.0'
+node.default['zabbix']['db_vendor'] = 'mysql'
+
+if node['platform_version'].to_f == 16.04
+  node.default['zabbix']['server']['database']['mysql']['version'] = '5.7'
+end
 
 include_recipe 'zabbix_lwrp::default'
 # Create LVM partition only if exists on node (for example on Amazon is not)
@@ -169,4 +171,3 @@ log "Run zabbix_connect 'default' as delayed" do
   notifies :make, 'zabbix_connect[default]', :delayed
 end
 ### end included recipe
->>>>>>> pr31:test/fixtures/cookbooks/zabbix_lwrp_test/recipes/zabbix24_postgres.rb

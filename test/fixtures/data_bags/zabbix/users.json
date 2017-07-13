@@ -6,6 +6,12 @@
         "password": "fced396df30cc3590d8a0deeeaf3eb70",
         "superuser": false
       }
+    },
+    "root": {
+      "options": {
+        "password": "fced396df30cc3590d8a0deeeaf3eb70",
+        "superuser": false
+      }
     }
   }
 }
