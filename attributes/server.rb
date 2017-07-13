@@ -8,7 +8,7 @@ default['zabbix']['server']['config']['debuglevel'] = 3
 
 default['zabbix']['server']['config']['workers'] = {
   StartPollers: 5,
-  StartTrappers: 8,
+  StartTrappers: 5,
   StartPingers: 1,
   StartProxyPollers: 1,
   StartDBSyncers: 4,
@@ -16,23 +16,22 @@ default['zabbix']['server']['config']['workers'] = {
 
 default['zabbix']['server']['config']['hk'] = {
   HousekeepingFrequency: 1,
-  MaxHousekeeperDelete: 2000,
+  MaxHousekeeperDelete: 5000,
 }
 
 default['zabbix']['server']['config']['cache'] = {
-  CacheSize: '24M',
+  CacheSize: '8M',
   CacheUpdateFrequency: 60,
-  TrendCacheSize: '24M',
-  HistoryCacheSize: '8M',
-  HistoryTextCacheSize: '8M',
+  TrendCacheSize: '4M',
+  HistoryCacheSize: '16M',
 }
 
 default['zabbix']['server']['config']['timeouts'] = {
-  Timeout: 10,
-  TrapperTimeout: 100,
-  UnreachablePeriod: 300,
+  Timeout: 3,
+  TrapperTimeout: 300,
+  UnreachablePeriod: 45,
   UnavailableDelay: 60,
-  UnreachableDelay: 10,
+  UnreachableDelay: 15,
 }
 
 default['zabbix']['server']['config']['global'] = {
