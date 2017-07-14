@@ -27,6 +27,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * lvm
 * php-fpm
 * postgresql
+* mysql2_chef_gem
 * mysql
 * yum-mysql-community
 * mysql2_chef_gem
@@ -51,6 +52,37 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['agent']['config']['user_params']` -  Defaults to `{ ... }`.
 
 ## Postgresql
+* `node['zabbix']['version']` -  Defaults to `3.2`.
+* `node['zabbix']['api-version']` -  Defaults to `3.1.0`.
+* `node['zabbix']['host']['group']` -  Defaults to `Hosts`.
+* `node['zabbix']['host']['name']` -  Defaults to `node['fqdn']`.
+* `node['zabbix']['host']['dns']` -  Defaults to `node['fqdn']`.
+* `node['zabbix']['host']['ipaddress']` -  Defaults to `node['ipaddress']`.
+* `node['zabbix']['host']['ipmi']['enabled']` -  Defaults to `false`.
+* `node['zabbix']['host']['ipmi']['port']` -  Defaults to `623`.
+* `node['zabbix']['host']['ipmi']['use_ip']` -  Defaults to `true`.
+* `node['zabbix']['host']['jmx']['enabled']` -  Defaults to `false`.
+* `node['zabbix']['host']['jmx']['port']` -  Defaults to `12345`.
+* `node['zabbix']['host']['jmx']['use_ip']` -  Defaults to `true`.
+* `node['zabbix']['host']['snmp']['enabled']` -  Defaults to `false`.
+* `node['zabbix']['host']['snmp']['port']` -  Defaults to `161`.
+* `node['zabbix']['host']['snmp']['use_ip']` -  Defaults to `true`.
+* `node['zabbix']['host']['agent']['use_ip']` -  Defaults to `true`.
+* `node['zabbix']['java_gateway']['enabled']` -  Defaults to `false`.
+* `node['zabbix']['java_gateway']['config']` -  Defaults to `{ ... }`.
+* `node['zabbix']['server']['database']['mysql']['filesystem']` -  Defaults to `ext4`.
+* `node['zabbix']['server']['database']['mysql']['lvm_group']` -  Defaults to `shared`.
+* `node['zabbix']['server']['database']['mysql']['lvm_volume']` -  Defaults to `/dev/sda3`.
+* `node['zabbix']['server']['database']['mysql']['partition_size']` -  Defaults to `10G`.
+* `node['zabbix']['server']['database']['mysql']['mount_point']` -  Defaults to `/var/lib/mysql_zabbix`.
+* `node['zabbix']['server']['database']['mysql']['databag']` -  Defaults to `zabbix`.
+* `node['zabbix']['server']['database']['mysql']['version']` -  Defaults to `5.5`.
+* `node['zabbix']['server']['database']['mysql']['service_name']` -  Defaults to `zabbix`.
+* `node['zabbix']['server']['database']['mysql']['database_name']` -  Defaults to `zabbix`.
+* `node['zabbix']['server']['database']['mysql']['configuration']['listen_addresses']` -  Defaults to `127.0.0.1`.
+* `node['zabbix']['server']['database']['mysql']['configuration']['port']` -  Defaults to `3306`.
+* `node['zabbix']['server']['database']['mysql']['configuration']['character_set']` -  Defaults to `utf8`.
+* `node['zabbix']['server']['database']['mysql']['configuration']['collate']` -  Defaults to `utf8_bin`.
 * `node['zabbix']['server']['database']['postgresql']['filesystem']` -  Defaults to `ext4`.
 * `node['zabbix']['server']['database']['postgresql']['lvm_group']` -  Defaults to `shared`.
 * `node['zabbix']['server']['database']['postgresql']['lvm_volume']` -  Defaults to `/dev/sda3`.
@@ -117,6 +149,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['java_gateway']['pollers']` -  Defaults to `5`.
 
 ## Server
+* `node['zabbix']['server']['database']['vendor']` -  Defaults to `postgresql`.
 * `node['zabbix']['server']['service']` -  Defaults to `zabbix-server`.
 * `node['zabbix']['server']['credentials']['databag']` -  Defaults to `zabbix`.
 * `node['zabbix']['server']['templates']` -  Defaults to `/opt/zabbix/templates`.
@@ -234,6 +267,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 
 ### Attribute Parameters
 
+- db_vendor:  Defaults to <code>"postgresql"</code>.
 - db_name:
 - db_user:
 - db_pass:
