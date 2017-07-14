@@ -91,7 +91,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 ## Default
 * `node['zabbix']['version']` -  Defaults to `3.2`.
 * `node['zabbix']['api-version']` -  Defaults to `3.1.0`.
-* `node['zabbix']['db_vendor']` -  Defaults to `postgresql`. Make sure that is setup for MySQL.
+* `node['zabbix']['server']['database']['vendor']` -  Defaults to `postgresql`. Make sure that is setup for MySQL.
 
 ## Host
 * `node['zabbix']['host']['group']` -  Defaults to `Hosts`.

@@ -10,12 +10,6 @@ provisioner:
 platforms:
   - name: ubuntu-14.04
     driver:
-<<<<<<< HEAD
-      box: express42/ubuntu-14.04
-# driver:
-      box: express42/ubuntu-16.04
-  - name: windows
-=======
       box: bento/ubuntu-14.04
   - name: ubuntu-16.04
     driver:
@@ -27,7 +21,6 @@ platforms:
     driver:
       box: bento/centos-6.7
   - name: windows-2012r2
->>>>>>> pr31
     driver:
       provider: virtualbox
       box:  opentable/win-2012r2-standard-amd64-nocm
@@ -36,6 +29,8 @@ platforms:
 
 verifier:
   name: inspec
+  inspec_tests:
+    - path: test/integration/inspec
 
 suites:
   - name: zabbix-agent
@@ -46,50 +41,58 @@ suites:
       - recipe[zabbix_lwrp::repository]
       - recipe[zabbix_lwrp::agent_win]
 
-  - name: zabbix24_postgres
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix24_postgres]
-    excludes:
-      - windows-2012r2
-      - ubuntu-16.04
-    verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_postgres
-
-  - name: zabbix24_mysql
+  - name: zabbix24-mysql
     run_list:
       - recipe[zabbix_lwrp_test::zabbix24_mysql]
     excludes:
       - windows-2012r2
       - ubuntu-16.04
     verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_mysql
+      attributes:
+        db: mysql
 
-  - name: zabbix30_postgres
+  - name: zabbix24-postgresql
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix30_postgres]
+      - recipe[zabbix_lwrp_test::zabbix24_postgresql]
     excludes:
       - windows-2012r2
+      - ubuntu-16.04
     verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_postgres
+      attributes:
+        db: postgresql
 
-  - name: zabbix30_mysql
+  - name: zabbix30-mysql
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30_mysql]
     excludes:
       - windows-2012r2
     verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_mysql
+      attributes:
+        db: mysql
 
-  - name: zabbix32_postgres
+  - name: zabbix30-postgresql
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix32_postgres]
+      - recipe[zabbix_lwrp_test::zabbix30_postgresql]
     excludes:
       - windows-2012r2
-      - ubuntu-14.04
     verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_postgres
+      attributes:
+        db: postgresql
+
+  - name: zabbix32-mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32_mysql]
+    excludes:
+      - windows-2012r2
+    verifier:
+      attributes:
+        db: mysql
+
+  - name: zabbix32-postgresql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32_postgtes]
+    excludes:
+      - windows-2012r2
+    verifier:
+      attributes:
+        db: postgresql

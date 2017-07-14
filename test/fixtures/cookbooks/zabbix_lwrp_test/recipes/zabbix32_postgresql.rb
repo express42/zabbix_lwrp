@@ -1,5 +1,3 @@
-<<<<<<< HEAD:test/fixtures/cookbooks/zabbix_lwrp_test/recipes/zabbix24.rb
-=======
 case node['platform_family']
 when 'debian'
   include_recipe 'apt'
@@ -45,20 +43,24 @@ when 'rhel'
 end
 include_recipe 'chef_nginx::default'
 
-node.default['zabbix']['server']['database']['postgresql']['version'] = '9.6'
-node.default['zabbix']['version'] = '2.4'
-# Temporary use higher version of zabbixapi, for correct tests works
-# In gem zabbixapi==2.4.X uses old json gem (==1.6.1) but in chefdk uses newest version
-node.default['zabbix']['api-version'] = '3.0.0'
+node.default['zabbix']['server']['database']['version'] = '9.6'
+node.default['zabbix']['version'] = '3.2'
+node.default['zabbix']['api-version'] = '3.1.0'
+node.default['zabbix']['host']['agent']['use_ip'] = false if node['zabbix']['host']['ipaddress'].to_s.empty?
+node.default['zabbix']['host']['agent']['ipaddress'] = '' if node['zabbix']['host']['ipaddress'].to_s.empty?
+
+node.default['zabbix']['host']['jmx']['enabled'] = true
+node.default['zabbix']['host']['jmx']['port'] = 12345
+node.default['zabbix']['host']['jmx']['use_ip'] = false  if node['zabbix']['host']['ipaddress'].to_s.empty?
 
 include_recipe 'zabbix_lwrp::default'
 # Create LVM partition only if exists on node (for example on Amazon is not)
-if node['filesystem'].attribute?(node['zabbix']['server']['database']['postgresql']['lvm_volume'])
-  include_recipe 'zabbix_lwrp::partition'
-end
+include_recipe 'zabbix_lwrp::partition' if node['filesystem'].attribute?(node['zabbix']['server']['database']['postgresql']['lvm_volume'])
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'
+include_recipe 'zabbix_lwrp::java_gateway'
+
 include_recipe 'zabbix_lwrp::host'
 
 zabbix_application 'Test application' do
@@ -169,4 +171,3 @@ log "Run zabbix_connect 'default' as delayed" do
   notifies :make, 'zabbix_connect[default]', :delayed
 end
 ### end included recipe
->>>>>>> pr31:test/fixtures/cookbooks/zabbix_lwrp_test/recipes/zabbix24_postgres.rb

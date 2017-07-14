@@ -22,10 +22,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-if node['zabbix']['db_vendor'] == 'postgresql'
+if node['zabbix']['server']['database']['vendor'] == 'postgresql'
   include_recipe 'zabbix_lwrp::postgresql'
-elsif node['zabbix']['db_vendor'] == 'mysql'
+elsif node['zabbix']['server']['database']['vendor'] == 'mysql'
   include_recipe 'zabbix_lwrp::mysql'
 else
-  raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
+  raise "You should specify correct database vendor attribute node['zabbix']['server']['database']['vendor'] (now: #{node['zabbix']['server']['database']['vendor']})"
 end

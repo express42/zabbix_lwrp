@@ -10,13 +10,9 @@ cookbook 'database'
 cookbook 'lvm'
 cookbook 'php-fpm'
 cookbook 'postgresql'
-<<<<<<< HEAD
-=======
 cookbook 'mysql'
 cookbook 'yum-mysql-community'
 cookbook 'mysql2_chef_gem'
-cookbook 'windows_firewall'
->>>>>>> pr31
 
 group :integration do
   cookbook 'locale'

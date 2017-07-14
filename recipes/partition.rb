@@ -24,7 +24,7 @@
 
 include_recipe 'lvm'
 
-db_vendor = node['zabbix']['db_vendor']
+db_vendor = node['zabbix']['server']['database']['vendor']
 
 lvm_physical_volume node['zabbix']['server']['database'][db_vendor]['lvm_volume']
 

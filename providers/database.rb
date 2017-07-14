@@ -124,7 +124,7 @@ action :create do
                     #{db_connect_string} < /usr/share/zabbix-server-mysql/data.sql;"
     end
   else
-    raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
+    raise "You should specify correct database vendor attribute node['zabbix']['server']['database']['vendor'] (now: #{node['zabbix']['server']['database']['vendor']})"
   end
 
   execute 'Provisioning zabbix database' do

@@ -25,9 +25,9 @@
 include_recipe 'php-fpm'
 include_recipe 'chef_nginx::default'
 
-db_vendor = node['zabbix']['db_vendor']
+db_vendor = node['zabbix']['server']['database']['vendor']
 unless db_vendor == 'postgresql' || db_vendor == 'mysql'
-  raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
+  raise "You should specify correct database vendor attribute node['zabbix']['server']['database']['vendor'] (now: #{node['zabbix']['server']['database']['vendor']})"
 end
 db_name = 'zabbix'
 

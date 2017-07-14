@@ -1,3 +1,4 @@
+default['zabbix']['server']['database']['vendor'] = 'postgresql'
 default['zabbix']['server']['service'] = 'zabbix-server'
 default['zabbix']['server']['credentials']['databag'] = 'zabbix'
 default['zabbix']['server']['templates'] = '/opt/zabbix/templates'

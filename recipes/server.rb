@@ -22,9 +22,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-db_vendor = node['zabbix']['db_vendor']
+db_vendor = node['zabbix']['server']['database']['vendor']
 unless db_vendor == 'postgresql' || db_vendor == 'mysql'
-  raise "You should specify correct database vendor attribute node['zabbix']['db_vendor'] (now: #{node['zabbix']['db_vendor']})"
+  raise "You should specify correct database vendor attribute node['zabbix']['server']['database']['vendor'] (now: #{node['zabbix']['server']['database']['vendor']})"
 end
 
 def configuration_hacks(configuration, server_version)
