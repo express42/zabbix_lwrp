@@ -53,7 +53,7 @@ node.default['zabbix']['host']['agent']['ipaddress'] = '' if node['zabbix']['hos
 
 node.default['zabbix']['host']['jmx']['enabled'] = true
 node.default['zabbix']['host']['jmx']['port'] = 12345
-node.default['zabbix']['host']['jmx']['use_ip'] = false  if node['zabbix']['host']['ipaddress'].to_s.empty?
+node.default['zabbix']['host']['jmx']['use_ip'] = false if node['zabbix']['host']['ipaddress'].to_s.empty?
 
 include_recipe 'zabbix_lwrp::default'
 # Create LVM partition only if exists on node (for example on Amazon is not)

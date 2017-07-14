@@ -8,7 +8,7 @@ template '/etc/zabbix/zabbix_java_gateway.conf' do
   owner 'root'
   group 'root'
   mode '0644'
-  variables(node['zabbix']['java_gateway'].to_hash)
+  variables config: node['zabbix']['java_gateway']['config']
   notifies :restart, 'service[zabbix-java-gateway]', :delayed
 end
 
