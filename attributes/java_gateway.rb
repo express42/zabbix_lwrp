@@ -1,6 +1,13 @@
 default['zabbix']['java_gateway']['enabled'] = false
-default['zabbix']['java_gateway']['timeout'] = 3
-default['zabbix']['java_gateway']['listen_ip'] = '127.0.0.1'
-default['zabbix']['java_gateway']['listen_port'] = 10052
-default['zabbix']['java_gateway']['pollers'] = 5
-default['zabbix']['java_gateway']['pidfile'] = '/var/run/zabbix/zabbix_java.pid'
+default['zabbix']['java_gateway']['config'] = {
+  TIMEOUT: 3,
+  LISTEN_IP: '127.0.0.1',
+  LISTEN_PORT: 10052,
+  START_POLLERS: 5,
+  PID_FILE: case node['platform_family']
+            when 'rhel'
+              '/var/run/zabbix/zabbix_java.pid'
+            when 'debian'
+              '/var/run/zabbix/zabbix_java_gateway.pid'
+            end,
+}

@@ -43,20 +43,31 @@ when 'rhel'
 end
 include_recipe 'chef_nginx::default'
 
-node.default['zabbix']['server']['database']['version'] = '9.6'
-node.default['zabbix']['version'] = '3.0'
-node.default['zabbix']['api-version'] = '3.0.0'
+node.default['zabbix']['version'] = '3.2'
+node.default['zabbix']['api-version'] = '3.1.0'
+node.default['zabbix']['server']['database']['vendor'] = 'mysql'
+node.default['zabbix']['host']['group'] = 'Test group'
 node.default['zabbix']['host']['agent']['use_ip'] = false if node['zabbix']['host']['ipaddress'].to_s.empty?
 node.default['zabbix']['host']['agent']['ipaddress'] = '' if node['zabbix']['host']['ipaddress'].to_s.empty?
 
+node.default['zabbix']['host']['jmx']['enabled'] = true
+node.default['zabbix']['host']['jmx']['port'] = 12345
+node.default['zabbix']['host']['jmx']['use_ip'] = false if node['zabbix']['host']['ipaddress'].to_s.empty?
+
+if node['platform_version'].to_f >= 16.04
+  node.default['zabbix']['server']['database']['mysql']['version'] = '5.7'
+end
+
 include_recipe 'zabbix_lwrp::default'
 # Create LVM partition only if exists on node (for example on Amazon is not)
-include_recipe 'zabbix_lwrp::partition' if node['filesystem'].attribute?(node['zabbix']['server']['database']['lvm_volume'])
+if node['filesystem'].attribute?(node['zabbix']['server']['database']['mysql']['lvm_volume'])
+  include_recipe 'zabbix_lwrp::partition'
+end
 include_recipe 'zabbix_lwrp::database'
 include_recipe 'zabbix_lwrp::server'
 include_recipe 'zabbix_lwrp::web'
-
 include_recipe 'zabbix_lwrp::host'
+include_recipe 'zabbix_lwrp::java_gateway'
 
 zabbix_application 'Test application' do
   action :sync
@@ -123,10 +134,13 @@ zabbix_action 'Test action' do
       media_type 'sms'
     end
   end
-
-  condition :trigger_severity, :gte, :high
-  condition :host_group, :equal, 'Main'
-  condition :maintenance, :not_in, :maintenance
+  condition_filter do
+    evaltype  :formula
+    condition :trigger_severity, :gte, :high, 'A'
+    condition :host_group, :equal, 'Test group', 'B'
+    condition :maintenance, :not_in, :maintenance, 'C'
+    formula   'A and (B or C)'
+  end
 end
 
 zabbix_user_macro 'Test_macro' do

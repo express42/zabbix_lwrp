@@ -16,7 +16,6 @@ transport:
   connection_timeout: 10
   connection_retries: 5
 
-
 provisioner:
   name: chef_zero
   data_bags_path: test/fixtures/data_bags
@@ -39,29 +38,53 @@ platforms:
 
 verifier:
   name: inspec
+  inspec_tests:
+    - path: test/integration/inspec
+
 
 suites:
-  - name: zabbix24
+  - name: zabbix24-mysql
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix24]
+      - recipe[zabbix_lwrp_test::zabbix24_mysql]
     excludes:
       - ubuntu-16.04
     verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_lwrp_test
+      attributes:
+        db: mysql
 
-  - name: zabbix30
+  - name: zabbix24-postgresql
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix30]
-    verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_lwrp_test
-
-  - name: zabbix32
-    run_list:
-      - recipe[zabbix_lwrp_test::zabbix32]
+      - recipe[zabbix_lwrp_test::zabbix24_postgresql]
     excludes:
-      - ubuntu-14.04
+      - ubuntu-16.04
     verifier:
-      inspec_tests:
-        - path: test/integration/zabbix_lwrp_test
+      attributes:
+        db: postgresql
+
+  - name: zabbix30-mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_mysql]
+    verifier:
+      attributes:
+        db: mysql
+
+  - name: zabbix30-postgresql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix30_postgresql]
+    verifier:
+      attributes:
+        db: postgresql
+
+  - name: zabbix32-mysql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32_mysql]
+    verifier:
+      attributes:
+        db: mysql
+
+  - name: zabbix32-postgresql
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32_postgresql]
+    verifier:
+      attributes:
+        db: postgresql

@@ -1,6 +1,16 @@
 # CHANGELOG for zabbix_lwrp
 
 This file is used to list changes made in each version of zabbix_lwrp.
+## 1.4.0
+
+* Use default values for server configuration
+* Add mysql database support
+* Fixed #3
+* Fixed #4
+* Fix error when ipaddress atribute is empty
+* Use default values for server configuration
+* Refactor java_gateway config
+
 
 ## 1.3.3
 * Use default values for server configuration

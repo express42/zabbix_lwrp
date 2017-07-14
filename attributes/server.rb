@@ -1,3 +1,4 @@
+default['zabbix']['server']['database']['vendor'] = 'postgresql'
 default['zabbix']['server']['service'] = 'zabbix-server'
 default['zabbix']['server']['credentials']['databag'] = 'zabbix'
 default['zabbix']['server']['templates'] = '/opt/zabbix/templates'
@@ -38,9 +39,9 @@ default['zabbix']['server']['config']['global'] = {
 }
 
 default['zabbix']['server']['config']['java_gateway'] = {
-  JavaGateway: node['zabbix']['java_gateway']['listen_ip'],
-  JavaGatewayPort: node['zabbix']['java_gateway']['listen_port'],
-  StartJavaPollers: node['zabbix']['java_gateway']['pollers'],
+  JavaGateway: node['zabbix']['java_gateway']['config']['LISTEN_IP'],
+  JavaGatewayPort: node['zabbix']['java_gateway']['config']['LISTEN_PORT'],
+  StartJavaPollers: node['zabbix']['java_gateway']['config']['START_POLLERS'],
 }
 
 default['zabbix']['server']['config']['alerts'] = {
