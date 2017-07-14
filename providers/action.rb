@@ -42,21 +42,21 @@ end
 action :sync do
   converge_by("Create #{new_resource}.") do
     operations = new_resource.operations.map(&:to_hash)
+    filter = new_resource.filter.to_hash
 
     add_data(node, node['fqdn'], 'actions' => { new_resource.name =>
       {
-        evaltype:      0,
         name:          new_resource.name,
         eventsource:   EVENT_SOURCE[new_resource.event_source],
         esc_period:    new_resource.escalation_time,
-        status:        new_resource.enabled ? 1 : 0,
+        status:        new_resource.enabled ? 0 : 1,
         def_shortdata: new_resource.message_subject || '',
         def_longdata:  new_resource.message_body || '',
         recovery_msg:  new_resource.send_recovery_message ? 1 : 0,
         r_shortdata:   new_resource.recovery_message_subject || '',
         r_longdata:    new_resource.recovery_message_body || '',
         operations:    operations,
-        conditions:    new_resource.conditions.map(&:to_hash),
+        filter:        filter,
       } })
   end
 end

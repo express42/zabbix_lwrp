@@ -483,12 +483,9 @@ end
 def create_actions
   get_hosts do |host|
     _, values = host['zabbix']['hosts'].to_a.first
-
     (values['actions'] || []).each do |name, data|
-      action = @@zbx.query(method: 'action.get', params: { filter: { name: name } }).first
-
-      next if action
-      conditions = data['conditions'].map do |condition|
+      filter = data['filter'].to_hash
+      filter['conditions'] = data['filter']['conditions'].map do |condition|
         if condition['conditiontype'] == Chef::Resource::ZabbixLwrpAction::ZabbixCondition::TYPE[:trigger]
           value = @@zbx.triggers.get_id(description: condition['value'])
           condition.merge('value' => value)
@@ -499,7 +496,6 @@ def create_actions
           condition
         end
       end
-
       operations = data['operations'].map do |operation|
         msg = operation['opmessage']
         media_type = @@zbx.mediatypes.get_id(description: msg['mediatypeid'])
@@ -513,12 +509,27 @@ def create_actions
           operation.merge('opmessage' => msg.merge('mediatypeid' => media_type))
         end
       end
-
-      converge_by("Create zabbix action #{name}.") do
-        @@zbx.query(
-          method: 'action.create',
-          params: data.merge('conditions' => conditions, 'operations' => operations)
-        )
+      action = @@zbx.query(method: 'action.get', params: { filter: { name: name } }).first
+      action_id = action['actionid'] unless action.nil?
+      if action
+        converge_by("Update zabbix action #{name}.") do
+          @@zbx.query(
+            method: 'action.update',
+            params: {
+              filter: filter,
+              operations: operations,
+              actionid: action_id,
+              status: data['status'].to_s,
+            }
+          )
+        end
+      else
+        converge_by("Create zabbix action #{name}.") do
+          @@zbx.query(
+            method: 'action.create',
+            params: data.merge('filter' => filter, 'operations' => operations)
+          )
+        end
       end
     end
   end

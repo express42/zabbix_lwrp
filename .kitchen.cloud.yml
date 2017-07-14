@@ -84,7 +84,7 @@ suites:
 
   - name: zabbix32-postgresql
     run_list:
-      - recipe[zabbix_lwrp_test::zabbix32_postgtes]
+      - recipe[zabbix_lwrp_test::zabbix32_postgresql]
     verifier:
       attributes:
         db: postgresql

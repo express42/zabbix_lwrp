@@ -32,7 +32,7 @@ actions :sync
 default_action :sync
 
 attr_accessor :exists
-attr_reader :operations, :conditions
+attr_reader :operations, :filter
 
 attribute :name, kind_of: String, name_attribute: true
 attribute :event_source,             required: true, equal_to: [:triggers]
@@ -47,15 +47,49 @@ attribute :recovery_message_body
 def initialize(name, run_context = nil)
   super
   @operations = []
-  @conditions = []
+  @filter = []
 end
 
 def operation(&block)
   @operations << ZabbixOperation.new(self, &block)
 end
 
-def condition(*cond, &block)
-  @conditions << ZabbixCondition.new(self, *cond, &block)
+def condition_filter(&block)
+  @filter = ZabbixFilter.new(self, &block)
+end
+
+class ZabbixFilter
+  TYPE = {
+    and_or: 0,
+    and:    1,
+    or:     2,
+    formula: 3,
+  }.freeze
+
+  def initialize(_context, &block)
+    @conditions = []
+    instance_eval(&block)
+  end
+
+  def evaltype(value)
+    @evaltype = value
+  end
+
+  def formula(value)
+    @formula = value
+  end
+
+  def condition(*cond, &block)
+    @conditions << ZabbixCondition.new(self, *cond, &block).to_hash
+  end
+
+  def to_hash
+    {
+      evaltype: TYPE[@evaltype] || 0,
+      formula:  TYPE[@evaltype] == 3 ? @formula : nil,
+      conditions: @conditions,
+    }
+  end
 end
 
 # Describe Zabbix condition in action
@@ -107,11 +141,15 @@ class ZabbixCondition
   }.freeze
 
   def initialize(_context, *cond, &block)
-    if cond
-      raise 'condition should have 3 elements - type, operator and value' unless cond.is_a?(Array) && cond.size == 3
+    case cond.size
+    when 3
       @type, @operator, @value = cond
-    else
+    when 4
+      @type, @operator, @value, @formulaid = cond
+    when 0
       instance_eval(&block)
+    else
+      raise 'condition should have 3 or 4 elements - type, operator,value, or formulaid(option)'
     end
   end
 
@@ -125,6 +163,10 @@ class ZabbixCondition
 
   def value(v)
     @value = v
+  end
+
+  def formulaid(value)
+    @formulaid = value
   end
 
   def to_hash
@@ -142,11 +184,11 @@ class ZabbixCondition
     else
       raise "Unknown action's condition type '#{@type}'"
     end
-
     {
       conditiontype: TYPE[@type],
       operator: OPERATOR[@operator],
       value: value,
+      formulaid: @formulaid.nil? ? nil : @formulaid,
     }
   end
 end
@@ -198,7 +240,7 @@ class ZabbixOperation
     {
       operationtype:  TYPE[@type || :message],
       opmessage_grp:  @user_groups,
-      opmessage: @message.to_hash,
+      opmessage:      @message.to_hash,
     }
   end
 end
