@@ -129,26 +129,11 @@ def create_hosts
         port: values['jmx_port'],
         useip: values['jmx_use_ip'] ? 1 : 0)
     end
-    h = @@zbx.hosts.get(host: fqdn).first
-    host_id = if h
-                h['hostid']
-              else
-                @@zbx.hosts.create(
-                  host: fqdn,
-                  interfaces: interfaces,
-                  groups: group_ids
-                )
-              end
-
-    tmp = @@zbx.query(
-      method: 'host.get',
-      params: {
-        hostids: host_id,
-        selectInterfaces: 'extend',
-      }
-    ).first
-
-    add_data(host, fqdn, 'host_id' => host_id, 'interface_id' => tmp['interfaces'].first['interfaceid'])
+      @@zbx.hosts.create(
+        host: fqdn,
+        interfaces: interfaces,
+        groups: group_ids
+      ) unless @@zbx.hosts.get(host: fqdn)
   end
 end
 
@@ -168,27 +153,22 @@ def create_applications
     interface_id = tmp['interfaces'].first['interfaceid']
 
     (values['applications'] || {}).each do |app_name, app_data|
-      if app_data['app_id']
-        app_id = app_data['app_id']
-      else
-        app = @@zbx.query(
-          method: 'application.get',
-          params: {
-            hostids: host_id,
-            filter: {
-              name: app_name,
-            },
-          }
-        ).first
 
-        app_id = if app
-                   app['applicationid']
-                 else
-                   @@zbx.applications.create(hostid: host_id, name: app_name)
-                 end
+      app = @@zbx.query(
+        method: 'application.get',
+        params: {
+          hostids: host_id,
+          filter: {
+            name: app_name,
+          },
+        }
+      ).first
 
-        add_data(host, fqdn, 'applications' => { app_name => { 'app_id' => app_id } })
-      end
+      app_id = if app
+                 app['applicationid']
+               else
+                 @@zbx.applications.create(hostid: host_id, name: app_name)
+               end
 
       current_items = @@zbx.query(
         method: 'item.get',
@@ -249,8 +229,16 @@ end
 
 def create_graphs
   get_hosts do |host|
-    _, values = host['zabbix']['hosts'].to_a.first
-    host_id = values['host_id']
+    fqdn, values = host['zabbix']['hosts'].to_a.first
+    host_id = @@zbx.query(
+      method: 'host.get',
+      params: {
+        filter: {
+          host: fqdn,
+        },
+        selectInterfaces: 'extend',
+      }
+    ).first['hostid']
 
     (values['graphs'] || {}).each do |graph_name, graph_value|
       graph = @@zbx.query(
@@ -263,8 +251,7 @@ def create_graphs
         }
       ).first
 
-      if graph
-      else
+      unless graph
         converge_by("Create zabbix graph #{graph_name}") do
           graph_items = graph_value['gitems'].map do |gi|
             {
