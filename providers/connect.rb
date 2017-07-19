@@ -129,11 +129,11 @@ def create_hosts
         port: values['jmx_port'],
         useip: values['jmx_use_ip'] ? 1 : 0)
     end
-      @@zbx.hosts.create(
-        host: fqdn,
-        interfaces: interfaces,
-        groups: group_ids
-      ) unless @@zbx.hosts.get(host: fqdn)
+    @@zbx.hosts.create(
+      host: fqdn,
+      interfaces: interfaces,
+      groups: group_ids
+    ) unless @@zbx.hosts.get(host: fqdn).first
   end
 end
 
@@ -153,7 +153,6 @@ def create_applications
     interface_id = tmp['interfaces'].first['interfaceid']
 
     (values['applications'] || {}).each do |app_name, app_data|
-
       app = @@zbx.query(
         method: 'application.get',
         params: {
@@ -250,21 +249,19 @@ def create_graphs
           },
         }
       ).first
-
-      unless graph
-        converge_by("Create zabbix graph #{graph_name}") do
-          graph_items = graph_value['gitems'].map do |gi|
-            {
-              itemid:    get_item_id(gi[:key], host_id),
-              color:     gi[:color],
-              yaxisside: gi[:yaxisside],
-            }
-          end
-
-          graph = @@zbx.graphs.create(name: graph_name, height: graph_value['height'],
-                                      width: graph_value['width'], gitems: graph_items,
-                                      graphtype: graph_value['graphtype'])
+      next if graph
+      converge_by("Create zabbix graph #{graph_name}") do
+        graph_items = graph_value['gitems'].map do |gi|
+          {
+            itemid:    get_item_id(gi[:key], host_id),
+            color:     gi[:color],
+            yaxisside: gi[:yaxisside],
+          }
         end
+
+        graph = @@zbx.graphs.create(name: graph_name, height: graph_value['height'],
+                                    width: graph_value['width'], gitems: graph_items,
+                                    graphtype: graph_value['graphtype'])
       end
     end
   end
