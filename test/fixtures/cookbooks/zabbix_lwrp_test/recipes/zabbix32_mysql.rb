@@ -172,7 +172,7 @@ include_recipe 'build-essential'
 zabbix_connect 'default' do
   action :nothing
   apiurl 'http://localhost/api_jsonrpc.php'
-  databag 'zabbix'
+  databag node['zabbix']['server']['credentials']['databag']
   sync node['zabbix']['server']['sync_hosts']
 end
 
