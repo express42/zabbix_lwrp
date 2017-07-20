@@ -43,6 +43,8 @@ when 'rhel'
 end
 include_recipe 'chef_nginx::default'
 
+include_recipe 'zabbix_lwrp_test::run_state'
+
 node.default['zabbix']['server']['database']['version'] = '9.6'
 node.default['zabbix']['version'] = '3.2'
 node.default['zabbix']['api-version'] = '3.1.0'

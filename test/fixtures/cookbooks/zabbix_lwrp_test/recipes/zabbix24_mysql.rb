@@ -43,6 +43,8 @@ when 'rhel'
 end
 include_recipe 'chef_nginx::default'
 
+include_recipe 'zabbix_lwrp_test::run_state'
+
 node.default['zabbix']['version'] = '2.4'
 # Temporary use higher version of zabbixapi, for correct tests works
 # In gem zabbixapi==2.4.X uses old json gem (==1.6.1) but in chefdk uses newest version
