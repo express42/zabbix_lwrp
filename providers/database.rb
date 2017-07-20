@@ -36,7 +36,7 @@ def change_admin_password(db_connect_string)
   admin_user_pass = 'zabbix'
   # Get Admin password from data bag
   begin
-    admin_user_pass = data_bag_item(node['zabbix']['server']['credentials']['databag'], 'admin')['pass']
+    admin_user_pass = get_data_bag_item(node['zabbix']['server']['credentials']['databag'], 'admin')['pass']
   rescue
     log('Using default password for user Admin ... (pass: zabbix)')
   end
