@@ -45,7 +45,7 @@ jobs:
         - bundle exec foodcritic --contex  --epic-fail any --tags ~chef13 .
 
     - stage: deploy
-      script: /bin/true
+      script: skip
       before_deploy:
         - openssl aes-256-cbc -K $encrypted_2be78cfba7d5_key -iv $encrypted_2be78cfba7d5_iv
           -in .travis/secret_keys.tar.enc -out .travis/secret_keys.tar -d
@@ -59,6 +59,8 @@ jobs:
         client_key: ".travis/express42.pem"
         cookbook_category: Monitoring & Trending
         skip_cleanup: true
+    - stage: notifications
+      script: skip
       notifications:
         slack:
           secure: UBDIgFYWZeXJWZtDQZ6sqvRZgXLp9jrDP1wjYetmdO37OpZy+OZZzE1YoD+K6w/jrtkrVGc4qI7Me2mhAxqVcHq8qRr5Lnu4qIit90/n/yr1nmC9y+WyVpHxJPiBbFUJkNtBSnSFVYalbaUi+keq9kKM6BuQEvR55Qsav0Kre+nkOfde7sdCFCq8MhMjYghsOvq1RdpwPIw45U6pOc96bBHnAwEIjlLk4ezXzP+Qf2kSMnw7TtT03oimOdlmFIy50XzJvy07m3HvfyKe4tp5k5YKvoo4IQ4cYVA0tXHTt4loPOviof6/20wz3P8SVoHl4A9bN6vPu1cz3lO727CJOdJ30MGSCXfCIIQXu/bCCVDarBGWUu6z5gWavM/fN2hInfXUAT6lS1Lq2ILTr3dB9oCnu/t9HvHAz7IUfqTDlTQP/GxNkDnxXuDWn8nmpNUUlw1Fmq2VHdrRxgrCSHr6/yS2Zdkwa0H5cA9+/DYBih7T/Cm8d0luR6gR9ywMFSWkJJVEw2LLKqHhXME8rYnwNkc4rFde8yVT7WG2GqKeYZGEK1uxnm5HDFf+jBgCorbExyJTpxIhJc+N1rlnGr1wpS8qvauU4tMP//jp/cZagaMAxCTDezlw3vEeb7Dcz7Mf7/+mmtK9GXyDyf6CtO5uL7kaUbq0ZZ0zkZS6Tik0ePQ=
