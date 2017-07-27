@@ -72,7 +72,7 @@ def check_zabbix_db(db_connect_string)
     check_db_exist = IO.popen("#{db_connect_string} #{cmd_key} \"select count(*) from users where alias='Admin'\"")
     check_db_exist_res = check_db_exist.readlines
     check_db_exist.close
-    check_db_flag = !($CHILD_STATUS.exitstatus == 0 && check_db_exist_res[0].to_i == 1)
+    check_db_flag = !($CHILD_STATUS.exitstatus.zero? && check_db_exist_res[0].to_i == 1)
   end
   check_db_flag
 end

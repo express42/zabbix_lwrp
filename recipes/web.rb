@@ -123,9 +123,10 @@ php_fpm_pool 'zabbix' do
   php_options node['zabbix']['server']['web']['configuration']
 end
 
-owner_name = if node['platform_family'] == 'rhel'
+owner_name = case node['platform_family']
+             when 'rhel'
                'apache'
-             elsif 'debian'
+             when 'debian'
                'www-data'
              end
 
