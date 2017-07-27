@@ -135,6 +135,7 @@ template '/etc/zabbix/web/zabbix.conf.php' do
   mode '0600'
   owner owner_name
   group owner_name
+  sensitive true
   variables(
     db_vendor: db_vendor.upcase,
     db_host: db_host,
