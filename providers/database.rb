@@ -59,7 +59,7 @@ def check_zabbix_db(db_connect_string)
   cmd_key = db_vendor == 'mysql' ? '-N -B -e' : '-c'
   check_db_flag = false
   # Check connect to database
-  log("Connect to database") 
+  log('Connect to database')
   sql_output = IO.popen("#{db_connect_string} #{cmd_key} 'SELECT 1'")
   sql_output_res = sql_output.readlines
   sql_output.close
