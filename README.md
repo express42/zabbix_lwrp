@@ -390,6 +390,48 @@ Data bag `zabbix` must contains the following items:
 
 For examples see fixture data bag `test/fixtures/databags/zabbix/`
 
+## Using node.run_state
+Optionally this data can be provided in node.run_state instead of data bags.
+
+This is useful in a wrapper cookbook that retrieves credentials from other locations such as chef-vault.
+
+Simply set the 'databag' attributes to the value of the run_state key that contains the data.
+
+### Example Wrapper Cookbook
+```ruby
+  #Your super secret code to get credentials here
+  
+  node.default['zabbix']['server']['database']['databag'] = 'zabbix_data'
+  node.default['zabbix']['server']['database']['postgresql']['databag'] = 'zabbix_data'
+  node.default['zabbix']['server']['credentials']['databag'] = 'zabbix_data'
+
+  node.run_state['zabbix_data'] = {
+    'users' => {
+      'id' => 'users',
+      'users' => {
+        'zabbix' => {
+          'options' => {
+             'password' => secret_zabbix_pass_here
+             'superuser' => false
+           }
+         }
+       }
+    },
+    'databases' => {
+      'id' => 'databases',
+      'databases' => {
+        'zabbix' => { 'options' => { 'owner' => 'zabbix' } }
+      }
+    },
+    'admin' => {'id' => 'admin', 'pass' => secret_admin_pass_here }
+  }
+
+  include_recipe 'zabbix_lwrp::default'
+  include_recipe 'zabbix_lwrp::database'
+  include_recipe 'zabbix_lwrp::server'
+  include_recipe 'zabbix_lwrp::web'
+```
+
 
 # Resources
 

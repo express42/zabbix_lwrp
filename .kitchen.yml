@@ -88,6 +88,25 @@ suites:
       attributes:
         db: mysql
 
+  - name: zabbix32-mysql-run-state
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32_mysql]
+    excludes:
+      - windows-2012r2
+    verifier:
+      attributes:
+        db: mysql
+    attributes:
+      zabbix:
+        server:
+          credentials:
+            databag: wrapper
+          database:
+            databag: wrapper
+            mysql:
+              databag: wrapper
+
+
   - name: zabbix32-postgresql
     run_list:
       - recipe[zabbix_lwrp_test::zabbix32_postgresql]
@@ -96,3 +115,22 @@ suites:
     verifier:
       attributes:
         db: postgresql
+
+  - name: zabbix32-postgresql-run-state
+    run_list:
+      - recipe[zabbix_lwrp_test::zabbix32_postgresql]
+    excludes:
+      - windows-2012r2
+    verifier:
+      attributes:
+        db: postgresql
+        attributes:
+      zabbix:
+        server:
+          credentials:
+            databag: wrapper
+          database:
+            databag: wrapper
+            postgresql:
+              databag: wrapper
+

@@ -1,8 +1,10 @@
 #
 # Cookbook Name:: zabbix_lwrp
-# Recipe:: connect
+# Library:: load
 #
-# Copyright (C) LLC 2015 Express 42
+# Author:: Eric Blevins (eblevins@kmilearning.com)
+#
+# Copyright (C) 2017 KMI Learning
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -21,19 +23,16 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-#
-# !!! ATTENTION
-#
-# Don't forget to update the following files if you do changes here:
-#  - test/fixtures/cookbooks/zabbix_lwrp_test/recipes/zabbix*.rb
 #
 
-include_recipe 'build-essential'
+def get_data_bag(databag)
+  node.run_state[databag] || data_bag(databag)
+end
 
-zabbix_connect 'default' do
-  action :make
-  apiurl 'http://localhost/api_jsonrpc.php'
-  databag node['zabbix']['server']['credentials']['databag']
-  sync node['zabbix']['server']['sync_hosts']
+def get_data_bag_item(databag, item)
+  if node.run_state[databag] && node.run_state[databag][item]
+    node.run_state[databag][item]
+  else
+    data_bag_item(databag, item)
+  end
 end

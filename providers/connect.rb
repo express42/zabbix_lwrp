@@ -37,7 +37,7 @@ action :make do
 
   if credentials_databag
     user = 'Admin'
-    pass = data_bag_item(credentials_databag, 'admin')['pass']
+    pass = get_data_bag_item(credentials_databag, 'admin')['pass']
   end
 
   raise "there aren't user and password for connection to zabbix" if !user || !pass

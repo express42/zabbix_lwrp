@@ -44,16 +44,16 @@ end
 
 if mysql_attr['databag'].nil? ||
    mysql_attr['databag'].empty? ||
-   !data_bag(mysql_attr['databag']).include?('users')
+   !get_data_bag(mysql_attr['databag']).include?('users')
 
   raise "You should specify databag name in node['zabbix']['server']['database']['mysql']['databag'] attibute (now: #{mysql_attr['databag']}) and databag should contains key 'users'"
 end
 
-unless data_bag_item(mysql_attr['databag'], 'users')['users'].key?('root')
+unless get_data_bag_item(mysql_attr['databag'], 'users')['users'].key?('root')
   raise 'You should specify user root in databag users'
 end
 
-unless data_bag_item(mysql_attr['databag'], 'users')['users'].key?('zabbix')
+unless get_data_bag_item(mysql_attr['databag'], 'users')['users'].key?('zabbix')
   raise 'You should specify user zabbix in databag users'
 end
 
@@ -62,7 +62,7 @@ mysql_service mysql_attr['service_name'] do
   port mysql_attr['configuration']['port']
   version mysql_attr['version']
   data_dir mysql_attr['mount_point']
-  initial_root_password data_bag_item(mysql_attr['databag'], 'users')['users']['root']['options']['password']
+  initial_root_password get_data_bag_item(mysql_attr['databag'], 'users')['users']['root']['options']['password']
   action [:create, :start]
 end
 
@@ -70,7 +70,7 @@ end
 db_name = mysql_attr['database_name']
 db_connect_string = "mysql -h #{mysql_attr['configuration']['listen_addresses']} \
                      -P #{mysql_attr['configuration']['port']} -u root \
-                     -p#{data_bag_item(mysql_attr['databag'], 'users')['users']['root']['options']['password']}"
+                     -p#{get_data_bag_item(mysql_attr['databag'], 'users')['users']['root']['options']['password']}"
 
 execute 'Create Zabbix MySQL database' do
   command "#{db_connect_string} -e \"create database if not exists #{db_name} \
@@ -81,7 +81,7 @@ execute 'Create Zabbix MySQL database' do
 end
 
 # create users
-data_bag_item(mysql_attr['databag'], 'users')['users'].each_pair do |name, options|
+get_data_bag_item(mysql_attr['databag'], 'users')['users'].each_pair do |name, options|
   execute "Create MySQL database user #{name}" do
     only_if { name != 'root' }
     command "#{db_connect_string} -e \"grant all privileges on #{db_name}.* to '#{name}'@'%' identified by '#{options['options']['password']}'; \""
