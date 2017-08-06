@@ -76,7 +76,7 @@ execute 'Create Zabbix MySQL database' do
   command "#{db_connect_string} -e \"create database if not exists #{db_name} \
            character set #{mysql_attr['configuration']['character_set']} \
            collate #{mysql_attr['configuration']['collate']}\" "
-  sensitive true if node['hide_sensitive']
+  sensitive true
   action :run
 end
 
@@ -86,6 +86,6 @@ data_bag_item(mysql_attr['databag'], 'users')['users'].each_pair do |name, optio
     only_if { name != 'root' }
     command "#{db_connect_string} -e \"grant all privileges on #{db_name}.* to '#{name}'@'%' identified by '#{options['options']['password']}'; \""
     action :run
-    sensitive true if node['hide_sensitive']
+    sensitive true
   end
 end
