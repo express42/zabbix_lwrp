@@ -13,6 +13,8 @@ cookbook 'postgresql'
 cookbook 'mysql'
 cookbook 'yum-mysql-community'
 cookbook 'mysql2_chef_gem'
+cookbook 'yum-epel'
+cookbook 'yum-scl'
 
 group :integration do
   cookbook 'locale'
