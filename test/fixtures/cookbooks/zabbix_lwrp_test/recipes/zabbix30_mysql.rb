@@ -51,7 +51,7 @@ node.default['zabbix']['host']['agent']['use_ip'] = false if node['zabbix']['hos
 node.default['zabbix']['host']['agent']['ipaddress'] = '' if node['zabbix']['host']['ipaddress'].to_s.empty?
 
 node.default['zabbix']['host']['jmx']['enabled'] = true
-node.default['zabbix']['host']['jmx']['port'] = 12345
+node.default['zabbix']['host']['jmx']['port'] = 12_345
 node.default['zabbix']['host']['jmx']['use_ip'] = false if node['zabbix']['host']['ipaddress'].to_s.empty?
 
 if node['platform_version'].to_f >= 16.04

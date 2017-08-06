@@ -107,7 +107,8 @@ def create_hosts
         ip: values['ip_address'] || '',
         dns: values['dns'] || '',
         port: values['snmp_port'],
-        useip: values['snmp_use_ip'] ? 1 : 0)
+        useip: values['snmp_use_ip'] ? 1 : 0
+      )
     end
 
     if values['ipmi_enabled']
@@ -117,7 +118,8 @@ def create_hosts
         ip: values['ip_address'] || '',
         dns: values['dns'] || '',
         port: values['ipmi_port'],
-        useip: values['ipmi_use_ip'] ? 1 : 0)
+        useip: values['ipmi_use_ip'] ? 1 : 0
+      )
     end
 
     if values['jmx_enabled']
@@ -127,13 +129,16 @@ def create_hosts
         ip: values['ip_address'] || '',
         dns: values['dns'] || '',
         port: values['jmx_port'],
-        useip: values['jmx_use_ip'] ? 1 : 0)
+        useip: values['jmx_use_ip'] ? 1 : 0
+      )
     end
-    @@zbx.hosts.create(
-      host: fqdn,
-      interfaces: interfaces,
-      groups: group_ids
-    ) unless @@zbx.hosts.get(host: fqdn).first
+    unless @@zbx.hosts.get(host: fqdn).first
+      @@zbx.hosts.create(
+        host: fqdn,
+        interfaces: interfaces,
+        groups: group_ids
+      )
+    end
   end
 end
 

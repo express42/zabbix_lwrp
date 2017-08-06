@@ -107,6 +107,7 @@ template '/etc/zabbix/zabbix_server.conf' do
   owner 'root'
   group 'root'
   mode '0640'
+  sensitive true
   variables(configuration)
   notifies :restart, "service[#{node['zabbix']['server']['service']}]", :immediately
 end
