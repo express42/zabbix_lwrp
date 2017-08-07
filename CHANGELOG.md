@@ -1,6 +1,10 @@
 # CHANGELOG for zabbix_lwrp
 
 This file is used to list changes made in each version of zabbix_lwrp.
+## 1.4.2
+* Hide db password in chef logs
+* Add run state credentials supports 
+
 ## 1.4.0
 
 * Use default values for server configuration
