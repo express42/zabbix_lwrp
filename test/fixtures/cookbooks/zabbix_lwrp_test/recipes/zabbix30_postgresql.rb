@@ -43,6 +43,8 @@ when 'rhel'
 end
 include_recipe 'chef_nginx::default'
 
+include_recipe 'zabbix_lwrp_test::run_state'
+
 node.default['zabbix']['server']['database']['postgresql']['version'] = '9.6'
 node.default['zabbix']['version'] = '3.0'
 node.default['zabbix']['api-version'] = '3.0.0'
@@ -168,7 +170,7 @@ include_recipe 'build-essential'
 zabbix_connect 'default' do
   action :nothing
   apiurl 'http://localhost/api_jsonrpc.php'
-  databag 'zabbix'
+  databag node['zabbix']['server']['credentials']['databag']
   sync node['zabbix']['server']['sync_hosts']
 end
 

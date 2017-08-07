@@ -75,3 +75,5 @@ Style/TrivialAccessors:
     - 'resources/action.rb'
     - 'resources/application.rb'
     - 'resources/screen.rb'
+Style/NumericPredicate:
+  Enabled: false

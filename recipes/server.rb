@@ -41,11 +41,11 @@ db_port = sql_attr['configuration']['port']
 
 if sql_attr['databag'].nil? ||
    sql_attr['databag'].empty? ||
-   data_bag(sql_attr['databag']).empty?
+   get_data_bag(sql_attr['databag']).empty?
   raise "You should specify databag name for zabbix db user in node['zabbix']['server']['database'][db_vendor]['databag'] attibute (now: #{sql_attr['databag']}) and databag should exist"
 end
 
-db_user_data = data_bag_item(sql_attr['databag'], 'users')['users']
+db_user_data = get_data_bag_item(sql_attr['databag'], 'users')['users']
 db_user = db_vendor == 'postgresql' ? db_user_data.keys.first : 'zabbix'
 db_pass = db_user_data[db_user]['options']['password']
 
