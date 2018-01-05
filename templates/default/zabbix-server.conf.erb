@@ -32,8 +32,10 @@ ListenIP=<%= @listenip %>
 <%= parameter %>=<%= value %>
 <% end %>
 
+<% unless node['zabbix']['version'].to_f >= 3.4 %>
 # zabbix sender freq
 SenderFrequency=300
+<% end %>
 
 # Cache params
 
