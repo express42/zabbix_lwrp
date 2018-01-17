@@ -18,7 +18,7 @@ server {
 
   location ~* \.php$ {
     fastcgi_index   index.php;
-    fastcgi_pass    <%= @fastcgi_listen %>:<%= @fastcgi_port %>;
+    fastcgi_pass    <%= @fastcgi_listen %>;
     include         fastcgi_params;
     fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
     fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;

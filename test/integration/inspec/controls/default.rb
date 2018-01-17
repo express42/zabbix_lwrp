@@ -130,11 +130,11 @@ end
 
 describe file(php_zabbix_pool_file) do
   it { should be_file }
-  its('content') { should include 'listen = 127.0.0.1:9200' }
+  its('content') { should include 'listen = /var/run/php-fpm-zabbix.sock' }
 end
 
-describe port(9200) do
-  it { should be_listening }
+describe file('/var/run/php-fpm-zabbix.sock') do
+  it { should be_socket }
 end
 
 describe file('/etc/zabbix/web/zabbix.conf.php') do
@@ -152,7 +152,7 @@ describe file('/etc/nginx/sites-available/localhost') do
   it { should be_file }
   its('content') { should include 'listen   80' }
   its('content') { should include 'server_name  localhost' }
-  its('content') { should include 'fastcgi_pass    127.0.0.1:9200' }
+  its('content') { should include 'fastcgi_pass    unix:/var/run/php-fpm-zabbix.sock' }
 end
 
 describe port(80) do

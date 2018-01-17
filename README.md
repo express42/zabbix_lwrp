@@ -164,8 +164,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['server']['config']['java_gateway']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['config']['alerts']` -  Defaults to `{ ... }`.
 * `node['zabbix']['server']['web']['server_name']` -  Defaults to `localhost`.
-* `node['zabbix']['server']['web']['listen']` -  Defaults to `127.0.0.1`.
-* `node['zabbix']['server']['web']['port']` -  Defaults to `9200`.
+* `node['zabbix']['server']['web']['listen']` -  Defaults to `/var/run/php-fpm-zabbix.sock`.
 * `node['zabbix']['server']['web']['max_requests']` -  Defaults to `500`.
 * `node['zabbix']['server']['web']['max_children']` -  Defaults to `5`.
 * `node['zabbix']['server']['web']['min_spare_servers']` -  Defaults to `1`.
