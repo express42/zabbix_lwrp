@@ -32,7 +32,7 @@ provides :zabbix_database if defined? provides
 require 'English'
 require 'digest/md5'
 
-def change_admin_password(db_connect_string)
+def change_admin_password(db_connect_string, db_env)
   admin_user_pass = 'zabbix'
   # Get Admin password from data bag
   begin
@@ -43,24 +43,24 @@ def change_admin_password(db_connect_string)
   db_vendor = new_resource.db_vendor
   cmd_key = db_vendor == 'mysql' ? '-N -B -e' : '-c'
   admin_user_pass_md5 = Digest::MD5.hexdigest(admin_user_pass)
-  getdb_admin_user_pass_query = IO.popen("#{db_connect_string} #{cmd_key} \"select passwd from users where alias='Admin'\"")
+  getdb_admin_user_pass_query = IO.popen(db_env, "#{db_connect_string} #{cmd_key} \"select passwd from users where alias='Admin'\"")
   getdb_admin_user_pass = getdb_admin_user_pass_query.readlines[0].to_s.gsub(/\s+/, '')
   getdb_admin_user_pass_query.close
   if getdb_admin_user_pass != admin_user_pass_md5
-    set_admin_pass_query = IO.popen("#{db_connect_string} #{cmd_key} \"update users set passwd='#{admin_user_pass_md5}' where alias = 'Admin';\"")
+    set_admin_pass_query = IO.popen(db_env, "#{db_connect_string} #{cmd_key} \"update users set passwd='#{admin_user_pass_md5}' where alias = 'Admin';\"")
     set_admin_pass_query_res = set_admin_pass_query.readlines
     set_admin_pass_query.close
   end
   log('Password for web user Admin has been successfully updated.') if set_admin_pass_query_res
 end
 
-def check_zabbix_db(db_connect_string)
+def check_zabbix_db(db_connect_string, db_env)
   db_vendor = new_resource.db_vendor
   cmd_key = db_vendor == 'mysql' ? '-N -B -e' : '-c'
   check_db_flag = false
   # Check connect to database
   log('Connect to database')
-  sql_output = IO.popen("#{db_connect_string} #{cmd_key} 'SELECT 1'")
+  sql_output = IO.popen(db_env, "#{db_connect_string} #{cmd_key} 'SELECT 1'")
   sql_output_res = sql_output.readlines
   sql_output.close
 
@@ -69,7 +69,7 @@ def check_zabbix_db(db_connect_string)
     check_db_flag = false
   else
     # Check if database exist
-    check_db_exist = IO.popen("#{db_connect_string} #{cmd_key} \"select count(*) from users where alias='Admin'\"")
+    check_db_exist = IO.popen(db_env, "#{db_connect_string} #{cmd_key} \"select count(*) from users where alias='Admin'\"")
     check_db_exist_res = check_db_exist.readlines
     check_db_exist.close
     check_db_flag = !($CHILD_STATUS.exitstatus == 0 && check_db_exist_res[0].to_i == 1)
@@ -86,7 +86,8 @@ action :create do
   db_port   = new_resource.db_port
 
   if db_vendor == 'postgresql'
-    db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
+    db_connect_string = "psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
+    db_env = { 'PGPASSWORD' => db_pass }
 
     if node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'rhel'
       db_command = "gunzip -c /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | #{db_connect_string}"
@@ -106,6 +107,7 @@ action :create do
     end
   elsif db_vendor == 'mysql'
     db_connect_string = "mysql -h #{db_host} -P #{db_port} -u #{db_user} -p#{db_pass} -D #{db_name}"
+    db_env = {}
 
     if node['zabbix']['version'].to_f.between?(3.0, 4.0) && node['platform_family'] == 'rhel'
       db_command = "zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | #{db_connect_string}"
@@ -128,15 +130,16 @@ action :create do
   end
 
   execute 'Provisioning zabbix database' do
+    environment db_env
     command db_command
-    only_if { check_zabbix_db(db_connect_string) }
+    only_if { check_zabbix_db(db_connect_string, db_env) }
     action :run
     sensitive true
   end
 
   ruby_block 'Set password for web user Admin' do
     block do
-      change_admin_password(db_connect_string)
+      change_admin_password(db_connect_string, db_env)
     end
   end
 
