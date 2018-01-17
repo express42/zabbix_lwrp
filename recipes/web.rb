@@ -47,13 +47,15 @@ db_user_data = get_data_bag_item(sql_attr['databag'], 'users')['users']
 db_user = db_user_data.keys.first
 db_pass = db_user_data[db_user]['options']['password']
 
+fastcgi_listen = node['zabbix']['server']['web']['listen']
+fastcgi_listen = "unix:#{fastcgi_listen}" if fastcgi_listen[0] == '/'
+
 chef_nginx_site node['zabbix']['server']['web']['server_name'] do
   action :enable
   template 'zabbix-site.conf.erb'
   variables(
     server_name: node['zabbix']['server']['web']['server_name'],
-    fastcgi_listen: node['zabbix']['server']['web']['listen'],
-    fastcgi_port: node['zabbix']['server']['web']['port']
+    fastcgi_listen: fastcgi_listen
   )
 end
 
@@ -113,7 +115,8 @@ when 'rhel'
 end
 
 php_fpm_pool 'zabbix' do
-  listen "#{node['zabbix']['server']['web']['listen']}:#{node['zabbix']['server']['web']['port']}"
+  listen_group node['nginx']['group']
+  listen node['zabbix']['server']['web']['listen']
   max_children node['zabbix']['server']['web']['max_children']
   max_requests node['zabbix']['server']['web']['max_requests']
   min_spare_servers node['zabbix']['server']['web']['min_spare_servers']

@@ -4,11 +4,6 @@ when 'debian'
 when 'rhel'
   include_recipe 'selinux_policy::install'
 
-  # Allow phpfpm to bind to port, by giving it the http_port_t context
-  selinux_policy_port node['zabbix']['server']['web']['port'] do
-    protocol 'tcp'
-    secontext 'http_port_t'
-  end
   selinux_policy_boolean 'httpd_can_network_connect' do
     value true
   end

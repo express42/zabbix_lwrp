@@ -1,6 +1,5 @@
 default['zabbix']['server']['web']['server_name'] = 'localhost'
-default['zabbix']['server']['web']['listen'] = '127.0.0.1'
-default['zabbix']['server']['web']['port'] = '9200'
+default['zabbix']['server']['web']['listen'] = node['php-fpm']['listen'].gsub(/%{pool_name}/, 'zabbix')
 
 default['zabbix']['server']['web']['max_requests'] = 500
 default['zabbix']['server']['web']['max_children'] = 5
