@@ -57,49 +57,43 @@ chef_nginx_site node['zabbix']['server']['web']['server_name'] do
   )
 end
 
-packages = []
-
-if node['platform_family'] == 'debian' && node['platform_version'].to_f < 16.04
-  if db_vendor == 'postgresql'
-    packages << 'php5-pgsql'
-  elsif db_vendor == 'mysql'
-    packages << 'php5-mysql'
-  end
-elsif node['platform_family'] == 'rhel' || node['platform_version'].to_f >= 16.04
-  if db_vendor == 'postgresql'
-    packages << 'php-pgsql'
-  elsif db_vendor == 'mysql'
-    packages << 'php-mysql'
-  end
-end
-
-if node['platform_family'] == 'debian'
-  if node['platform_version'].to_f >= 16.04
-    # ubuntu 16.04 and higher
-    packages << 'php-mbstring'
-    packages << 'php-bcmath'
-    packages << 'php-gd'
-    packages << 'php-xml'
-  end
-elsif node['platform_family'] == 'rhel'
-  packages << 'php-mbstring'
-  packages << 'php-bcmath'
-  packages << 'php-gd'
-end
-
-packages.each do |pkg|
-  package pkg
-end
-
 case node['platform_family']
 when 'debian'
+  packages = []
+
+  if node['platform_version'].to_f < (node['platform'] == 'ubuntu' ? 16.04 : 9)
+    php_suffix = '5'
+  else
+    php_suffix = ''
+    packages.concat %w[
+      php-mbstring
+      php-bcmath
+      php-gd
+      php-xml
+    ]
+  end
+
+  case db_vendor
+  when 'postgresql'
+    packages << "php#{php_suffix}-pgsql"
+  when 'mysql'
+    packages << "php#{php_suffix}-mysql"
+  end
+
+  package packages
+
   package 'zabbix-frontend-php' do
     response_file 'zabbix-frontend-without-apache.seed'
     action [:install, :reconfig]
   end
 
 when 'rhel'
-  package 'zabbix-web-pgsql'
+  case db_vendor
+  when 'postgresql'
+    package 'zabbix-web-pgsql'
+  when 'mysql'
+    package 'zabbix-web-mysql'
+  end
 end
 
 php_fpm_pool 'zabbix' do
