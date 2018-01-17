@@ -27,7 +27,7 @@ when 'rhel'
 
   os_version = node['platform_version'].split('.').first
   remote_file "#{Chef::Config[:file_cache_path]}/zabbix_repo.rpm" do
-    source "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/#{node['platform_family']}/#{os_version}/x86_64/zabbix-release-#{node['zabbix']['version']}-1.el#{os_version}.noarch.rpm"
+    source "https://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/#{node['platform_family']}/#{os_version}/x86_64/zabbix-release-#{node['zabbix']['version']}-1.el#{os_version}.noarch.rpm"
     action :create
   end
 
@@ -38,11 +38,13 @@ when 'rhel'
 
 when 'debian'
 
+  package 'apt-transport-https'
+
   apt_repository 'zabbix-official' do
-    uri "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/ubuntu/"
+    uri "https://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/ubuntu/"
     distribution node['lsb']['codename']
     components ['main']
-    key 'http://repo.zabbix.com/zabbix-official-repo.key'
+    key 'https://repo.zabbix.com/zabbix-official-repo.key'
   end
 
 end
