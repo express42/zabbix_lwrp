@@ -74,18 +74,14 @@ elsif node['platform_family'] == 'rhel' || node['platform_version'].to_f >= 16.0
 end
 
 if node['platform_family'] == 'debian'
-  if node['platform_version'].to_f < 16.04
-    packages << 'apache2'
-  else
+  if node['platform_version'].to_f >= 16.04
     # ubuntu 16.04 and higher
-    packages << 'apache2'
     packages << 'php-mbstring'
     packages << 'php-bcmath'
     packages << 'php-gd'
     packages << 'php-xml'
   end
 elsif node['platform_family'] == 'rhel'
-  packages << 'httpd'
   packages << 'php-mbstring'
   packages << 'php-bcmath'
   packages << 'php-gd'
@@ -100,12 +96,6 @@ when 'debian'
   package 'zabbix-frontend-php' do
     response_file 'zabbix-frontend-without-apache.seed'
     action [:install, :reconfig]
-  end
-
-  if node['platform_version'].to_f >= 16.04
-    package 'apache2' do
-      action :remove
-    end
   end
 
 when 'rhel'
