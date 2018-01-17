@@ -1,3 +1,21 @@
+extend SELinuxPolicy::Helpers
+include_recipe 'selinux_policy::install' if use_selinux
+
+selinux_policy_module 'zabbix_agent_setrlimit' do
+  content <<-eos
+    module zabbix_agent_setrlimit 1.0;
+
+    require {
+      type zabbix_agent_t;
+      class process setrlimit;
+    }
+
+    #============= zabbix_agent_t ==============
+    allow zabbix_agent_t self:process setrlimit;
+  eos
+  action :deploy
+end
+
 include_dir = node['zabbix']['agent']['include']
 scripts_dir = node['zabbix']['agent']['scripts']
 
