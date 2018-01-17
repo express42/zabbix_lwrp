@@ -1,4 +1,5 @@
 default['zabbix']['server']['web']['server_name'] = 'localhost'
+default['zabbix']['server']['web']['proxy_listen'] = '80'
 default['zabbix']['server']['web']['listen'] = '127.0.0.1'
 default['zabbix']['server']['web']['port'] = '9200'
 

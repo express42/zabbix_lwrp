@@ -150,7 +150,7 @@ end
 
 describe file('/etc/nginx/sites-available/localhost') do
   it { should be_file }
-  its('content') { should include 'listen   80' }
+  its('content') { should include 'listen 80' }
   its('content') { should include 'server_name  localhost' }
   its('content') { should include 'fastcgi_pass    127.0.0.1:9200' }
 end
