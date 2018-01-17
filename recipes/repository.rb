@@ -25,15 +25,20 @@
 case node['platform_family']
 when 'rhel'
 
-  os_version = node['platform_version'].split('.').first
-  remote_file "#{Chef::Config[:file_cache_path]}/zabbix_repo.rpm" do
-    source "http://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/#{node['platform_family']}/#{os_version}/x86_64/zabbix-release-#{node['zabbix']['version']}-1.el#{os_version}.noarch.rpm"
+  yum_repository 'zabbix' do
+    description 'Zabbix Official Repository - $basearch'
+    baseurl "https://repo.zabbix.com/zabbix/#{node['zabbix']['version']}/#{node['platform_family']}/#{node['platform_version'].to_i}/$basearch/"
+    gpgkey 'https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591'
+    gpgcheck true
     action :create
   end
 
-  rpm_package 'zabbix-official' do
-    source "#{Chef::Config[:file_cache_path]}/zabbix_repo.rpm"
-    action :install
+  yum_repository 'zabbix-non-supported' do
+    description 'Zabbix Official Repository non-supported - $basearch'
+    baseurl "https://repo.zabbix.com/non-supported/#{node['platform_family']}/#{node['platform_version'].to_i}/$basearch/"
+    gpgkey 'https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX'
+    gpgcheck true
+    action :create
   end
 
 when 'debian'
