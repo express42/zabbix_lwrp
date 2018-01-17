@@ -70,7 +70,9 @@ when 'debian'
     action [:install, :reconfig]
   end
 
-  package 'snmp-mibs-downloader'
+  package 'snmp-mibs-downloader' do
+    only_if { node['zabbix']['server']['snmp'] }
+  end
 
 when 'rhel'
   package db_vendor == 'postgresql' ? 'zabbix-server-pgsql' : 'zabbix-server-mysql' do
