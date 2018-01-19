@@ -153,6 +153,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['server']['service']` -  Defaults to `zabbix-server`.
 * `node['zabbix']['server']['credentials']['databag']` -  Defaults to `zabbix`.
 * `node['zabbix']['server']['templates']` -  Defaults to `/opt/zabbix/templates`.
+* `node['zabbix']['server']['snmp']` -  Defaults to `true`.
 * `node['zabbix']['server']['sync_hosts']` -  Defaults to `false`.
 * `node['zabbix']['server']['config']['listenip']` -  Defaults to `0.0.0.0`.
 * `node['zabbix']['server']['config']['debuglevel']` -  Defaults to `3`.
