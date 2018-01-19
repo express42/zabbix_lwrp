@@ -14,12 +14,12 @@ platforms:
   - name: ubuntu-16.04
     driver:
       box: bento/ubuntu-16.04
-  - name: centos-7.3
+  - name: centos-7.4
     driver:
-      box: bento/centos-7.3
-  - name: centos-6.7
+      box: bento/centos-7.4
+  - name: centos-6.9
     driver:
-      box: bento/centos-6.7
+      box: bento/centos-6.9
   - name: windows-2012r2
     driver:
       provider: virtualbox
@@ -65,6 +65,7 @@ suites:
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30_mysql]
     excludes:
+      - centos-6.9
       - windows-2012r2
     verifier:
       attributes:
@@ -74,6 +75,7 @@ suites:
     run_list:
       - recipe[zabbix_lwrp_test::zabbix30_postgresql]
     excludes:
+      - centos-6.9
       - windows-2012r2
     verifier:
       attributes:
@@ -83,6 +85,7 @@ suites:
     run_list:
       - recipe[zabbix_lwrp_test::zabbix32_mysql]
     excludes:
+      - centos-6.9
       - windows-2012r2
     verifier:
       attributes:
@@ -92,6 +95,7 @@ suites:
     run_list:
       - recipe[zabbix_lwrp_test::zabbix32_mysql]
     excludes:
+      - centos-6.9
       - windows-2012r2
     verifier:
       attributes:
@@ -111,6 +115,7 @@ suites:
     run_list:
       - recipe[zabbix_lwrp_test::zabbix32_postgresql]
     excludes:
+      - centos-6.9
       - windows-2012r2
     verifier:
       attributes:
@@ -120,6 +125,7 @@ suites:
     run_list:
       - recipe[zabbix_lwrp_test::zabbix32_postgresql]
     excludes:
+      - centos-6.9
       - windows-2012r2
     verifier:
       attributes:
