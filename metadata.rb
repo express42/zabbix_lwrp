@@ -19,6 +19,7 @@ depends          'php-fpm'
 depends          'postgresql'
 depends          'mysql2_chef_gem'
 depends          'mysql'
+depends          'selinux_policy'
 depends          'yum-mysql-community'
 
 recipe           'zabbix_lwrp::agent_linux', 'Installs and configures Zabbix agent for Linux.'

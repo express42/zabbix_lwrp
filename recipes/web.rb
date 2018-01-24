@@ -22,6 +22,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+extend SELinuxPolicy::Helpers
+include_recipe 'selinux_policy::install' if use_selinux
+
+# Allow phpfpm to bind to port, by giving it the http_port_t context
+selinux_policy_port node['zabbix']['server']['web']['port'] do
+  protocol 'tcp'
+  secontext 'http_port_t'
+end
+
+selinux_policy_boolean 'httpd_can_network_connect' do
+  value true
+end
+
 include_recipe 'php-fpm'
 include_recipe 'chef_nginx::default'
 

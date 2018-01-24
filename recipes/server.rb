@@ -22,6 +22,42 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+extend SELinuxPolicy::Helpers
+include_recipe 'selinux_policy::install' if use_selinux
+
+selinux_policy_module 'zabbix_server_setrlimit' do
+  content <<-eos
+    module zabbix_server_setrlimit 1.0;
+
+    require {
+      type zabbix_t;
+      class process setrlimit;
+    }
+
+    #============= zabbix_t ==============
+    allow zabbix_t self:process setrlimit;
+  eos
+  action :deploy
+end
+
+selinux_policy_module 'zabbix_server_sockets' do
+  content <<-eos
+    module zabbix_server_sockets 1.0;
+
+    require {
+      type zabbix_t;
+      type zabbix_var_run_t;
+      class sock_file { create unlink write };
+      class unix_stream_socket connectto;
+    }
+
+    #============= zabbix_t ==============
+    allow zabbix_t zabbix_var_run_t:sock_file { create unlink write };
+    allow zabbix_t self:unix_stream_socket connectto;
+  eos
+  action :deploy
+end
+
 db_vendor = node['zabbix']['server']['database']['vendor']
 unless db_vendor == 'postgresql' || db_vendor == 'mysql'
   raise "You should specify correct database vendor attribute node['zabbix']['server']['database']['vendor'] (now: #{node['zabbix']['server']['database']['vendor']})"
