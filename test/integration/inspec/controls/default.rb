@@ -110,6 +110,8 @@ describe file('/etc/zabbix/zabbix_server.conf') do
   its('content') { should include "DBPort=#{db_port}" }
   its('content') { should include 'ListenIP=0.0.0.0' }
   its('content') { should include 'JavaGateway=127.0.0.1' }
+  its('content') { should include 'Server=localhost' }
+  its('content') { should include 'ServerActive=localhost' }
 end
 
 describe port(10_051) do
