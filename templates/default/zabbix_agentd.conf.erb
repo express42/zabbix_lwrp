@@ -17,7 +17,7 @@ PidFile=<%= @pidfile %>
 
 # zabbix server connect configuration
 Server=<%= @serverhost %>
-ServerActive=<%= @serverhost %>
+ServerActive=<%= @serveractive %>
 <% unless @hostname.to_s.empty? %>
 Hostname=<%= @hostname %>
 <% end %>

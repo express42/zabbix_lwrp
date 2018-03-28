@@ -45,6 +45,7 @@ Installs and configures Zabbix agent and server with PostgreSQL/MySQL and Nginx.
 * `node['zabbix']['agent']['config']['listen_ip']` -  Defaults to `0.0.0.0`.
 * `node['zabbix']['agent']['config']['listen_port']` -  Defaults to `10050`.
 * `node['zabbix']['agent']['config']['serverhost']` -  Defaults to `localhost`.
+* `node['zabbix']['agent']['config']['serveractive']` -  Defaults to `node['zabbix']['agent']['config']['serverhost']`.
 * `node['zabbix']['agent']['config']['hostname']` -  Defaults to `node['fqdn']`.
 * `node['zabbix']['agent']['config']['pidfile']` -  Defaults to `/var/run/zabbix/zabbix_agentd.pid`.
 * `node['zabbix']['agent']['config']['logs']` -  Defaults to `{ ... }`.
