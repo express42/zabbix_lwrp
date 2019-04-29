@@ -6,6 +6,7 @@ default['zabbix']['server']['sync_hosts'] = false
 
 default['zabbix']['server']['config']['listenip'] = '0.0.0.0'
 default['zabbix']['server']['config']['debuglevel'] = 3
+default['zabbix']['server']['config']['SenderFrequency'] = 300
 
 default['zabbix']['server']['config']['workers'] = {
   StartPollers: 5,

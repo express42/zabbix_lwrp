@@ -32,8 +32,10 @@ ListenIP=<%= @listenip %>
 <%= parameter %>=<%= value %>
 <% end %>
 
+<% if not @SenderFrequency.nil? %>
 # zabbix sender freq
-SenderFrequency=300
+SenderFrequency=<% @SenderFrequency %>
+<% end %>
 
 # Cache params
 

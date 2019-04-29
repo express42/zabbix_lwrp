@@ -29,6 +29,7 @@ end
 
 def configuration_hacks(configuration, server_version)
   configuration['cache'].delete('HistoryTextCacheSize') if server_version.to_f >= 3.0
+  configuration.delete('SenderFrequency') if server_version.to_f >= 3.4
 end
 
 sql_attr = node['zabbix']['server']['database'][db_vendor]
