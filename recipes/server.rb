@@ -22,14 +22,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+server_type = node['zabbix']['server']['config']['server_type']
+if server_type.nil? || server_type.empty? || server_type == 'server' ? false : server_type == 'proxy' ? false : true
+  Chef::Application.fatal!("node['zabbix']['server']['config']['server_type'] must be 'server' or 'proxy'")
+end
+Chef::Log.warn("node['zabbix']['server']['config'] = #{node['zabbix']['server']['config']}")
 db_vendor = node['zabbix']['server']['database']['vendor']
 unless db_vendor == 'postgresql' || db_vendor == 'mysql'
   raise "You should specify correct database vendor attribute node['zabbix']['server']['database']['vendor'] (now: #{node['zabbix']['server']['database']['vendor']})"
 end
 
-def configuration_hacks(configuration, server_version)
+def configuration_hacks(configuration, server_version, server_type)
   configuration['cache'].delete('HistoryTextCacheSize') if server_version.to_f >= 3.0
   configuration.delete('SenderFrequency') if server_version.to_f >= 3.4
+
+  case server_type
+    when 'server'
+
+    when 'proxy'
+      configuration['cache'].delete('TrendCacheSize') if server_version.to_f >= 3.4
+      configuration['cache'].delete('ValueCacheSize') if server_version.to_f >= 3.4
+      configuration['cache'].delete('CacheUpdateFrequency') if server_version.to_f >= 3.4
+      configuration['cache'].delete('HistoryCacheSize') if server_version.to_f >= 3.4
+      configuration['cache'].delete('HistoryIndexCacheSize') if server_version.to_f >= 3.4
+      configuration['workers'].delete('StartProxyPollers') if server_version.to_f >= 3.4
+      configuration['hk'].delete('MaxHousekeeperDelete') if server_version.to_f >= 3.4
+  end
 end
 
 sql_attr = node['zabbix']['server']['database'][db_vendor]
@@ -66,7 +84,7 @@ db_config = {
 
 case node['platform_family']
 when 'debian'
-  package db_vendor == 'postgresql' ? 'zabbix-server-pgsql' : 'zabbix-server-mysql' do
+  package db_vendor == 'postgresql' ? "zabbix-#{server_type}-pgsql" : "zabbix-#{server_type}-mysql" do
     response_file 'zabbix-server-withoutdb.seed'
     action [:install, :reconfig]
   end
@@ -74,7 +92,7 @@ when 'debian'
   package 'snmp-mibs-downloader'
 
 when 'rhel'
-  package db_vendor == 'postgresql' ? 'zabbix-server-pgsql' : 'zabbix-server-mysql' do
+  package db_vendor == 'postgresql' ? "zabbix-#{server_type}-pgsql" : "zabbix-#{server_type}-mysql" do
     action [:install, :reconfig]
   end
 end
@@ -85,6 +103,7 @@ zabbix_database db_name do
   db_pass   db_pass
   db_host   db_host
   db_port   db_port
+  server_type server_type
   action :create
 end
 
@@ -101,9 +120,14 @@ end
 
 configuration = Chef::Mixin::DeepMerge.merge(node['zabbix']['server']['config'].to_hash, db_config)
 
-configuration_hacks(configuration, node['zabbix']['version'])
+if node['zabbix']['server']['config']['server_type'] == 'proxy'
+  configuration["global"][:Server] = node['zabbix']['proxy']['config']['server']
+  configuration["global"][:Hostname] = node['zabbix']['proxy']['config']['hostname']
+end
 
-template '/etc/zabbix/zabbix_server.conf' do
+configuration_hacks(configuration, node['zabbix']['version'], server_type)
+
+template "/etc/zabbix/zabbix_#{server_type}.conf" do
   source 'zabbix-server.conf.erb'
   owner 'root'
   group 'root'

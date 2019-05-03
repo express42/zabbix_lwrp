@@ -2,10 +2,10 @@
 
 ListenPort=10051
 
-LogFile=/var/log/zabbix/zabbix_server.log
+LogFile=/var/log/zabbix/zabbix_<%= @server_type %>.log
 LogFileSize=10
 DebugLevel=<%= @debuglevel %>
-PidFile=/var/run/zabbix/zabbix_server.pid
+PidFile=/var/run/zabbix/zabbix_<%= @server_type %>.pid
 
 # DB params
 
@@ -63,8 +63,9 @@ SenderFrequency=<% @SenderFrequency %>
 #
 <% end %>
 
-
+<% if not @alerts[:path].nil? %>
 AlertScriptsPath=<%= @alerts[:path] %>
+<% end %>
 TmpDir=/tmp
 
 
