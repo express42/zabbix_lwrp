@@ -63,7 +63,7 @@ SenderFrequency=<% @SenderFrequency %>
 #
 <% end %>
 
-<% if not @alerts[:path].nil? %>
+<% if @server_type == 'server' %>
 AlertScriptsPath=<%= @alerts[:path] %>
 <% end %>
 TmpDir=/tmp

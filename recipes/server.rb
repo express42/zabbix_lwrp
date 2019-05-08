@@ -26,7 +26,6 @@ server_type = node['zabbix']['server']['config']['server_type']
 if server_type.nil? || server_type.empty? || server_type == 'server' ? false : server_type == 'proxy' ? false : true
   Chef::Application.fatal!("node['zabbix']['server']['config']['server_type'] must be 'server' or 'proxy'")
 end
-Chef::Log.warn("node['zabbix']['server']['config'] = #{node['zabbix']['server']['config']}")
 db_vendor = node['zabbix']['server']['database']['vendor']
 unless db_vendor == 'postgresql' || db_vendor == 'mysql'
   raise "You should specify correct database vendor attribute node['zabbix']['server']['database']['vendor'] (now: #{node['zabbix']['server']['database']['vendor']})"
@@ -119,11 +118,6 @@ service node['zabbix']['server']['service'] do
 end
 
 configuration = Chef::Mixin::DeepMerge.merge(node['zabbix']['server']['config'].to_hash, db_config)
-
-if node['zabbix']['server']['config']['server_type'] == 'proxy'
-  configuration["global"][:Server] = node['zabbix']['proxy']['config']['server']
-  configuration["global"][:Hostname] = node['zabbix']['proxy']['config']['hostname']
-end
 
 configuration_hacks(configuration, node['zabbix']['version'], server_type)
 

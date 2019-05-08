@@ -73,6 +73,12 @@ def check_zabbix_db(db_connect_string)
     check_db_exist_res = check_db_exist.readlines
     check_db_exist.close
     check_db_flag = !($CHILD_STATUS.exitstatus == 0 && check_db_exist_res[0].to_i == 1)
+    if check_db_flag == true
+      user_database_output = IO.popen("#{db_connect_string} #{cmd_key} 'SHOW columns from users'")
+      user_database_exist = user_database_output.readlines
+      user_database_output.close
+      check_db_flag = !($CHILD_STATUS.exitstatus == 0 && !user_database_exist.empty?)
+    end
   end
   check_db_flag
 end
@@ -85,43 +91,46 @@ action :create do
   db_host   = new_resource.db_host
   db_port   = new_resource.db_port
 
+  servertype = new_resource.server_type
+  create_schema_name = servertype == 'server' ? 'create' : 'schema'
+
   if db_vendor == 'postgresql'
     db_connect_string = "PGPASSWORD=#{db_pass} psql -q -t -h #{db_host} -p #{db_port} -U #{db_user} -d #{db_name}"
 
     if node['zabbix']['version'].to_f.between?(3.0, 4.2) && node['platform_family'] == 'rhel'
-      db_command = "gunzip -c /usr/share/doc/zabbix-#{new_resource.server_type}-pgsql*/create.sql.gz | #{db_connect_string}"
+      db_command = "gunzip -c /usr/share/doc/zabbix-#{servertype}-pgsql*/#{create_schema_name}.sql.gz | #{db_connect_string}"
 
     elsif node['zabbix']['version'].to_f.between?(3.0, 4.2) && node['platform_family'] == 'debian'
-      db_command = "gunzip -c /usr/share/doc/zabbix-#{new_resource.server_type}-pgsql/create.sql.gz | #{db_connect_string}"
+      db_command = "gunzip -c /usr/share/doc/zabbix-#{servertype}-pgsql/#{create_schema_name}.sql.gz | #{db_connect_string}"
 
     elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'rhel'
-      db_command = "#{db_connect_string} -f /usr/share/doc/zabbix-#{new_resource.server_type}-pgsql*/create/schema.sql; \
-                    #{db_connect_string} -f /usr/share/doc/zabbix-#{new_resource.server_type}-pgsql*/create/images.sql; \
-                    #{db_connect_string} -f /usr/share/doc/zabbix-#{new_resource.server_type}-pgsql*/create/data.sql;"
+      db_command = "#{db_connect_string} -f /usr/share/doc/zabbix-#{servertype}-pgsql*/create/schema.sql; \
+                    #{db_connect_string} -f /usr/share/doc/zabbix-#{servertype}-pgsql*/create/images.sql; \
+                    #{db_connect_string} -f /usr/share/doc/zabbix-#{servertype}-pgsql*/create/data.sql;"
 
     elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'debian'
-      db_command = "#{db_connect_string} -f /usr/share/zabbix-#{new_resource.server_type}-pgsql/schema.sql; \
-                    #{db_connect_string} -f /usr/share/zabbix-#{new_resource.server_type}-pgsql/images.sql; \
-                    #{db_connect_string} -f /usr/share/zabbix-#{new_resource.server_type}-pgsql/data.sql;"
+      db_command = "#{db_connect_string} -f /usr/share/zabbix-#{servertype}-pgsql/schema.sql; \
+                    #{db_connect_string} -f /usr/share/zabbix-#{servertype}-pgsql/images.sql; \
+                    #{db_connect_string} -f /usr/share/zabbix-#{servertype}-pgsql/data.sql;"
     end
   elsif db_vendor == 'mysql'
     db_connect_string = "mysql -h #{db_host} -P #{db_port} -u #{db_user} -p#{db_pass} -D #{db_name}"
 
     if node['zabbix']['version'].to_f.between?(3.0, 4.2) && node['platform_family'] == 'rhel'
-      db_command = "zcat /usr/share/doc/zabbix-#{new_resource.server_type}-mysql*/create.sql.gz | #{db_connect_string}"
+      db_command = "zcat /usr/share/doc/zabbix-#{servertype}-mysql*/#{create_schema_name}.sql.gz | #{db_connect_string}"
 
     elsif node['zabbix']['version'].to_f.between?(3.0, 4.2) && node['platform_family'] == 'debian'
-      db_command = "zcat /usr/share/doc/zabbix-#{new_resource.server_type}-mysql/create.sql.gz | #{db_connect_string}"
+      db_command = "zcat /usr/share/doc/zabbix-#{servertype}-mysql/#{create_schema_name}.sql.gz | #{db_connect_string}"
 
     elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'rhel'
-      db_command = "cat /usr/share/doc/zabbix-#{new_resource.server_type}-mysql*/create/schema.sql | #{db_connect_string}; \
-                    cat /usr/share/doc/zabbix-#{new_resource.server_type}-mysql*/create/images.sql | #{db_connect_string}; \
-                    cat /usr/share/doc/zabbix-#{new_resource.server_type}-mysql*/create/data.sql | #{db_connect_string};"
+      db_command = "cat /usr/share/doc/zabbix-#{servertype}-mysql*/create/schema.sql | #{db_connect_string}; \
+                    cat /usr/share/doc/zabbix-#{servertype}-mysql*/create/images.sql | #{db_connect_string}; \
+                    cat /usr/share/doc/zabbix-#{servertype}-mysql*/create/data.sql | #{db_connect_string};"
 
     elsif node['zabbix']['version'].to_f < 3.0 && node['platform_family'] == 'debian'
-      db_command = "#{db_connect_string} < /usr/share/zabbix-#{new_resource.server_type}-mysql/schema.sql; \
-                    #{db_connect_string} < /usr/share/zabbix-#{new_resource.server_type}-mysql/images.sql; \
-                    #{db_connect_string} < /usr/share/zabbix-#{new_resource.server_type}-mysql/data.sql;"
+      db_command = "#{db_connect_string} < /usr/share/zabbix-#{servertype}-mysql/schema.sql; \
+                    #{db_connect_string} < /usr/share/zabbix-#{servertype}-mysql/images.sql; \
+                    #{db_connect_string} < /usr/share/zabbix-#{servertype}-mysql/data.sql;"
     end
   else
     raise "You should specify correct database vendor attribute node['zabbix']['server']['database']['vendor'] (now: #{node['zabbix']['server']['database']['vendor']})"
@@ -131,7 +140,7 @@ action :create do
     command db_command
     only_if { check_zabbix_db(db_connect_string) }
     action :run
-    sensitive true
+    sensitive false
   end
 
   ruby_block 'Set password for web user Admin' do
