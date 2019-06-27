@@ -36,8 +36,6 @@ def configuration_hacks(configuration, server_version, server_type)
   configuration.delete('SenderFrequency') if server_version.to_f >= 3.4
 
   case server_type
-    when 'server'
-
     when 'proxy'
       configuration['cache'].delete('TrendCacheSize') if server_version.to_f >= 3.4
       configuration['cache'].delete('ValueCacheSize') if server_version.to_f >= 3.4
@@ -93,6 +91,32 @@ when 'debian'
 when 'rhel'
   package db_vendor == 'postgresql' ? "zabbix-#{server_type}-pgsql" : "zabbix-#{server_type}-mysql" do
     action [:install, :reconfig]
+  end
+end
+
+if server_type == 'proxy'
+  mysql_attr = node['zabbix']['server']['database']['mysql']
+  db_name = mysql_attr['database_name']
+  db_connect_string = "mysql -h #{mysql_attr['configuration']['listen_addresses']} \
+                       -P #{mysql_attr['configuration']['port']} -u root \
+                       -p#{get_data_bag_item(mysql_attr['databag'], 'users')['users']['root']['options']['password']}"
+
+  execute 'Create Zabbix MySQL database' do
+    command "#{db_connect_string} -e \"create database if not exists #{db_name} \
+             character set #{mysql_attr['configuration']['character_set']} \
+             collate #{mysql_attr['configuration']['collate']}\" "
+    sensitive true
+    action :run
+  end
+
+  # create users
+  get_data_bag_item(mysql_attr['databag'], 'users')['users'].each_pair do |name, options|
+    execute "Create MySQL database user #{name}" do
+      only_if { name != 'root' }
+      command "#{db_connect_string} -e \"grant all privileges on #{db_name}.* to '#{name}'@'%' identified by '#{options['options']['password']}'; \""
+      action :run
+      sensitive true
+    end
   end
 end
 
