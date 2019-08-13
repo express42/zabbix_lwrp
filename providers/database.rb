@@ -140,7 +140,7 @@ action :create do
     command db_command
     only_if { check_zabbix_db(db_connect_string) }
     action :run
-    sensitive false
+    sensitive true
   end
 
   ruby_block 'Set password for web user Admin' do
