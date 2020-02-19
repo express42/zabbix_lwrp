@@ -143,7 +143,8 @@ template '/etc/zabbix/web/zabbix.conf.php' do
     db_port: db_port,
     user_name: db_user,
     user_password: db_pass,
-    server_host: 'localhost',
-    server_port: '10051'
+    server_host: node['zabbix']['server']['web']['server_host'],
+    server_port: '10051',
+    server_name: node['zabbix']['server']['web']['server_name']
   )
 end

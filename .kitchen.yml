@@ -6,6 +6,8 @@ provisioner:
   name: chef_zero
   data_bags_path: test/fixtures/data_bags
   require_chef_omnibus: 12
+  client_rb:
+    chef_license: accept
 
 platforms:
   - name: ubuntu-14.04
@@ -133,4 +135,3 @@ suites:
             databag: wrapper
             postgresql:
               databag: wrapper
-

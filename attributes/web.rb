@@ -8,6 +8,8 @@ default['zabbix']['server']['web']['min_spare_servers'] = 1
 default['zabbix']['server']['web']['start_servers'] = 2
 default['zabbix']['server']['web']['max_spare_servers'] = 3
 default['zabbix']['server']['web']['process_manager'] = 'dynamic'
+default['zabbix']['server']['web']['server_host'] = 'localhost'
+default['zabbix']['server']['web']['server_name'] = ''
 
 default['zabbix']['server']['web']['configuration']['php_admin_value[date.timezone]'] = 'UTC'
 default['zabbix']['server']['web']['configuration']['php_admin_flag[display_errors]'] = false

@@ -4,8 +4,13 @@ default['zabbix']['server']['credentials']['databag'] = 'zabbix'
 default['zabbix']['server']['templates'] = '/opt/zabbix/templates'
 default['zabbix']['server']['sync_hosts'] = false
 
+default['zabbix']['server']['config']['server_type'] = 'server' # server or proxy
 default['zabbix']['server']['config']['listenip'] = '0.0.0.0'
 default['zabbix']['server']['config']['debuglevel'] = 3
+default['zabbix']['server']['config']['SenderFrequency'] = 300
+
+default['zabbix']['proxy']['config']['server'] = nil
+default['zabbix']['proxy']['config']['hostname'] = nil
 
 default['zabbix']['server']['config']['workers'] = {
   StartPollers: 5,

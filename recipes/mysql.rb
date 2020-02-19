@@ -62,6 +62,7 @@ mysql_service mysql_attr['service_name'] do
   port mysql_attr['configuration']['port']
   version mysql_attr['version']
   data_dir mysql_attr['mount_point']
+  mysqld_options mysql_attr['options']
   initial_root_password get_data_bag_item(mysql_attr['databag'], 'users')['users']['root']['options']['password']
   action [:create, :start]
 end

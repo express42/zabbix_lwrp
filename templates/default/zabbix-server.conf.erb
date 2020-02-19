@@ -2,10 +2,10 @@
 
 ListenPort=10051
 
-LogFile=/var/log/zabbix/zabbix_server.log
+LogFile=/var/log/zabbix/zabbix_<%= @server_type %>.log
 LogFileSize=10
 DebugLevel=<%= @debuglevel %>
-PidFile=/var/run/zabbix/zabbix_server.pid
+PidFile=/var/run/zabbix/zabbix_<%= @server_type %>.pid
 
 # DB params
 
@@ -32,8 +32,10 @@ ListenIP=<%= @listenip %>
 <%= parameter %>=<%= value %>
 <% end %>
 
+<% if not @SenderFrequency.nil? %>
 # zabbix sender freq
-SenderFrequency=300
+SenderFrequency=<% @SenderFrequency %>
+<% end %>
 
 # Cache params
 
@@ -61,8 +63,9 @@ SenderFrequency=300
 #
 <% end %>
 
-
+<% if @server_type == 'server' %>
 AlertScriptsPath=<%= @alerts[:path] %>
+<% end %>
 TmpDir=/tmp
 
 

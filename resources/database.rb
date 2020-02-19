@@ -38,3 +38,4 @@ attribute :db_user, kind_of: String
 attribute :db_pass, kind_of: String
 attribute :db_host, kind_of: String
 attribute :db_port, kind_of: String
+attribute :server_type, kind_of: String
